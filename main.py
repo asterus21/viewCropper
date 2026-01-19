@@ -6,14 +6,18 @@ import data
 import misc
 
 # import target colors
-target = data.find_targets()
+central_targets = data.find_central_targets()
+right_targets   = data.find_right_targets()
+left_targets    = data.find_left_targets()
 
 # find target pixels and their neighbours
 def get_targets(image, x: int, y: int) -> dict:
     targets = dict(
-        target_0 = image.getpixel((x, y)),
-        target_1 = image.getpixel((x + 1, y)),
-        target_2 = image.getpixel((x - 1, y))
+        target = image.getpixel((x, y)),
+        right  = image.getpixel((x + 1, y)),
+        down   = image.getpixel((x, y + 1)),
+        left   = image.getpixel((x - 1, y)),
+        up     = image.getpixel((x, y - 1))
     )
     return targets
 
@@ -32,9 +36,19 @@ def find_target_pixels(directory: str, files: list) -> list:
             for y in range(height - 1):
                 t = get_targets(image, x, y)
                 if (
-                    t.get('target_0')     == target.get('target_0')
-                    and t.get('target_1') == target.get('target_1')
-                    and t.get('target_2') == target.get('target_2')
+                    (
+                        t.get('target') == central_targets.get('central_target_0') or
+                        t.get('target') == central_targets.get('central_target_1') or
+                        t.get('target') == central_targets.get('central_target_2')
+                    ) and
+                    (
+                        t.get('right')   == right_targets.get('right_target_0') or 
+                        t.get('right')   == right_targets.get('right_target_1')
+                    ) and
+                    (
+                        t.get('left')    == left_targets.get('left_target_0') or 
+                        t.get('left')    == left_targets.get('left_target_1')
+                    )
                 ): coordinates.append((x, y))
         targets.append(coordinates)
     # print(targets)
@@ -46,7 +60,7 @@ def remove_empty_targets(coordinates: list, files: list) -> dict:
     s = {
         str(files[i]): coordinates[i] for i in range(0, len(files)) if coordinates[i]
     }
-    print(s)
+    # print(s)
     return s
 
 
