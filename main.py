@@ -137,7 +137,10 @@ if __name__ == '__main__':
     flags = ['-w', '-v', '-x', '-y']
     # TODO: add the -f flag to process only one file
     # start the main script
-    if len(sys.argv) < 3 and len(sys.argv) > 1:
+    if len(sys.argv) == 1:
+        directory, files_list = misc.get_input()
+        main(directory, files_list, wizard=True)
+    if len(sys.argv) == 2:
         # print(sys.argv[:])
         if   sys.argv[1] == '-w':
             directory, files_list = misc.get_input()
@@ -145,17 +148,18 @@ if __name__ == '__main__':
         elif sys.argv[1] == '-v':
             directory, files_list = misc.get_input()
             main(directory, files_list, wizard=False)
-        elif sys.argv[1] == '-x':
-            if not sys.argv[-1]: 
+    if len(sys.argv) == 3:
+        if sys.argv[1] == '-x':
+            if sys.argv[2]: 
                 directory, files_list = misc.get_input()
-                main(directory, files_list, wizard=False, view_width=int(sys.argv[-1]))
+                main(directory, files_list, wizard=False, view_width=int(sys.argv[2]))
             else:
                 print("The flag value cannot be empty!")
                 misc.close_script()
         elif sys.argv[1] == '-y':
-            if not sys.argv[-1]: 
+            if sys.argv[2]: 
                 directory, files_list = misc.get_input()
-                main(directory, files_list, wizard=False, view_height=int(sys.argv[-1]))
+                main(directory, files_list, wizard=False, view_height=int(sys.argv[2]))
             else:
                 print("The flag value cannot be empty!")
                 misc.close_script()
@@ -172,6 +176,3 @@ if __name__ == '__main__':
         else:
             print("The given flag is not supported!")
             misc.close_script()
-    if len(sys.argv) == 1:
-        directory, files_list = misc.get_input()
-        main(directory, files_list, wizard=True)

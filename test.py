@@ -1,4 +1,4 @@
-import os, subprocess
+import subprocess
 import datetime
 
 valid_script_commands = [
@@ -20,8 +20,9 @@ not_valid_script_commands = [
 ]
 
 
-print(os.getcwd())
-now = datetime.datetime.now()
+script_number = 0
+print('starting the test...')
+print()
 for command in valid_script_commands:
     process = subprocess.Popen(
         command,
@@ -31,4 +32,8 @@ for command in valid_script_commands:
         text=True
     )
     stdout, stderr = process.communicate(input='\n')
-    print(f'finished at {now}')
+    
+    print(f'"{valid_script_commands[script_number]}" finished at {datetime.datetime.now().strftime("%H:%M:%S")}')
+    
+    script_number +=1
+print('the test is finshed')
