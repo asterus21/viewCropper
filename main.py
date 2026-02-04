@@ -1,57 +1,52 @@
-'''The script is aimed to crop wizard windows of the PolyAnalyst nodes.'''
+'''The script is aimed to crop windows of the PolyAnalyst nodes.'''
 
 import os
 from PIL import Image
 import data
 import misc
 
-# import target colors
-central_targets = data.find_central_targets()
-right_targets   = data.find_right_targets()
-left_targets    = data.find_left_targets()
 
-# find target pixels and their neighbours
-def get_targets(image, x: int, y: int) -> dict:
-    targets = dict(
-        target = image.getpixel((x, y)),
-        right  = image.getpixel((x + 1, y)),
-        down   = image.getpixel((x, y + 1)),
-        left   = image.getpixel((x - 1, y)),
-        up     = image.getpixel((x, y - 1))
-    )
-    return targets
+# import target colors for views
+central_targets       = data.find_central_targets()
+right_targets         = data.find_right_targets()
+left_targets          = data.find_left_targets()
+
+# import target colors for wizards
+target_upper          = data.get_upper_target()
+target_upper_neighbor = data.get_upper_neighbors()
+target_lower          = data.get_lower_target()
+target_lower_neighbor = data.get_lower_neighbors()
 
 # create a list of coordinates for the target pixels
-def find_target_pixels(directory: str, files: list) -> list:
+def find_target_pixels(directory: str, files: list, wizard=True) -> list:
     targets = []
     print(f'{misc.print_time()}', 'Getting a list of files...')
-    print(f'{misc.print_time()}', 'There ' + str(len(files)) + ' file(s) found that match the pattern.')
     for file in files:
         print(f'{misc.print_time()}', 'Processing: ' + file)
         # concatenate a path and file, e.g. 'D:/folder/screenshot_1.png')
         image = Image.open(os.path.join(directory, file)).convert('RGB')
         width, height = image.size
-        coordinates = []
-        for x in range(width - 1):
-            for y in range(height - 1):
-                t = get_targets(image, x, y)
-                if (
-                    (
-                        t.get('target') == central_targets.get('central_target_0') or
-                        t.get('target') == central_targets.get('central_target_1') or
-                        t.get('target') == central_targets.get('central_target_2')
-                    ) and
-                    (
-                        t.get('right')   == right_targets.get('right_target_0') or 
-                        t.get('right')   == right_targets.get('right_target_1')
-                    ) and
-                    (
-                        t.get('left')    == left_targets.get('left_target_0') or 
-                        t.get('left')    == left_targets.get('left_target_1')
+        if wizard:
+            t = misc.find_targets_in_wizard(
+                    target_upper, 
+                    target_upper_neighbor, 
+                    target_lower,
+                    target_lower_neighbor,
+                    width, 
+                    height, 
+                    image
                     )
-                ): coordinates.append((x, y))
-        targets.append(coordinates)
-    # print(targets)
+        else: 
+            t = misc.find_targets_in_view(
+                    central_targets, 
+                    right_targets, 
+                    left_targets, 
+                    width, 
+                    height, 
+                    image
+                    )
+        # print(targets)
+        targets.append(t)
     return targets
 
 
@@ -64,11 +59,17 @@ def remove_empty_targets(coordinates: list, files: list) -> dict:
     return s
 
 
-def edit_coordinates_list_as_dictionary(coordinates: dict) -> list:
-    # fetch only the first and the last targets in case there are several ones
-    coordinates_list = [
-        item[0] for item in coordinates.values() if item
-    ]
+def edit_coordinates(coordinates: dict, wizard=True) -> list:
+    # fetch only the first target in case there are several ones
+    # print(coordinates)
+    if not wizard:
+        coordinates_list = [
+            item[0] for item in coordinates.values() if item
+        ]
+    else:
+        coordinates_list = [
+            (item[0], item[-1]) for item in coordinates.values() if item
+        ]
     # print(coordinates_list)
     return coordinates_list
 
@@ -80,7 +81,7 @@ def get_new_list_of_files(files: dict) -> list:
 
 
 # main logic of the script, i.e. image cropping
-def crop_corners(directory: str, files: list, target_pixels: list) -> None:
+def crop_corners(directory: str, files: list, target_pixels: list, wizard=True, view_width=1271, view_height=761) -> None:
     file_number = 1
     for i in range(len(files)):
         # skip empty coordinates
@@ -88,34 +89,67 @@ def crop_corners(directory: str, files: list, target_pixels: list) -> None:
         # concatenate a path and file, e.g. 'D:/folder/screenshot_1.png')
         image = Image.open(os.path.join(directory, files[i]))
         # main logic of the script, i.e. screens cropping
-        crop = image.crop((
-            target_pixels[i][0] - 12,
-            target_pixels[i][1] - 15,
-            1271,
-            761
-            ))
-        crop.save(f'Cropped_{file_number}.png')
+        if not wizard:
+            crop = image.crop((
+                # target_pixels[i][0][0] - 12,
+                # target_pixels[i][0][1] - 15,
+                target_pixels[i][0] - 12,                
+                target_pixels[i][1] - 15,
+                view_width,
+                view_height
+                ))
+            crop.save(f'Cropped_{file_number}.png')            
+        else:
+            crop = image.crop((
+                target_pixels[i][0][0],
+                target_pixels[i][0][1],
+                target_pixels[i][1][0] + 1,
+                target_pixels[i][1][1] + 1
+                ))
+            crop.save(f'Cropped_{file_number}.png')
         file_number += 1
+    cropped_files = [file for file in os.listdir(directory) if file.startswith('Cropped_')]
+    print(f'{misc.print_time()}', str(len(cropped_files)) + ' file(s) processed.')
 
 
-def main(directory, files):
+def main(directory, files, wizard, view_width=1271, view_height=761):    
     # find target pixels
-    f = find_target_pixels(directory, files)
+    f = find_target_pixels(directory, files, wizard)
+
     # remove empty coordinates
     r = remove_empty_targets(f, files)
+
     # get a new list of files, i.e. remove those where there are no targets
     l = get_new_list_of_files(r)
+
     # edit the list, i.e. get only the first occurence
-    e = edit_coordinates_list_as_dictionary(r)
+    e = edit_coordinates(r, wizard)
+
     # show that the script is finished
-    crop_corners(directory, l, e)
-    print(f'{misc.print_time()}', 'The script is finished.')
+    crop_corners(directory, l, e, wizard, view_width, view_height)
+
     # close the script
+    print(f'{misc.print_time()}', 'The script is finished.')
     misc.close_script()
 
+if __name__ == '__main__':  
+    import sys
 
-if __name__ == '__main__':
     # get the user's input
     directory, files_list = misc.get_input()
-    # start the main script
-    main(directory, files_list)
+
+    # start the main script    
+    if len(sys.argv) > 1:
+        print(sys.argv[:])
+        if  sys.argv[1] == '-w':
+            main(directory, files_list, wizard=True)
+        elif sys.argv[1] == '-v':
+            main(directory, files_list, wizard=False)
+        elif sys.argv[1] == '-x':
+            main(directory, files_list, wizard=False, view_width=int(sys.argv[-1]))
+        elif sys.argv[1] == '-y':
+            main(directory, files_list, wizard=False, view_height=int(sys.argv[-1]))
+        elif sys.argv[1] == '-x' and sys.argv[3] == '-y':            
+            main(directory, files_list, wizard=False, view_width=int(sys.argv[2]), view_height=int(sys.argv[4]))    
+    else:
+        main(directory, files_list, wizard=True)

@@ -35,10 +35,104 @@ def process_input(user_input: str) -> str:
     else: return user_input
 
 
+# find target pixels and their neighbours
+def get_targets(image, x: int, y: int) -> dict:
+    targets = dict(
+        target = image.getpixel((x, y)),
+        right  = image.getpixel((x + 1, y)),
+        down   = image.getpixel((x, y + 1)),
+        left   = image.getpixel((x - 1, y)),
+        up     = image.getpixel((x, y - 1))
+    )
+    return targets
+
+
+def find_targets_in_view(central, right, left, width, height, image):
+    coordinates = []
+    for x in range(width - 1):
+        for y in range(height - 1):
+            t = get_targets(image, x, y)
+            if (
+                (
+                    t.get('target') == central.get('central_target_0') or
+                    t.get('target') == central.get('central_target_1') or
+                    t.get('target') == central.get('central_target_2') or
+                    t.get('target') == central.get('central_target_3')
+                ) and
+                (
+                    t.get('right')   == right.get('right_target_0') or 
+                    t.get('right')   == right.get('right_target_1') or
+                    t.get('right')   == right.get('right_target_2')
+                ) and
+                (
+                    t.get('left')    == left.get('left_target_0') or 
+                    t.get('left')    == left.get('left_target_1') or
+                    t.get('left')    == left.get('left_target_2')
+                )
+            ): coordinates.append((x, y))
+    return coordinates
+
+
+def find_targets_in_wizard(upper: dict, upper_n: dict, lower: dict, lower_n: dict, width, height, image):
+    target_left_coordinates  = []
+    target_right_coordinates = []
+    for x in range(width - 1):
+        for y in range(height - 1):
+            t = get_targets(image, x, y)
+            if (
+                    (
+                    t.get('target') == upper.get('upper_0') or 
+                    t.get('target') == upper.get('upper_1') or 
+                    t.get('target') == upper.get('upper_2') or 
+                    t.get('target') == upper.get('upper_4') or 
+                    t.get('target') == upper.get('upper_5') or 
+                    t.get('target') == upper.get('upper_6') or
+                    t.get('target') == upper.get('upper_7')
+                    ) and 
+                    (
+                    t.get('right')  == upper_n.get('neighbor_0') or 
+                    t.get('right')  == upper_n.get('neighbor_1') or 
+                    t.get('right')  == upper_n.get('neighbor_2')
+                    )
+                    and 
+                    (
+                    t.get('down')   == upper_n.get('neighbor_0') or 
+                    t.get('down')   == upper_n.get('neighbor_1') or 
+                    t.get('down')   == upper_n.get('neighbor_2')
+                    )
+            ): target_left_coordinates.append((x, y))
+            if (
+                    (
+                    t.get('target') == lower.get('lower_0') or
+                    t.get('target') == lower.get('lower_1') or
+                    t.get('target') == lower.get('lower_2') or
+                    t.get('target') == lower.get('lower_4') or
+                    t.get('target') == lower.get('lower_5') or
+                    t.get('target') == lower.get('lower_6') or
+                    t.get('target') == lower.get('lower_7')
+                    ) and 
+                    ( 
+                    t.get('left')   == lower_n.get('neighbor_0') or
+                    t.get('left')   == lower_n.get('neighbor_1') or
+                    t.get('left')   == lower_n.get('neighbor_2') or
+                    t.get('left')   == lower_n.get('neighbor_3')
+                    ) and
+                    ( 
+                    t.get('up')     == lower_n.get('neighbor_0') or
+                    t.get('up')     == lower_n.get('neighbor_1') or
+                    t.get('up')     == lower_n.get('neighbor_2') or
+                    t.get('up')     == lower_n.get('neighbor_3')
+                    )
+            ): target_right_coordinates.append((x, y))
+    coordinates = target_left_coordinates + target_right_coordinates        
+    # print(coordinates)
+    return coordinates
+
+
 def get_input() -> str:
     '''Accepts the user's input.'''
     # create a list of files in the folder
-    files = lambda folder: [file for file in os.listdir(folder) if file.lower().endswith('.png')]
+    files = lambda folder: [file for file in os.listdir(folder) if file.lower().endswith('.png') and not file.startswith('Cropped_')]
     # check if the folder is empty
     def is_empty(files_list: list) -> list:
         if not files_list:
