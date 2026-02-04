@@ -135,6 +135,7 @@ def main(directory, files, wizard, view_width=1271, view_height=761):
 if __name__ == '__main__':
     import sys
     flags = ['-w', '-v', '-x', '-y']
+    # TODO: add the -f flag to process only one file
     # start the main script
     if len(sys.argv) < 3:        
         # print(sys.argv[:])
