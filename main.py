@@ -132,24 +132,40 @@ def main(directory, files, wizard, view_width=1271, view_height=761):
     print(f'{misc.print_time()}', 'The script is finished.')
     misc.close_script()
 
-if __name__ == '__main__':  
+if __name__ == '__main__':
     import sys
-
-    # get the user's input
+    flags = ['-w', '-v', '-x', '-y']
     directory, files_list = misc.get_input()
-
-    # start the main script    
-    if len(sys.argv) > 1:
-        print(sys.argv[:])
-        if  sys.argv[1] == '-w':
+    # start the main script
+    if len(sys.argv) < 3:
+        # get the user's input
+        # print(sys.argv[:])
+        if   sys.argv[1] == '-w':
             main(directory, files_list, wizard=True)
         elif sys.argv[1] == '-v':
             main(directory, files_list, wizard=False)
         elif sys.argv[1] == '-x':
-            main(directory, files_list, wizard=False, view_width=int(sys.argv[-1]))
+            if not sys.argv[-1]: 
+                main(directory, files_list, wizard=False, view_width=int(sys.argv[-1]))
+            else:
+                print("The flag value cannot be empty!")
+                misc.close_script()
         elif sys.argv[1] == '-y':
-            main(directory, files_list, wizard=False, view_height=int(sys.argv[-1]))
-        elif sys.argv[1] == '-x' and sys.argv[3] == '-y':            
-            main(directory, files_list, wizard=False, view_width=int(sys.argv[2]), view_height=int(sys.argv[4]))    
-    else:
+            if not sys.argv[-1]: 
+                main(directory, files_list, wizard=False, view_height=int(sys.argv[-1]))
+            else:
+                print("The flag value cannot be empty!")
+                misc.close_script()
+        elif sys.argv[1] not in flags:
+            print("The given flag is not supported!")
+            misc.close_script()
+    if len(sys.argv) == 5:
+        if sys.argv[1]   == '-x' and sys.argv[3] == '-y':            
+            main(directory, files_list, wizard=False, view_width=int(sys.argv[2]),  view_height=int(sys.argv[-1]))
+        elif sys.argv[1] == '-y' and sys.argv[3] == '-x':            
+            main(directory, files_list, wizard=False, view_width=int(sys.argv[-1]), view_height=int(sys.argv[2]))
+        else:
+            print("The given flag is not supported!")
+            misc.close_script()
+    if len(sys.argv) == 1:
         main(directory, files_list, wizard=True)
