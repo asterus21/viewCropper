@@ -137,7 +137,7 @@ if __name__ == '__main__':
     flags = ['-w', '-v', '-x', '-y']
     # TODO: add the -f flag to process only one file
     # start the main script
-    if len(sys.argv) < 3:        
+    if len(sys.argv) < 3 and len(sys.argv) > 1:
         # print(sys.argv[:])
         if   sys.argv[1] == '-w':
             directory, files_list = misc.get_input()
