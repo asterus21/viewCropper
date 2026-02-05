@@ -136,6 +136,8 @@ if __name__ == '__main__':
     import sys
     flags = ['-w', '-v', '-x', '-y']
     # TODO: add the -f flag to process only one file
+    # TODO: add the errors handling for flags, e.g. negative numbers
+    # TODO: add docstrings
     # start the main script
     if len(sys.argv) == 1:
         directory, files_list = misc.get_input()
@@ -148,6 +150,9 @@ if __name__ == '__main__':
         elif sys.argv[1] == '-v':
             directory, files_list = misc.get_input()
             main(directory, files_list, wizard=False)
+        elif sys.argv[1] not in flags:
+            print("The given flag is not supported!")
+            misc.close_script()
     if len(sys.argv) == 3:
         if sys.argv[1] == '-x':
             if sys.argv[2]: 
