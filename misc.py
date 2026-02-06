@@ -129,10 +129,31 @@ def find_targets_in_wizard(upper: dict, upper_n: dict, lower: dict, lower_n: dic
     return coordinates
 
 
+def process_single_input(p):
+    # user_input = input('Enter a path to the PNG files to crop (e.g. D:/screens) or press Enter to use a current directory (type exit to quit): ')
+    # add an empty line before the script start
+    # print()
+    def check_path(path):
+        p = Path(path)
+        if not p.exists() and not p.is_dir() and p.is_file():
+            print('No valid path is provided or the file does not exist.')
+            input('Press Enter to close to programm.')
+            sys.exit(1)
+        else:
+            # print(p.parent)
+            # print(p.name)
+            return p.parent, p.name
+    directory, file = check_path(p)
+    str_directory = str(directory)
+    # lst_file = list(file)
+    # print(str_directory, type(str_directory), file, type(file))
+    return str_directory, [file]
+
+
 def get_input() -> str:
     '''Accepts the user's input.'''
     # create a list of files in the folder
-    files = lambda folder: [file for file in os.listdir(folder) if file.lower().endswith('.png') and not file.startswith('Cropped_')]
+    files_lambda = lambda folder: [file for file in os.listdir(folder) if file.lower().endswith('.png') and not file.startswith('Cropped_')]
     # check if the folder is empty
     def is_empty(files_list: list) -> list:
         if not files_list:
@@ -163,11 +184,11 @@ def get_input() -> str:
         case '':
             print(print_time(), 'Current directory is being used.')
             directory = os.getcwd()
-            files_list = is_empty(files(directory))
+            files_list = is_empty(files_lambda(directory))
             return directory, files_list
         # match the user input
         case _:
             directory = process_input(user_input)
-            files_list = is_empty(files(directory))
+            files_list = is_empty(files_lambda(directory))
             # e.g. (D:/folder, [screenshot_1.png, screenshot_2.png, ...])
             return directory, files_list
