@@ -47,33 +47,33 @@ def get_targets(image, x: int, y: int) -> dict:
     return targets
 
 
-def find_targets_in_view(central, right, left, width, height, image):
+def find_targets_in_view(image, height, width, central, right, left):
     coordinates = []
     for x in range(width - 1):
         for y in range(height - 1):
             t = get_targets(image, x, y)
             if (
                 (
-                    t.get('target') == central.get('central_target_0') or
-                    t.get('target') == central.get('central_target_1') or
-                    t.get('target') == central.get('central_target_2') or
-                    t.get('target') == central.get('central_target_3')
+                    t.get('target') == central[0] or
+                    t.get('target') == central[1] or
+                    t.get('target') == central[2] or
+                    t.get('target') == central[3]
                 ) and
                 (
-                    t.get('right')   == right.get('right_target_0') or 
-                    t.get('right')   == right.get('right_target_1') or
-                    t.get('right')   == right.get('right_target_2')
+                    t.get('right')   == right[0] or 
+                    t.get('right')   == right[1] or
+                    t.get('right')   == right[2]
                 ) and
                 (
-                    t.get('left')    == left.get('left_target_0') or 
-                    t.get('left')    == left.get('left_target_1') or
-                    t.get('left')    == left.get('left_target_2')
+                    t.get('left')    == left[0] or 
+                    t.get('left')    == left[1] or
+                    t.get('left')    == left[2]
                 )
             ): coordinates.append((x, y))
     return coordinates
 
 
-def find_targets_in_wizard(upper: dict, upper_n: dict, lower: dict, lower_n: dict, width, height, image):
+def find_targets_in_wizard(upper, upper_n, lower: dict, lower_n: dict, width, height, image):
     target_left_coordinates  = []
     target_right_coordinates = []
     for x in range(width - 1):
@@ -81,18 +81,18 @@ def find_targets_in_wizard(upper: dict, upper_n: dict, lower: dict, lower_n: dic
             t = get_targets(image, x, y)
             if (
                     (
-                    t.get('target') == upper.get('upper_0') or 
-                    t.get('target') == upper.get('upper_1') or 
-                    t.get('target') == upper.get('upper_2') or 
-                    t.get('target') == upper.get('upper_4') or 
-                    t.get('target') == upper.get('upper_5') or 
-                    t.get('target') == upper.get('upper_6') or
-                    t.get('target') == upper.get('upper_7')
+                    t.get('target') == upper[0] or 
+                    t.get('target') == upper[1] or 
+                    t.get('target') == upper[2] or 
+                    t.get('target') == upper[4] or 
+                    t.get('target') == upper[5] or 
+                    t.get('target') == upper[6] or
+                    t.get('target') == upper[7]
                     ) and 
                     (
-                    t.get('right')  == upper_n.get('neighbor_0') or 
-                    t.get('right')  == upper_n.get('neighbor_1') or 
-                    t.get('right')  == upper_n.get('neighbor_2')
+                    t.get('right')  == upper_n[0] or 
+                    t.get('right')  == upper_n[1] or 
+                    t.get('right')  == upper_n[2]
                     )
                     and 
                     (

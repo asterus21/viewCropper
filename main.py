@@ -6,10 +6,6 @@ import data
 import misc
 
 
-# import target colors for views
-central_targets       = data.find_central_targets()
-right_targets         = data.find_right_targets()
-left_targets          = data.find_left_targets()
 # import target colors for wizards
 target_upper          = data.get_upper_target()
 target_upper_neighbor = data.get_upper_neighbors()
@@ -27,7 +23,7 @@ def find_target_pixels(directory: str, files: list, wizard=True) -> list:
         width, height = image.size
         if wizard:
             t = misc.find_targets_in_wizard(
-                    target_upper, 
+                    data.upper_targets, 
                     target_upper_neighbor, 
                     target_lower,
                     target_lower_neighbor,
@@ -37,12 +33,12 @@ def find_target_pixels(directory: str, files: list, wizard=True) -> list:
                     )
         else: 
             t = misc.find_targets_in_view(
-                    central_targets, 
-                    right_targets, 
-                    left_targets, 
-                    width, 
-                    height, 
-                    image
+                    image,
+                    height,
+                    width,
+                    data.central_targets,
+                    data.right_targets,
+                    data.left_targets                    
                     )
         targets.append(t)
     return targets
@@ -131,6 +127,9 @@ def main(directory, files, wizard, view_width, view_height):
 if __name__ == '__main__':
     import sys
     flags = ['-w', '-v', '-x', '-y', '-f']
+    # TODO: add -s flag to show the sizes of views
+    # TODO: add -h flag to show the manual
+    # TODO: add full flags, e.g. --wizard
     # print(sys.argv[:])
     print()
 
