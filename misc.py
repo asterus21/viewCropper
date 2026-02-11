@@ -1,4 +1,12 @@
-'''The module contains miscellaneous functions, i.e. the ones to close a script, get current time, etc.'''
+'''
+The module contains miscellaneous functions, i.e. those which
+- print the current time
+- close the script
+- process the user's input
+- get a list of target pixels
+- find target pixels for views
+- find target pixels for wizards
+'''
 
 import datetime
 import os
@@ -15,7 +23,7 @@ def print_time() -> str:
 
 
 def close_script() -> None:
-    '''Closes the programm.'''
+    '''closes the script'''
     # add an empty line before the closing statetement
     print()
     input('Press Enter to close the program.')
@@ -24,19 +32,19 @@ def close_script() -> None:
 
 
 def process_input(user_input: str) -> str:
-    '''Handles the user's input.'''
+    '''validates the user's input'''
     p = Path(user_input)
-    # check of the object exists and if it is a folder
+    # the entered path must exist and be a folder
     if not p.exists() and not p.is_dir():
         print('No valid path is provided.')
         input('Press Enter to close to programm.')
-        sys.exit(1)        
-    
-    else: return user_input
+        sys.exit(1)    
+    else:
+        return user_input
 
 
-# find target pixels and their neighbours
 def get_targets(image, x: int, y: int) -> dict:
+    '''finds target pixels and their neighbours'''
     targets = dict(
         target = image.getpixel((x, y)),
         right  = image.getpixel((x + 1, y)),
@@ -48,6 +56,7 @@ def get_targets(image, x: int, y: int) -> dict:
 
 
 def find_targets_in_view(image, height, width, central, right, left):
+    '''creates of list of target pixels for views'''
     coordinates = []
     for x in range(width - 1):
         for y in range(height - 1):
@@ -73,7 +82,8 @@ def find_targets_in_view(image, height, width, central, right, left):
     return coordinates
 
 
-def find_targets_in_wizard(upper, upper_n, lower: dict, lower_n: dict, width, height, image):
+def find_targets_in_wizard(image, height, width, upper, upper_neighbor, lower, lower_neighbor):
+    '''creates a list of target pixels for wizards'''
     target_left_coordinates  = []
     target_right_coordinates = []
     for x in range(width - 1):
@@ -90,49 +100,46 @@ def find_targets_in_wizard(upper, upper_n, lower: dict, lower_n: dict, width, he
                     t.get('target') == upper[7]
                     ) and 
                     (
-                    t.get('right')  == upper_n[0] or 
-                    t.get('right')  == upper_n[1] or 
-                    t.get('right')  == upper_n[2]
+                    t.get('right')  == upper_neighbor[0] or 
+                    t.get('right')  == upper_neighbor[1] or 
+                    t.get('right')  == upper_neighbor[2]
                     )
                     and 
                     (
-                    t.get('down')   == upper_n.get('neighbor_0') or 
-                    t.get('down')   == upper_n.get('neighbor_1') or 
-                    t.get('down')   == upper_n.get('neighbor_2')
+                    t.get('down')   == upper_neighbor[0] or
+                    t.get('down')   == upper_neighbor[1] or  
+                    t.get('down')   == upper_neighbor[2]
                     )
             ): target_left_coordinates.append((x, y))
             if (
                     (
-                    t.get('target') == lower.get('lower_0') or
-                    t.get('target') == lower.get('lower_1') or
-                    t.get('target') == lower.get('lower_2') or
-                    t.get('target') == lower.get('lower_4') or
-                    t.get('target') == lower.get('lower_5') or
-                    t.get('target') == lower.get('lower_6') or
-                    t.get('target') == lower.get('lower_7')
+                    t.get('target') == lower[0] or 
+                    t.get('target') == lower[1] or 
+                    t.get('target') == lower[2] or 
+                    t.get('target') == lower[4] or 
+                    t.get('target') == lower[5] or 
+                    t.get('target') == lower[6] or
+                    t.get('target') == lower[7]
                     ) and 
                     ( 
-                    t.get('left')   == lower_n.get('neighbor_0') or
-                    t.get('left')   == lower_n.get('neighbor_1') or
-                    t.get('left')   == lower_n.get('neighbor_2') or
-                    t.get('left')   == lower_n.get('neighbor_3')
+                    t.get('left')   == lower_neighbor[0] or
+                    t.get('left')   == lower_neighbor[1] or
+                    t.get('left')   == lower_neighbor[2] or
+                    t.get('left')   == lower_neighbor[3]
                     ) and
                     ( 
-                    t.get('up')     == lower_n.get('neighbor_0') or
-                    t.get('up')     == lower_n.get('neighbor_1') or
-                    t.get('up')     == lower_n.get('neighbor_2') or
-                    t.get('up')     == lower_n.get('neighbor_3')
+                    t.get('up')     == lower_neighbor[0] or
+                    t.get('up')     == lower_neighbor[1] or
+                    t.get('up')     == lower_neighbor[2] or
+                    t.get('up')     == lower_neighbor[3]
                     )
             ): target_right_coordinates.append((x, y))
-    coordinates = target_left_coordinates + target_right_coordinates        
-    # print(coordinates)
+    coordinates = target_left_coordinates + target_right_coordinates
     return coordinates
 
 
 def process_single_input(p):
-    # user_input = input('Enter a path to the PNG files to crop (e.g. D:/screens) or press Enter to use a current directory (type exit to quit): ')
-    # add an empty line before the script start
-    # print()
+    '''process the path to a single file'''
     def check_path(path):
         p = Path(path)
         if not p.exists() and not p.is_dir() and p.is_file():
@@ -140,18 +147,14 @@ def process_single_input(p):
             input('Press Enter to close to programm.')
             sys.exit(1)
         else:
-            # print(p.parent)
-            # print(p.name)
             return p.parent, p.name
     directory, file = check_path(p)
     str_directory = str(directory)
-    # lst_file = list(file)
-    # print(str_directory, type(str_directory), file, type(file))
     return str_directory, [file]
 
 
 def get_input() -> str:
-    '''Accepts the user's input.'''
+    '''accepts the user's input'''
     # create a list of files in the folder
     files_lambda = lambda folder: [file for file in os.listdir(folder) if file.lower().endswith('.png') and not file.startswith('Cropped_')]
     # check if the folder is empty

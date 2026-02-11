@@ -6,12 +6,6 @@ import data
 import misc
 
 
-# import target colors for wizards
-target_upper          = data.get_upper_target()
-target_upper_neighbor = data.get_upper_neighbors()
-target_lower          = data.get_lower_target()
-target_lower_neighbor = data.get_lower_neighbors()
-
 # create a list of coordinates for the target pixels
 def find_target_pixels(directory: str, files: list, wizard=True) -> list:
     targets = []
@@ -23,13 +17,13 @@ def find_target_pixels(directory: str, files: list, wizard=True) -> list:
         width, height = image.size
         if wizard:
             t = misc.find_targets_in_wizard(
+                    image,
+                    height,
+                    width,
                     data.upper_targets, 
-                    target_upper_neighbor, 
-                    target_lower,
-                    target_lower_neighbor,
-                    width, 
-                    height, 
-                    image
+                    data.upper_neighbor_targets, 
+                    data.lower_targets,
+                    data.lower_neighbor_targets
                     )
         else: 
             t = misc.find_targets_in_view(
@@ -126,11 +120,11 @@ def main(directory, files, wizard, view_width, view_height):
 # TODO: add docstrings
 if __name__ == '__main__':
     import sys
-    flags = ['-w', '-v', '-x', '-y', '-f']
+    flags = ['-w', '-v', '-x', '-y', '-f', '-h', '-s']
+    full_flags = ['--wizard', '--view', '--file', '--help', '--size']
     # TODO: add -s flag to show the sizes of views
     # TODO: add -h flag to show the manual
     # TODO: add full flags, e.g. --wizard
-    # print(sys.argv[:])
     print()
 
     # start the main script

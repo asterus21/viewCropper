@@ -1,4 +1,13 @@
-'''Contains data, i.e. color of the target pixels.'''
+'''
+Contains data, i.e. color of the target pixels given
+- as central targets for views
+- one pixel to the right called 'right_targets'
+- one pixel to the left called 'left_targets'
+- the same is for wizards where go
+- one pixel to the right of the target one
+- one pixel below the target one
+- and the same for the target pixel on the bottom left cornen
+'''
 
 # view targets
 central_targets = [
@@ -32,36 +41,26 @@ upper_targets = [
     (161, 161, 161)
 ]
 
-
 upper_neighbor_targets = [
     (239, 239, 239),
     (143, 143, 143),
     (238, 238, 238)
 ]
 
+lower_targets = [
+    (176, 176, 176),
+    (175, 175, 175),
+    (106, 106, 106),
+    (143, 143, 143),
+    (173, 173, 173),
+    (151, 151, 151),
+    (105, 105, 105),
+    (149, 149, 149)
+]
 
-def get_lower_target() -> dict:
-    '''Contains lower targets colors.'''
-    targets = {
-        'lower_0' : (176, 176, 176),
-        'lower_1' : (175, 175, 175),
-        'lower_2' : (106, 106, 106),
-        'lower_3' : (143, 143, 143),
-        'lower_4' : (173, 173, 173),
-        'lower_5' : (151, 151, 151),
-        'lower_6' : (105, 105, 105),
-        'lower_7' : (149, 149, 149)
-    }
-
-    return targets
-
-def get_lower_neighbors() -> dict:
-    '''Contains lower neighbors colors.'''
-    targets = {
-        'neighbor_0' : (238, 238, 238),
-        'neighbor_1' : (143, 143, 143),
-        'neighbor_2' : (237, 237, 237),
-        'neighbor_3' : (236, 236, 236)
-    }
-
-    return targets
+lower_neighbor_targets = [
+    (238, 238, 238),
+    (143, 143, 143),
+    (237, 237, 237),
+    (236, 236, 236)
+]
