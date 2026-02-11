@@ -1,9 +1,15 @@
-'''The script is aimed to crop windows of the PolyAnalyst nodes.'''
+'''The script is aimed to crop screenshots of the PolyAnalyst nodes.'''
 
 import os
 from PIL import Image
 import data
 import misc
+
+
+# TODO: add docstrings
+# TODO: add -s flag to show the sizes of views
+# TODO: add -h flag to show the manual
+# TODO: add full flags, e.g. --wizard
 
 
 # create a list of coordinates for the target pixels
@@ -13,37 +19,43 @@ def find_target_pixels(directory: str, files: list, wizard=True) -> list:
     for file in files:
         print(f'{misc.print_time()}', 'Processing: ' + file)
         # concatenate a path and file, e.g. 'D:/folder/screenshot_1.png')
+        # and convert to the RGB format
         image = Image.open(os.path.join(directory, file)).convert('RGB')
         width, height = image.size
         if wizard:
-            t = misc.find_targets_in_wizard(
-                    image,
-                    height,
-                    width,
-                    data.upper_targets, 
-                    data.upper_neighbor_targets, 
-                    data.lower_targets,
-                    data.lower_neighbor_targets
-                    )
+            coordinates = misc.find_targets_in_wizard(
+                image,
+                height,
+                width,
+                data.upper_targets, 
+                data.upper_neighbor_targets, 
+                data.lower_targets,
+                data.lower_neighbor_targets
+                )
         else: 
-            t = misc.find_targets_in_view(
-                    image,
-                    height,
-                    width,
-                    data.central_targets,
-                    data.right_targets,
-                    data.left_targets                    
-                    )
-        targets.append(t)
-    return targets
-
-
-def remove_empty_targets(coordinates: list, files: list) -> dict:
-    # get a dictionary with file names as keys and their coordinates as values
-    s = {
-        str(files[i]): coordinates[i] for i in range(0, len(files)) if coordinates[i]
+            coordinates = misc.find_targets_in_view(
+                image,
+                height,
+                width,
+                data.central_targets,
+                data.right_targets,
+                data.left_targets                    
+                )
+        targets.append(coordinates)
+    # remove empty coordinates
+    non_empty_coordinates = {
+            files[i]: targets[i] 
+            for i in range(0, len(files))
+            if targets[i]
     }
-    return s
+    return non_empty_coordinates
+
+
+def get_new_list_of_files(files: dict) -> list:
+    # fetch only the keys of the dictionary, i.e. files names
+    # because those file names are then given as arguments
+    # to crop the screenshots as we don't want to crop extra ones
+    return(list(files.keys()))
 
 
 def edit_coordinates(coordinates: dict, wizard=True) -> list:
@@ -52,16 +64,12 @@ def edit_coordinates(coordinates: dict, wizard=True) -> list:
         coordinates_list = [
             item[0] for item in coordinates.values() if item
         ]
+    # fetch only the first and last targets for wizards
     else:
         coordinates_list = [
             (item[0], item[-1]) for item in coordinates.values() if item
         ]
     return coordinates_list
-
-
-def get_new_list_of_files(files: dict) -> list:
-    # fetch only the keys of the dictionary, i.e. files names
-    return(list(files.keys()))
 
 
 # main logic of the script, i.e. image cropping
@@ -97,133 +105,224 @@ def crop_corners(directory: str, files: list, target_pixels: list, wizard=True, 
 
 
 def main(directory, files, wizard, view_width, view_height):
+    ##################################
     # find target pixels
     targets = find_target_pixels(directory, files, wizard)
-
-    # remove empty coordinates
-    r = remove_empty_targets(targets, files)
-
+    ##################################
     # get a new list of files, i.e. remove those where there are no targets
-    l = get_new_list_of_files(r)
-
-    # edit the list, i.e. get only the first occurence
-    e = edit_coordinates(r, wizard)
-
-    # show that the script is finished
-    crop_corners(directory, l, e, wizard, view_width, view_height)
-
+    # i.e. here we filter out those filenames which do not have empty targets
+    non_empty_files = get_new_list_of_files(targets)
+    ##################################
+    # edit the list, i.e. get only the first occurence for views
+    # and the first and last coordinates for wizards
+    edited_coordinates = edit_coordinates(targets, wizard)
+    ##################################
+    # cropping the images
+    crop_corners(
+        directory, 
+        non_empty_files, 
+        edited_coordinates, 
+        wizard, 
+        view_width, 
+        view_height
+        )
+    ##################################
     # close the script
     print(f'{misc.print_time()}', 'The script is finished.')
     misc.close_script()
 
 
-# TODO: add docstrings
 if __name__ == '__main__':
     import sys
     flags = ['-w', '-v', '-x', '-y', '-f', '-h', '-s']
     full_flags = ['--wizard', '--view', '--file', '--help', '--size']
-    # TODO: add -s flag to show the sizes of views
-    # TODO: add -h flag to show the manual
-    # TODO: add full flags, e.g. --wizard
-    print()
-
     # start the main script
     if len(sys.argv) == 1:
         directory, files_list = misc.get_input()
-        main(directory, files_list, wizard=True, view_width=1271, view_height=761)
+        main(
+            directory, 
+            files_list, 
+            wizard=True, 
+            view_width=1271, 
+            view_height=761
+            )
     if len(sys.argv) == 2:
-        if sys.argv[1]   == '-w':
+        if sys.argv[1] == '-w':
             directory, files_list = misc.get_input()
-            main(directory, files_list, wizard=True, view_width=1271, view_height=761)
+            main(
+                directory, 
+                files_list, 
+                wizard=True, 
+                view_width=1271, 
+                view_height=761
+                )
         elif sys.argv[1] == '-v':
             directory, files_list = misc.get_input()
-            main(directory, files_list, wizard=False, view_width=1271, view_height=761)        
+            main(
+                directory, 
+                files_list, 
+                wizard=False, 
+                view_width=1271, 
+                view_height=761
+                )
         elif sys.argv[1] not in flags:
             print("The given flag is not supported!")
             misc.close_script()
-        else:
-            print("The flag value cannot be empty or less than zero!")
-            misc.close_script()
-
+    else:
+        print("The flag value cannot be empty or less than zero!")
+        misc.close_script()
     if len(sys.argv) == 3:
         if sys.argv[1] == '-x' and int(sys.argv[2]) > 0:
             directory, files_list = misc.get_input()
-            main(directory, files_list, wizard=False, view_width=int(sys.argv[2]), view_height=761)
+            main(
+                directory, 
+                files_list, 
+                wizard=False, 
+                view_width=int(sys.argv[2]), 
+                view_height=761
+                )
         elif sys.argv[1] == '-y' and int(sys.argv[2]) > 0:
             directory, files_list = misc.get_input()
-            main(directory, files_list, wizard=False, view_height=int(sys.argv[2]), view_width=1271)
+            main(
+                directory, 
+                files_list, 
+                wizard=False, 
+                view_height=int(sys.argv[2]), 
+                view_width=1271)
         elif sys.argv[1] == '-f':
-            directory, files_list = misc.process_single_input(sys.argv[-1])            
-            main(directory, files_list, wizard=True, view_width=1271, view_height=761)
+            directory, files_list = misc.process_single_input(sys.argv[2])            
+            main(
+                directory, 
+                files_list, 
+                wizard=True, 
+                view_width=1271, 
+                view_height=761
+                )
         elif sys.argv[1] not in flags:
             print("The given flag is not supported!")
             misc.close_script()
         else:
             print("The flag value cannot be empty or less than zero!")
             misc.close_script()
-
     if len(sys.argv) == 5:
-        if (sys.argv[1]   == '-x' and sys.argv[3] == '-y' and int(sys.argv[2]) > 0 and int(sys.argv[4]) > 0):
+        if (sys.argv[1] == '-x' and sys.argv[3] == '-y' and int(sys.argv[2]) > 0 and int(sys.argv[4]) > 0):
             directory, files_list = misc.get_input()           
-            main(directory, files_list, wizard=False, view_width=int(sys.argv[2]),  view_height=int(sys.argv[4]))        
-
-        elif (sys.argv[1] == '-y' and sys.argv[3] == '-x' and int(sys.argv[2]) > 0 and int(sys.argv[-1]) > 0):    
+            main(
+                directory, 
+                files_list, 
+                wizard=False, 
+                view_width=int(sys.argv[2]),  
+                view_height=int(sys.argv[4])
+                )
+        elif (sys.argv[1] == '-y' and sys.argv[3] == '-x' and int(sys.argv[2]) > 0 and int(sys.argv[4]) > 0):    
             directory, files_list = misc.get_input()         
-            main(directory, files_list, wizard=False, view_width=int(sys.argv[-1]), view_height=int(sys.argv[2]))
-
-        elif (sys.argv[1]   == '-x' and sys.argv[3] == '-f' and int(sys.argv[2]) > 0): 
-            directory, files_list = misc.process_single_input(sys.argv[-1])            
-            main(directory, files_list, wizard=False, view_width=int(sys.argv[2]), view_height=761)
-
-        elif (sys.argv[1]   == '-f' and sys.argv[3] == '-x' and int(sys.argv[4]) > 0):
+            main(
+                directory, 
+                files_list, 
+                wizard=False, 
+                view_width=int(sys.argv[4]), 
+                view_height=int(sys.argv[2])
+                )
+        elif (sys.argv[1] == '-x' and sys.argv[3] == '-f' and int(sys.argv[2]) > 0): 
+            directory, files_list = misc.process_single_input(sys.argv[4])            
+            main(
+                directory, 
+                files_list, 
+                wizard=False, 
+                view_width=int(sys.argv[2]), 
+                view_height=761
+                )
+        elif (sys.argv[1] == '-f' and sys.argv[3] == '-x' and int(sys.argv[4]) > 0):
             directory, files_list = misc.process_single_input(sys.argv[2])     
-            main(directory, files_list, wizard=False, view_width=int(sys.argv[4]), view_height=761)
-
-        elif (sys.argv[1]   == '-f' and sys.argv[3] == '-y' and int(sys.argv[4]) > 0):
+            main(
+                directory, 
+                files_list, 
+                wizard=False,
+                view_width=int(sys.argv[4]),
+                view_height=761
+                )
+        elif (sys.argv[1] == '-f' and sys.argv[3] == '-y' and int(sys.argv[4]) > 0):
             directory, files_list = misc.process_single_input(sys.argv[2])
-            main(directory, files_list, wizard=False, view_width=1271, view_height=int(sys.argv[4]))
-
-        elif (sys.argv[1]   == '-y' and sys.argv[3] == '-f' and int(sys.argv[2]) > 0): 
-            directory, files_list = misc.process_single_input(sys.argv[-1])            
-            main(directory, files_list, wizard=False, view_height=int(sys.argv[2]), view_width=1271)
-    
+            main(
+                directory,
+                files_list,
+                wizard=False,
+                view_width=1271,
+                view_height=int(sys.argv[4])
+                )
+        elif (sys.argv[1] == '-y' and sys.argv[3] == '-f' and int(sys.argv[2]) > 0): 
+            directory, files_list = misc.process_single_input(sys.argv[4])            
+            main(
+                directory,
+                files_list,
+                wizard=False,
+                view_height=int(sys.argv[2]), 
+                view_width=1271
+                )
         elif sys.argv[1] or sys.argv[3] not in flags:
             print("The given flag is not supported!")
             misc.close_script()
-
         else:
             print("The flag value cannot be empty or less than zero!")
             misc.close_script()
-    
     if len(sys.argv) == 7:
-        if (sys.argv[1]   == '-x' and sys.argv[3] == '-y' and sys.argv[5] == '-f' and int(sys.argv[2]) > 0 and int(sys.argv[4]) > 0): 
+        if sys.argv[1] == '-x' and sys.argv[3] == '-y' and sys.argv[5] == '-f' and int(sys.argv[2]) > 0 and int(sys.argv[4]) > 0:
             directory, files_list = misc.process_single_input(sys.argv[6])   
-            main(directory, files_list, wizard=False, view_width=int(sys.argv[2]),  view_height=int(sys.argv[4]))
-            
-        elif (sys.argv[1]   == '-x' and sys.argv[3] == '-f' and sys.argv[5] == '-y' and int(sys.argv[2]) > 0 and int(sys.argv[6]) > 0): 
+            main(
+                directory, 
+                files_list,
+                wizard=False, 
+                view_width=int(sys.argv[2]), 
+                view_height=int(sys.argv[4])
+                )
+        elif sys.argv[1] == '-x' and sys.argv[3] == '-f' and sys.argv[5] == '-y' and int(sys.argv[2]) > 0 and int(sys.argv[6]) > 0: 
             directory, files_list = misc.process_single_input(sys.argv[4])
-            main(directory, files_list, wizard=False, view_height=int(sys.argv[6]),  view_width=int(sys.argv[2]))
-
-        elif (sys.argv[1]   == '-y' and sys.argv[3] == '-x' and sys.argv[5] == '-f' and int(sys.argv[2]) > 0 and int(sys.argv[4]) > 0): 
+            main(
+                directory, 
+                files_list, 
+                wizard=False, 
+                view_height=int(sys.argv[6]), 
+                view_width=int(sys.argv[2])
+                )
+        elif sys.argv[1] == '-y' and sys.argv[3] == '-x' and sys.argv[5] == '-f' and int(sys.argv[2]) > 0 and int(sys.argv[4]) > 0: 
             directory, files_list = misc.process_single_input(sys.argv[-1])   
-            main(directory, files_list, wizard=False, view_height=int(sys.argv[2]),  view_width=int(sys.argv[4]))
-    
-        elif (sys.argv[1]   == '-y' and sys.argv[3] == '-f' and sys.argv[5] == '-x' and int(sys.argv[2]) > 0 and int(sys.argv[6]) > 0): 
+            main(
+                directory, 
+                files_list, 
+                wizard=False, 
+                view_height=int(sys.argv[2]), 
+                view_width=int(sys.argv[4])
+                )    
+        elif sys.argv[1] == '-y' and sys.argv[3] == '-f' and sys.argv[5] == '-x' and int(sys.argv[2]) > 0 and int(sys.argv[6]) > 0: 
             directory, files_list = misc.process_single_input(sys.argv[4])
-            main(directory, files_list, wizard=False, view_height=int(sys.argv[2]),  view_width=int(sys.argv[6]))
-
-        elif (sys.argv[1]   == '-f' and sys.argv[3] == '-x' and sys.argv[5] == '-y' and int(sys.argv[4]) > 0 and int(sys.argv[-1]) > 0): 
+            main(
+                directory,
+                files_list,
+                wizard=False, 
+                view_height=int(sys.argv[2]), 
+                view_width=int(sys.argv[6])
+                )
+        elif sys.argv[1] == '-f' and sys.argv[3] == '-x' and sys.argv[5] == '-y' and int(sys.argv[4]) > 0 and int(sys.argv[-1]) > 0: 
             directory, files_list = misc.process_single_input(sys.argv[2])   
-            main(directory, files_list, wizard=False, view_height=int(sys.argv[-1]),  view_width=int(sys.argv[4]))
-
-        elif (sys.argv[1]   == '-f' and sys.argv[3] == '-y' and sys.argv[5] == '-x' and int(sys.argv[4]) > 0 and int(sys.argv[-1]) > 0): 
+            main(
+                directory, 
+                files_list, 
+                wizard=False, 
+                view_height=int(sys.argv[6]), 
+                view_width=int(sys.argv[4])
+                )
+        elif sys.argv[1] == '-f' and sys.argv[3] == '-y' and sys.argv[5] == '-x' and int(sys.argv[4]) > 0 and int(sys.argv[-1]) > 0: 
             directory, files_list = misc.process_single_input(sys.argv[2])   
-            main(directory, files_list, wizard=False, view_height=int(sys.argv[4]),  view_width=int(sys.argv[-1]))
-
+            main(
+                directory, 
+                files_list, 
+                wizard=False, 
+                view_height=int(sys.argv[4]), 
+                view_width=int(sys.argv[6])
+                )
         elif sys.argv[1] or sys.argv[3] or sys.argv[5] not in flags:
             print("The given flag is not supported!")
             misc.close_script()
-
         else:
             print("The flag value cannot be empty or less than zero!")
             misc.close_script()

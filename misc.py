@@ -52,6 +52,7 @@ def get_targets(image, x: int, y: int) -> dict:
         left   = image.getpixel((x - 1, y)),
         up     = image.getpixel((x, y - 1))
     )
+
     return targets
 
 
@@ -79,6 +80,7 @@ def find_targets_in_view(image, height, width, central, right, left):
                     t.get('left')    == left[2]
                 )
             ): coordinates.append((x, y))
+
     return coordinates
 
 
@@ -135,6 +137,7 @@ def find_targets_in_wizard(image, height, width, upper, upper_neighbor, lower, l
                     )
             ): target_right_coordinates.append((x, y))
     coordinates = target_left_coordinates + target_right_coordinates
+
     return coordinates
 
 
@@ -150,6 +153,7 @@ def process_single_input(p):
             return p.parent, p.name
     directory, file = check_path(p)
     str_directory = str(directory)
+
     return str_directory, [file]
 
 
@@ -162,7 +166,8 @@ def get_input() -> str:
         if not files_list:
             print(print_time(), 'The folder is empty. The program is about to close.')
             close_script()
-        else: return files_list
+        else:
+            return files_list
     user_input = input('Enter a path to the PNG files to crop (e.g. D:/screens) or press Enter to use a current directory (type exit to quit): ')
     # add an empty line before the script start
     print()
@@ -188,10 +193,12 @@ def get_input() -> str:
             print(print_time(), 'Current directory is being used.')
             directory = os.getcwd()
             files_list = is_empty(files_lambda(directory))
+
             return directory, files_list
         # match the user input
         case _:
             directory = process_input(user_input)
             files_list = is_empty(files_lambda(directory))
             # e.g. (D:/folder, [screenshot_1.png, screenshot_2.png, ...])
+
             return directory, files_list
