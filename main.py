@@ -3,6 +3,7 @@ from script import main
 
 
 if __name__ == '__main__':
+    # TODO: add --width, --height, --dry (and -d)
     import sys
     flags = ['-w', '-v', '-x', '-y', '-f', '-h', '-s']
     full_flags = ['--wizard', '--view', '--file', '--help', '--size']
@@ -196,3 +197,4 @@ if __name__ == '__main__':
         else:
             print("The flag value cannot be empty or less than zero!")
             misc.close_script()
+
