@@ -1,12 +1,13 @@
-'''
-The module contains miscellaneous functions, i.e. those which
+"""miscellaneous functions
+
+This module contains miscellaneous functions, i.e. those which
 - print the current time
 - close the script
 - process the user's input
 - get a list of target pixels
 - find target pixels for views
 - find target pixels for wizards
-'''
+"""
 
 import datetime
 import os
@@ -15,27 +16,23 @@ from pathlib import Path
 
 
 def print_time() -> str:
-    '''Prints the current time.'''
+    """prints the current time."""
     now = datetime.datetime.now()
     formatted_time = now.strftime("%Y-%m-%d %H:%M:%S")
-
     return formatted_time
 
 
 def close_script() -> None:
-    '''closes the script'''
-    # add an empty line before the closing statetement
-    print()
+    """closes the script"""    
+    print() # add an empty line before the closing statetement
     input('Press Enter to close the program.')
-
     sys.exit(0)
 
 
 def process_input(user_input: str) -> str:
-    '''validates the user's input'''
-    p = Path(user_input)
-    # the entered path must exist and be a folder
-    if not p.exists() and not p.is_dir():
+    """validates the user's input"""
+    p = Path(user_input)    
+    if not p.exists() and not p.is_dir(): # the entered path must exist and be a folder
         print('No valid path is provided.')
         input('Press Enter to close to programm.')
         sys.exit(1)    
@@ -44,7 +41,7 @@ def process_input(user_input: str) -> str:
 
 
 def get_targets(image, x: int, y: int) -> dict:
-    '''finds target pixels and their neighbours'''
+    """finds target pixels and their neighbours"""
     targets = dict(
         target = image.getpixel((x, y)),
         right  = image.getpixel((x + 1, y)),
@@ -52,12 +49,11 @@ def get_targets(image, x: int, y: int) -> dict:
         left   = image.getpixel((x - 1, y)),
         up     = image.getpixel((x, y - 1))
     )
-
     return targets
 
 
 def find_targets_in_view(image, height, width, central, right, left):
-    '''creates of list of target pixels for views'''
+    """creates of list of target pixels for views"""
     coordinates = []
     for x in range(width - 1):
         for y in range(height - 1):
@@ -70,22 +66,21 @@ def find_targets_in_view(image, height, width, central, right, left):
                     t.get('target') == central[3]
                 ) and
                 (
-                    t.get('right')   == right[0] or 
-                    t.get('right')   == right[1] or
-                    t.get('right')   == right[2]
+                    t.get('right')  == right[0] or 
+                    t.get('right')  == right[1] or
+                    t.get('right')  == right[2]
                 ) and
                 (
-                    t.get('left')    == left[0] or 
-                    t.get('left')    == left[1] or
-                    t.get('left')    == left[2]
+                    t.get('left')   == left[0] or 
+                    t.get('left')   == left[1] or
+                    t.get('left')   == left[2]
                 )
             ): coordinates.append((x, y))
-
     return coordinates
 
 
 def find_targets_in_wizard(image, height, width, upper, upper_neighbor, lower, lower_neighbor):
-    '''creates a list of target pixels for wizards'''
+    """creates a list of target pixels for wizards"""
     target_left_coordinates  = []
     target_right_coordinates = []
     for x in range(width - 1):
@@ -142,7 +137,7 @@ def find_targets_in_wizard(image, height, width, upper, upper_neighbor, lower, l
 
 
 def process_single_input(p):
-    '''process the path to a single file'''
+    """process the path to a single file"""
     def check_path(path):
         p = Path(path)
         if not p.exists() and not p.is_dir() and p.is_file():
@@ -158,7 +153,7 @@ def process_single_input(p):
 
 
 def get_input() -> str:
-    '''accepts the user's input'''
+    """accepts the user's input"""
     # create a list of files in the folder
     files_lambda = lambda folder: [file for file in os.listdir(folder) if file.lower().endswith('.png') and not file.startswith('Cropped_')]
     # check if the folder is empty

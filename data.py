@@ -1,5 +1,6 @@
-'''
-Contains data, i.e. color of the target pixels given
+"""data module
+
+This module contains data, i.e. color of the target pixels given
 - as central targets for views
 - one pixel to the right called 'right_targets'
 - one pixel to the left called 'left_targets'
@@ -7,7 +8,7 @@ Contains data, i.e. color of the target pixels given
 - one pixel to the right of the target one
 - one pixel below the target one
 - and the same for the target pixel on the bottom left cornen
-'''
+"""
 
 # view targets
 central_targets = [
