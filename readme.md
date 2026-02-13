@@ -3,4 +3,3 @@ The current script is aimed to automatically crop result windows of the PolyAnal
 ---
 
 Данный скрипт используется для автоматического "нарезания" окон просмотра результатов узлов в PolyAnalyst, что позволит команде Технических писателей сократить время на ручное "нарезание" скриншотов (см. папку examples).
-# viewCropper
