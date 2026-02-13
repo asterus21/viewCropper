@@ -1,4 +1,7 @@
-'''The script is aimed to crop screenshots of the PolyAnalyst nodes.'''
+"""cropping screenshots script
+
+The script is aimed to crop screenshots of the PolyAnalyst nodes.
+"""
 
 import os
 from PIL import Image
@@ -23,23 +26,25 @@ def find_target_pixels(directory: str, files: list, wizard=True) -> list:
         image = Image.open(os.path.join(directory, file)).convert('RGB')
         width, height = image.size
         if wizard:
-            coordinates = misc.find_targets_in_wizard(
+            coordinates = misc.find_targets(
                 image,
                 height,
                 width,
-                data.upper_targets, 
-                data.upper_neighbor_targets, 
-                data.lower_targets,
-                data.lower_neighbor_targets
+                wizard=True,
+                upper=data.upper_targets,
+                upper_neighbor=data.upper_neighbor_targets,
+                lower=data.lower_targets,
+                lower_neighbor=data.lower_neighbor_targets
                 )
         else: 
-            coordinates = misc.find_targets_in_view(
+            coordinates = misc.find_targets(
                 image,
                 height,
                 width,
-                data.central_targets,
-                data.right_targets,
-                data.left_targets                    
+                wizard=False,
+                central=data.central_targets,
+                right=data.right_targets,
+                left=data.left_targets                    
                 )
         targets.append(coordinates)
     # remove empty coordinates
