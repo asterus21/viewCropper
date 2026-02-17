@@ -14,9 +14,9 @@ if __name__ == '__main__':
     import misc
     print(args)
     match (args.wizard, args.view, args.path is not None):
-        case(True,  False, None): main(wizard=True,  view_width=args.width, view_height=args.height,  file_path=None)
-        case(False, True,  None): main(wizard=False, view_width=args.width, view_height=args.height,  file_path=None)
-        case(True,  False, True): main(wizard=True,  view_width=args.width, view_height=args.height,  file_path=args.path)
-        case(False, True,  True): main(wizard=False, view_width=args.width, view_height=args.height,  file_path=args.path)        
-        case(False, False, None): main(wizard=True,  view_width=args.width, view_height=args.height,  file_path=None)
-        case(True,  True,  None): misc.close_script_by_duplicated_flags()
+        case(True,  False, False): main(wizard=True,  view_width=args.width, view_height=args.height,  file_path=None)
+        case(False, True,  False): main(wizard=False, view_width=args.width, view_height=args.height,  file_path=None)
+        case(True,  False, True):  main(wizard=True,  view_width=args.width, view_height=args.height,  file_path=args.path)
+        case(False, True,  True):  main(wizard=False, view_width=args.width, view_height=args.height,  file_path=args.path)        
+        case(False, False, _):     main(wizard=True,  view_width=args.width, view_height=args.height,  file_path=None)
+        case(True,  True,  _):     misc.close_script_by_duplicated_flags()
