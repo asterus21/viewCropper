@@ -20,3 +20,7 @@ if __name__ == '__main__':
         case(False, True,  True):  main(wizard=False, view_width=args.width, view_height=args.height,  file_path=args.path)        
         case(False, False, _):     main(wizard=True,  view_width=args.width, view_height=args.height,  file_path=None)
         case(True,  True,  _):     misc.close_script_by_duplicated_flags()
+
+# TODO: add docstrings and type hints
+# TODO: add -s flag to show the sizes of views
+# TODO: expand the description for the arguments
