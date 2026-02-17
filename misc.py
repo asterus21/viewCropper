@@ -70,7 +70,7 @@ def find_targets(
         for x in range(width - 1):
             for y in range(height - 1):
                 t = get_targets(image, x, y)
-                if (
+                if  (
                     t.get('target') in upper and
                     t.get('right')  in upper_neighbor and
                     t.get('down')   in upper_neighbor
@@ -87,7 +87,7 @@ def find_targets(
         for x in range(width - 1):
             for y in range(height - 1):
                 t = get_targets(image, x, y) 
-                if (
+                if  (
                     t.get('target') in central and 
                     t.get('right')  in right and
                     t.get('left')   in left
