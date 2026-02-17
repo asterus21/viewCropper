@@ -29,6 +29,14 @@ def close_script() -> None:
     sys.exit(0)
 
 
+def close_script_by_duplicated_flags() -> None:
+    """closes the script"""    
+    print() # add an empty line before the closing statetement
+    print('Both -v and -w flags cannot be given together.')
+    input('Press Enter to close the program.')
+    sys.exit(1)
+
+
 def process_input(user_input: str) -> str:
     """validates the user's input"""
     p = Path(user_input)    
@@ -99,7 +107,6 @@ def process_single_input(p):
             return p.parent, p.name
     directory, file = check_path(p)
     str_directory = str(directory)
-
     return str_directory, [file]
 
 

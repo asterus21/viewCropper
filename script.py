@@ -109,7 +109,11 @@ def crop_corners(directory: str, files: list, target_pixels: list, wizard=True, 
     print(f'{misc.print_time()}', str(len(cropped_files)) + ' file(s) processed.')
 
 
-def main(directory, files, wizard, view_width, view_height):
+def main(wizard, view_width, view_height, file_path=None):
+    if file_path:
+        directory, files = misc.process_single_input(file_path)
+    else:
+        directory, files = misc.get_input()
     ##################################
     # find target pixels
     targets = find_target_pixels(directory, files, wizard)
