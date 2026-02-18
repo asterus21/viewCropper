@@ -23,15 +23,17 @@ def print_time() -> str:
 
 
 def close_script() -> None:
-    """closes the script"""    
-    print() # add an empty line before the closing statetement
+    """closes the script"""
+    # add an empty line before the closing statetement
+    print() 
     input('Press Enter to close the program.')
     sys.exit(0)
 
 
 def close_script_by_duplicated_flags() -> None:
-    """closes the script"""    
-    print() # add an empty line before the closing statetement
+    """closes the script"""
+    # add an empty line before the closing statetement
+    print() 
     print('Both -v and -w flags cannot be given together.')
     input('Press Enter to close the program.')
     sys.exit(1)
@@ -39,11 +41,12 @@ def close_script_by_duplicated_flags() -> None:
 
 def process_input(user_input: str) -> str:
     """validates the user's input"""
-    p = Path(user_input)    
-    if not p.exists() and not p.is_dir(): # the entered path must exist and be a folder
+    p = Path(user_input)
+    # the entered path must exist and be a folder
+    if not p.exists() and not p.is_dir():
         print('No valid path is provided.')
         input('Press Enter to close to programm.')
-        sys.exit(1)    
+        sys.exit(1)
     else:
         return user_input
 
@@ -78,7 +81,7 @@ def find_targets(
                 if  (
                     t.get('target') in lower and
                     t.get('left')   in lower_neighbor and
-                    t.get('up')     in lower_neighbor    
+                    t.get('up')     in lower_neighbor
                     ): target_right_coordinates.append((x, y))
             coordinates = target_left_coordinates + target_right_coordinates
         return coordinates
@@ -146,12 +149,10 @@ def get_input() -> str:
             print(print_time(), 'Current directory is being used.')
             directory = os.getcwd()
             files_list = is_empty(files_lambda(directory))
-
             return directory, files_list
         # match the user input
         case _:
             directory = process_input(user_input)
             files_list = is_empty(files_lambda(directory))
             # e.g. (D:/folder, [screenshot_1.png, screenshot_2.png, ...])
-
             return directory, files_list

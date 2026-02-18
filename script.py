@@ -44,7 +44,7 @@ def find_target_pixels(directory: str, files: list, wizard=True) -> list:
                 wizard=False,
                 central=data.central_targets,
                 right=data.right_targets,
-                left=data.left_targets                    
+                left=data.left_targets
                 )
         targets.append(coordinates)
     # remove empty coordinates
@@ -90,12 +90,12 @@ def crop_corners(directory: str, files: list, target_pixels: list, wizard=True, 
             crop = image.crop((
                 # target_pixels[i][0][0] - 12,
                 # target_pixels[i][0][1] - 15,
-                target_pixels[i][0] - 12,                
+                target_pixels[i][0] - 12,
                 target_pixels[i][1] - 15,
                 view_width,
                 view_height
                 ))
-            crop.save(f'Cropped_{file_number}.png')            
+            crop.save(f'Cropped_{file_number}.png')
         else:
             crop = image.crop((
                 target_pixels[i][0][0],

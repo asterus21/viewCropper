@@ -43,7 +43,7 @@ for script in valid_script_commands:
         stderr  = subprocess.PIPE, 
         text    = True
         )
-    stdout, stderr = process.communicate(input='\n')          
-    print(f'"{valid_script_commands[script_number]}" finished at {datetime.datetime.now().strftime("%H:%M:%S")}')            
+    stdout, stderr = process.communicate(input='\n')
+    print(f'"{valid_script_commands[script_number]}" finished at {datetime.datetime.now().strftime("%H:%M:%S")}')
     script_number +=1
 print('the test is finshed')
