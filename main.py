@@ -24,7 +24,8 @@ if __name__ == '__main__':
 # TODO: add docstrings and type hints
 # TODO: add -s (or --size) flag to show the sizes of all screens
 # TODO: add -t (or --type) flag to show the type of all screens, i.e view or wizard
-# TODO: add -a (or --all) flag for the use of -s and -z together
+# TODO: add -a (or --all) flag for the use of -s and -t together
 # TODO: add -d (or --dir) flag for not to ask for the path
 # TODO: make the -d flag default
 # TODO: expand the description for the arguments
+
