@@ -26,4 +26,5 @@ if __name__ == '__main__':
 # TODO: add -t (or --type) flag to show the type of all screens, i.e view or wizard
 # TODO: add -a (or --all) flag for the use of -s and -t together
 # TODO: add -d (or --dir) flag for not to specify the directory path
+# TODO: add -c (or --cropped) flag to process screenshots starting with "Cropped_", e.g. to edit already cropped screenshots
 # TODO: expand the description for the arguments
