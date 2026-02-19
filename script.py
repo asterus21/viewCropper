@@ -9,12 +9,6 @@ import data
 import misc
 
 
-# TODO: add docstrings
-# TODO: add -s flag to show the sizes of views
-# TODO: add -h flag to show the manual
-# TODO: add full flags, e.g. --wizard
-
-
 # create a list of coordinates for the target pixels
 def find_target_pixels(directory: str, files: list, wizard=True) -> list:
     targets = []
