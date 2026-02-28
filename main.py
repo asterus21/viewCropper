@@ -22,10 +22,12 @@ if __name__ == '__main__':
         case(True,  True,  _):     misc.close_script_by_duplicated_flags()
 
 # TODO: add docstrings and type hints
-# TODO: add -s (or --size) flag to show the sizes of all screens
+# TODO: add -s (or --size) flag to show the sizes of all screens STARTING from the target pixel
 # TODO: add -t (or --type) flag to show the type of all screens, i.e view or wizard
 # TODO: add -a (or --all) flag for the use of -s and -t together
 # TODO: add -d (or --dir) flag for not to specify the directory path
+# TODO: add -b (or --both) flag to process both views and wizards at the same time
 # TODO: add -c (or --cropped) flag to process ONLY those screenshots which start with "Cropped_", e.g. to edit already cropped screenshots
 # TODO: expand the description for the arguments
+
 
