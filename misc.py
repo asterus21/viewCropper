@@ -1,5 +1,4 @@
-"""miscellaneous functions
-
+"""
 This module contains miscellaneous functions, i.e. those which
 - print the current time
 - close the script
