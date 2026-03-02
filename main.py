@@ -29,6 +29,3 @@ if __name__ == '__main__':
 # TODO: add -b (or --both) flag to process both views and wizards at the same time
 # TODO: add -c (or --cropped) flag to process ONLY those screenshots which start with "Cropped_", e.g. to edit already cropped screenshots
 # TODO: expand the description for the arguments
-
-
-
