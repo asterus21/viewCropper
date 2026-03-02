@@ -1,5 +1,4 @@
-"""cropping screenshots script
-
+"""
 The script is aimed to crop screenshots of the PolyAnalyst nodes.
 """
 
