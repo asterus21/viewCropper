@@ -1,5 +1,4 @@
-"""data module
-
+"""
 This module contains data, i.e. color of the target pixels given
 - as central targets for views
 - one pixel to the right called 'right_targets'
