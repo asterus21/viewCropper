@@ -23,8 +23,7 @@ if __name__ == '__main__':
         case(True,  True,  _, False):     misc.close_script_by_duplicated_flags()
         case(_, _, _, True):              
             directory, files = misc.get_input()
-            targets = script.print_target_pixels(directory, files)
-            script.get_type_of_image(targets)
+            script.print_target_pixels(directory, files)
 
 
 # TODO: add docstrings and type hints

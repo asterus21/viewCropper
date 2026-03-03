@@ -60,20 +60,12 @@ def print_target_pixels(directory: str, files: list, wizard=True) -> list:
         # print(f'{misc.print_time()}', 'Processing: ' + file)
         process_targets(directory, file, targets, wizard)
     coordinates = {
-        files[i]: targets[i] for i in range(0, len(files))
+        files[i]: "wizard" if i else "view" for i in range(0, len(files))
         # if targets[i]
-    }   
-    return coordinates
-
-
-def get_type_of_image(coordinates: dict) -> dict:
-    types = {
-        key: "wizard" if value else "view" for key, value 
-        in coordinates.items()
     }
-    for key, value in types.items(): print(key + ': ' + str(value))
+    for key, value in coordinates.items(): print(key + ': ' + str(value))
     print()
-    return types
+    return coordinates
 
 
 def get_new_list_of_files(files: dict) -> list:
