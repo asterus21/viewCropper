@@ -9,44 +9,71 @@ import misc
 
 
 # create a list of coordinates for the target pixels
+def process_targets(directory: str, file: list, targets: list, wizard=True):
+    # concatenate a path and file, e.g. 'D:/folder/screenshot_1.png')
+    # and convert to the RGB format
+    image = Image.open(os.path.join(directory, file)).convert('RGB')
+    width, height = image.size
+    if wizard:
+        coordinates = misc.find_targets(
+            image,
+            height,
+            width,
+            wizard=True,
+            upper=data.upper_targets,
+            upper_neighbor=data.upper_neighbor_targets,
+            lower=data.lower_targets,
+            lower_neighbor=data.lower_neighbor_targets
+            )
+    else: 
+        coordinates = misc.find_targets(
+            image,
+            height,
+            width,
+            wizard=False,
+            central=data.central_targets,
+            right=data.right_targets,
+            left=data.left_targets
+            )
+    targets.append(coordinates)
+    return targets
+
+
 def find_target_pixels(directory: str, files: list, wizard=True) -> list:
     targets = []
     print(f'{misc.print_time()}', 'Getting a list of files...')
     for file in files:
         print(f'{misc.print_time()}', 'Processing: ' + file)
-        # concatenate a path and file, e.g. 'D:/folder/screenshot_1.png')
-        # and convert to the RGB format
-        image = Image.open(os.path.join(directory, file)).convert('RGB')
-        width, height = image.size
-        if wizard:
-            coordinates = misc.find_targets(
-                image,
-                height,
-                width,
-                wizard=True,
-                upper=data.upper_targets,
-                upper_neighbor=data.upper_neighbor_targets,
-                lower=data.lower_targets,
-                lower_neighbor=data.lower_neighbor_targets
-                )
-        else: 
-            coordinates = misc.find_targets(
-                image,
-                height,
-                width,
-                wizard=False,
-                central=data.central_targets,
-                right=data.right_targets,
-                left=data.left_targets
-                )
-        targets.append(coordinates)
+        process_targets(directory, file, targets, wizard)
     # remove empty coordinates
-    non_empty_coordinates = {
-            files[i]: targets[i] 
-            for i in range(0, len(files))
-            if targets[i]
+    coordinates = {
+        files[i]: targets[i] for i in range(0, len(files))
+        if targets[i]
     }
-    return non_empty_coordinates
+    return coordinates
+
+
+def print_target_pixels(directory: str, files: list, wizard=True) -> list:
+    targets = []
+    # print(f'{misc.print_time()}', 'Getting a list of files...')
+    for file in files:
+        # print(f'{misc.print_time()}', 'Processing: ' + file)
+        process_targets(directory, file, targets, wizard)
+    coordinates = {
+        files[i]: targets[i] for i in range(0, len(files))
+        # if targets[i]
+    }   
+    return coordinates
+
+
+def get_type_of_image(coordinates: dict) -> dict:
+    types = {
+        key: "wizard" if value else "view" for key, value 
+        in coordinates.items()
+    }
+    for key, value in types.items(): print(key + ': ' + str(value))
+    print()
+    return types
 
 
 def get_new_list_of_files(files: dict) -> list:

@@ -145,7 +145,7 @@ def get_input() -> str:
             print(print_time(), 'The program is about to close.')
             sys.exit(0)
         case '':
-            print(print_time(), 'Current directory is being used.')
+            print(print_time(), 'Current directory is being used.\n')
             directory = os.getcwd()
             files_list = is_empty(files_lambda(directory))
             return directory, files_list
