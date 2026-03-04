@@ -29,7 +29,7 @@ def close_script() -> None:
     sys.exit(0)
 
 
-def close_script_by_duplicated_flags() -> None:
+def close_script_by_conflicting_flags() -> None:
     """closes the script"""
     # add an empty line before the closing statetement
     print() 
@@ -120,10 +120,17 @@ def get_files(folder: str, cropped=True) -> list:
     return files
 
 
+def one_liner_script():
+    import script
+    directory, files = get_input()
+    script.print_target_pixels(directory, files)
+
+
 def get_input() -> str:
     """accepts the user's input"""
     # create a list of files in the folder
-    files_lambda = lambda folder: [file for file in os.listdir(folder) if file.lower().endswith('.png') and not file.startswith('Cropped_')]
+    # files_lambda = lambda folder: [file for file in os.listdir(folder) if file.lower().endswith('.png') and not file.startswith('Cropped_')]
+    # files = misc.get_files(cropped=True)
     # check if the folder is empty
     def is_empty(files_list: list) -> list:
         if not files_list:
@@ -155,11 +162,13 @@ def get_input() -> str:
         case '':
             print(print_time(), 'Current directory is being used.\n')
             directory = os.getcwd()
-            files_list = is_empty(files_lambda(directory))
+            # files_list = is_empty(files_lambda(directory))
+            files_list = get_files(directory, cropped=True)
             return directory, files_list
         # match the user input
         case _:
             directory = process_input(user_input)
-            files_list = is_empty(files_lambda(directory))
+            # files_list = is_empty(files_lambda(directory))
+            files_list = get_files(directory, cropped=True)
             # e.g. (D:/folder, [screenshot_1.png, screenshot_2.png, ...])
             return directory, files_list

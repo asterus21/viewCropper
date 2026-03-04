@@ -52,7 +52,7 @@ def find_target_pixels(directory: str, files: list, wizard=True) -> list:
     }
     return coordinates
 
-
+# WORKS INCORRECTLY
 def print_target_pixels(directory: str, files: list, wizard=True) -> list:
     targets = []
     wizards, views = [], []
@@ -130,23 +130,16 @@ def crop_corners(directory: str, files: list, target_pixels: list, wizard=True, 
 
 
 def main(wizard, view_width, view_height, file_path=None):
-    if file_path:
-        directory, files = misc.process_single_input(file_path)
-    else:
-        directory, files = misc.get_input()
-    ##################################
-    # find target pixels
+    # if file_path: 
+    #     directory, files = misc.process_single_input(file_path)
+    # else: 
+    #     directory, files = misc.get_input()
+    
+    directory, files = misc.process_single_input(file_path) if file_path else misc.get_input()
+
     targets = find_target_pixels(directory, files, wizard)
-    ##################################
-    # get a new list of files, i.e. remove those where there are no targets
-    # i.e. here we filter out those filenames which do not have empty targets
     non_empty_files = get_new_list_of_files(targets)
-    ##################################
-    # edit the list, i.e. get only the first occurence for views
-    # and the first and last coordinates for wizards
     edited_coordinates = edit_coordinates(targets, wizard)
-    ##################################
-    # cropping the images
     crop_corners(
         directory, 
         non_empty_files, 
@@ -155,7 +148,5 @@ def main(wizard, view_width, view_height, file_path=None):
         view_width, 
         view_height
         )
-    ##################################
-    # close the script
     print(f'{misc.print_time()}', 'The script is finished.')
     misc.close_script()
