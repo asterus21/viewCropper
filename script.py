@@ -55,6 +55,7 @@ def find_target_pixels(directory: str, files: list, wizard=True) -> list:
 
 def print_target_pixels(directory: str, files: list, wizard=True) -> list:
     targets = []
+    wizards, views = [], []
     # print(f'{misc.print_time()}', 'Getting a list of files...')
     for file in files:
         # print(f'{misc.print_time()}', 'Processing: ' + file)
@@ -64,7 +65,14 @@ def print_target_pixels(directory: str, files: list, wizard=True) -> list:
         # if targets[i]
     }
     for key, value in coordinates.items(): print(key + ': ' + str(value))
-    print()
+    print()    
+    for value in coordinates.values():
+        if value == 'wizard':
+            wizards.append(value)
+        else:
+            views.append(value)
+    print('number of wizards: ' + str(len(wizards)))
+    print('number of views: ' + str(len(views)) + '\n')
     return coordinates
 
 
