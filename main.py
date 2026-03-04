@@ -3,14 +3,14 @@ import misc
 
 
 
-def start_script(wizard=True):
+def start_script_in_current_folder(wizard=True):
     import os
-    wizard = True
+    print(f'{misc.print_time()}', 'Current folder is being used...')
     directory = os.getcwd()            
     files = [file for file in os.listdir(directory) if file.lower().endswith('.png') and not file.startswith('Cropped_')]
     targets = script.find_target_pixels(directory, files, wizard)
     non_empty_files = script.get_new_list_of_files(targets)
-    edited_coordinates = script.edit_coordinates(targets, wizard)
+    edited_coordinates = script.edit_coordinates(targets, wizard)    
     script.crop_corners(
         directory, 
         non_empty_files, 
@@ -47,9 +47,9 @@ if __name__ == '__main__':
         case(False, False, _, True, False):
             directory, files = misc.get_input()   
             script.print_target_pixels(directory, files)
-        case(False, False, _, False, True):      start_script(wizard=True)
-        case(True, False, _, False, True):       start_script(wizard=True)
-        case(False, True, _, False, True):       start_script(wizard=False)
+        case(False, False, _, False, True):      start_script_in_current_folder(wizard=True)
+        case(True, False, _, False, True):       start_script_in_current_folder(wizard=True)
+        case(False, True, _, False, True):       start_script_in_current_folder(wizard=False)
 
 # TODO: add docstrings and type hints
 # TODO: add -b (or --both) flag to process both views and wizards at the same time

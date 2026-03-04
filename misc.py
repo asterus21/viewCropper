@@ -112,6 +112,14 @@ def process_single_input(p):
     return str_directory, [file]
 
 
+def get_files(folder: str, cropped=True) -> list:
+    if cropped:
+        files = [file for file in os.listdir(folder) if file.lower().endswith('.png') and not file.startswith('Cropped_')]
+    else:
+        files = [file for file in os.listdir(folder) if file.lower().endswith('.png')]    
+    return files
+
+
 def get_input() -> str:
     """accepts the user's input"""
     # create a list of files in the folder
