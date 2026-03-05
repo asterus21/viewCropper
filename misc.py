@@ -33,7 +33,7 @@ def close_script_by_conflicting_flags() -> None:
     """closes the script"""
     # add an empty line before the closing statetement
     print() 
-    print('Both -v and -w flags cannot be given together.')
+    print('Given flags cannot be used together.')
     input('Press Enter to close the program.')
     sys.exit(1)
 
@@ -128,10 +128,6 @@ def one_liner_script():
 
 def get_input() -> str:
     """accepts the user's input"""
-    # create a list of files in the folder
-    # files_lambda = lambda folder: [file for file in os.listdir(folder) if file.lower().endswith('.png') and not file.startswith('Cropped_')]
-    # files = misc.get_files(cropped=True)
-    # check if the folder is empty
     def is_empty(files_list: list) -> list:
         if not files_list:
             print(print_time(), 'The folder is empty. The program is about to close.')
@@ -162,13 +158,11 @@ def get_input() -> str:
         case '':
             print(print_time(), 'Current directory is being used.\n')
             directory = os.getcwd()
-            # files_list = is_empty(files_lambda(directory))
             files_list = get_files(directory, cropped=True)
             return directory, files_list
         # match the user input
         case _:
             directory = process_input(user_input)
-            # files_list = is_empty(files_lambda(directory))
             files_list = get_files(directory, cropped=True)
             # e.g. (D:/folder, [screenshot_1.png, screenshot_2.png, ...])
             return directory, files_list

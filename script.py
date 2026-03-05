@@ -52,29 +52,19 @@ def find_target_pixels(directory: str, files: list, wizard=True) -> list:
     }
     return coordinates
 
-# WORKS INCORRECTLY
+
 def print_target_pixels(directory: str, files: list, wizard=True) -> list:
     targets = []
-    wizards, views = [], []
-    for file in files:
-        process_targets(directory, file, targets, wizard)
-    # print(process_targets(directory, file, targets, wizard))
+    for file in files: process_targets(directory, file, targets, wizard)
     coordinates = {
         files[i]: targets[i] for i in range(0, len(files))
     }
     types = {
         key: "wizard" if value else "view" for key, value in coordinates.items()
     }
-    print(types)
-    # for key, value in coordinates.items(): print(key + ': ' + str(value))
-    # print()    
-    # for value in coordinates.values():
-    #     if value == 'wizard':
-    #         wizards.append(value)
-    #     else:
-    #         views.append(value)
-    # print('number of wizards: ' + str(len(wizards)))
-    # print('number of views: ' + str(len(views)) + '\n')
+    print()
+    for key, value in types.items(): print(str(key) + ': ' + str(value))
+    print()
     return types
 
 
@@ -127,17 +117,17 @@ def crop_corners(directory: str, files: list, target_pixels: list, wizard=True, 
                 ))
             crop.save(f'Cropped_{file_number}.png')
         file_number += 1
-    cropped_files = [file for file in os.listdir(directory) if file.startswith('Cropped_')]
-    print(f'{misc.print_time()}', str(len(cropped_files)) + ' file(s) processed.')
+    # cropped_files = [file for file in os.listdir(directory) if file.startswith('Cropped_')]
+    # print(f'{misc.print_time()}', str(len(cropped_files)) + ' file(s) processed.')
 
 
 def main(wizard, view_width, view_height, file_path=None):
-    # if file_path: 
-    #     directory, files = misc.process_single_input(file_path)
-    # else: 
-    #     directory, files = misc.get_input()
+    if file_path is not None:
+        directory, files = misc.process_single_input(file_path)
+    else: 
+        directory, files = misc.get_input()
     
-    directory, files = misc.process_single_input(file_path) if file_path else misc.get_input()
+    # directory, files = misc.process_single_input(file_path) if file_path else misc.get_input()
 
     targets = find_target_pixels(directory, files, wizard)
     non_empty_files = get_new_list_of_files(targets)
