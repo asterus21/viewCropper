@@ -35,7 +35,7 @@ def process_targets(directory: str, file: list, targets: list, wizard=True):
             right=data.right_targets,
             left=data.left_targets
             )
-    targets.append(coordinates)
+    targets.append(coordinates)    
     return targets
 
 
@@ -56,24 +56,26 @@ def find_target_pixels(directory: str, files: list, wizard=True) -> list:
 def print_target_pixels(directory: str, files: list, wizard=True) -> list:
     targets = []
     wizards, views = [], []
-    # print(f'{misc.print_time()}', 'Getting a list of files...')
     for file in files:
-        # print(f'{misc.print_time()}', 'Processing: ' + file)
         process_targets(directory, file, targets, wizard)
+    # print(process_targets(directory, file, targets, wizard))
     coordinates = {
-        files[i]: "wizard" if i else "view" for i in range(0, len(files))
-        # if targets[i]
+        files[i]: targets[i] for i in range(0, len(files))
     }
-    for key, value in coordinates.items(): print(key + ': ' + str(value))
-    print()    
-    for value in coordinates.values():
-        if value == 'wizard':
-            wizards.append(value)
-        else:
-            views.append(value)
-    print('number of wizards: ' + str(len(wizards)))
-    print('number of views: ' + str(len(views)) + '\n')
-    return coordinates
+    types = {
+        key: "wizard" if value else "view" for key, value in coordinates.items()
+    }
+    print(types)
+    # for key, value in coordinates.items(): print(key + ': ' + str(value))
+    # print()    
+    # for value in coordinates.values():
+    #     if value == 'wizard':
+    #         wizards.append(value)
+    #     else:
+    #         views.append(value)
+    # print('number of wizards: ' + str(len(wizards)))
+    # print('number of views: ' + str(len(views)) + '\n')
+    return types
 
 
 def get_new_list_of_files(files: dict) -> list:

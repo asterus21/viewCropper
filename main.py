@@ -52,7 +52,7 @@ if __name__ == '__main__':
         # script -t
         case(False, False, _, True, False):      misc.one_liner_script()
         # script -t -d
-        case(False, False, _, True, True):       script.print_target_pixels(os.getcwd(), misc.get_files(cropped=True))
+        case(False, False, _, True, True):       script.print_target_pixels(os.getcwd(), misc.get_files(os.getcwd(), cropped=True))
         # script -d
         case(False, False, _, False, True):      start_script_in_current_folder(wizard=True)
         # script -w -d
