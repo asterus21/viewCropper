@@ -63,8 +63,9 @@ if __name__ == '__main__':
         # script -f -d
         case(False, False, True, False, True):    misc.close_script_by_conflicting_flags()
 
-
+# TODO: add exception for the -t flag if no wizard or view screenshot is found
 # TODO: add -c (or --cropped) flag to process ONLY those screenshots which start with "Cropped_", e.g. to edit already cropped screenshots
 # TODO: add -b (or --both) flag to process both views and wizards at the same time
 # TODO: add docstrings and type hints
 # TODO: expand the description for the arguments
+
