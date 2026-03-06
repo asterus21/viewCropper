@@ -116,7 +116,7 @@ def get_files(folder: str, cropped=True) -> list:
     if cropped:
         files = [file for file in os.listdir(folder) if file.lower().endswith('.png') and not file.startswith('Cropped_')]
     else:
-        files = [file for file in os.listdir(folder) if file.lower().endswith('.png')]    
+        files = [file for file in os.listdir(folder) if file.startswith('Cropped_')] 
     return files
 
 
