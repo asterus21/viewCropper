@@ -1,4 +1,5 @@
-"""
+"""data module
+
 This module contains data, i.e. color of the target pixels given
 - as central targets for views
 - one pixel to the right called 'right_targets'
@@ -11,24 +12,22 @@ This module contains data, i.e. color of the target pixels given
 
 # view targets
 central_targets = [
-    (229, 165, 90),
-    (229, 168, 97),
-    (137, 99, 54),
-    (82, 61, 35),
-    (242, 210, 173)
+        (229, 165, 90),
+        (229, 168, 97),
+        (137, 99, 54),
+        (82, 61, 35)
     ]
 
 right_targets = [
-    (51, 51, 51),
-    (31, 31, 31),
-    (19, 19, 19),
-    (153, 153, 153)
+        (51, 51, 51),
+        (31, 31, 31),
+        (19, 19, 19)
 ]
 
 left_targets = [
-    (255, 255, 255),
-    (153, 153, 153),
-    (92, 92, 92)
+        (255, 255, 255),
+        (153, 153, 153),
+        (92, 92, 92)
     ]
 
 # wizard targets
@@ -36,6 +35,7 @@ upper_targets = [
     (187, 187, 187),
     (186, 186, 186),
     (112, 112, 112),
+    (153, 153, 153),
     (182, 182, 182),
     (162, 162, 162),
     (111, 111, 111),
@@ -52,6 +52,7 @@ lower_targets = [
     (176, 176, 176),
     (175, 175, 175),
     (106, 106, 106),
+    (143, 143, 143),
     (173, 173, 173),
     (151, 151, 151),
     (105, 105, 105),
