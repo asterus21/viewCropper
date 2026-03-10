@@ -48,7 +48,7 @@ def script_close(flags=False) -> None:
         input('Given flags cannot be used together.\nPress Enter to close the program.')
         sys.exit(1)
     else:
-    input('Press Enter to close the program.')
+        input('Press Enter to close the program.')
     sys.exit(0)
 #############
 
@@ -81,7 +81,7 @@ def process_single_input(user_input: str):
     
 
 def process_inputs(user_input: str, single_file=False):
-    if singe_file:
+    if single_file:
         def check_path(path):
             user_input = Path(path)
             if not user_input.exists() and not user_input.is_dir() and user_input.is_file():
@@ -176,12 +176,12 @@ def one_liner_script():
 
 def get_input(cropped=False) -> str:
     """accepts the user's input"""
-    # def is_empty(files_list: list) -> list:
-    #     if not files_list:
-    #         print(print_time(), 'The folder is empty. The program is about to close.')
-    #         close_script()
-    #     else:
-    #         return files_list
+    def is_empty(files_list: list) -> list:
+        if not files_list:
+            print(print_time(), 'The folder is empty. The program is about to close.')
+            close_script()
+        else:
+            return files_list
     user_input = input('Enter a path to the PNG files to crop (e.g. D:/screens) or press Enter to use a current directory (type exit to quit): ')
     # add an empty line before the script start
     print()
