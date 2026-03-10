@@ -76,12 +76,18 @@ def find_targets(
                     t.get('target') in upper and
                     t.get('right')  in upper_neighbor and
                     t.get('down')   in upper_neighbor
-                    ): target_left_coordinates.append((x, y))
+                    ):
+                    target_left_coordinates.append((x, y))
+                # else:
+                #     target_left_coordinates.append('none')
                 if  (
                     t.get('target') in lower and
                     t.get('left')   in lower_neighbor and
                     t.get('up')     in lower_neighbor
-                    ): target_right_coordinates.append((x, y))
+                    ):
+                    target_right_coordinates.append((x, y))
+                # else:
+                #     target_right_coordinates.append('none')
             coordinates = target_left_coordinates + target_right_coordinates
         return coordinates
     else:
@@ -93,7 +99,10 @@ def find_targets(
                     t.get('target') in central and 
                     t.get('right')  in right and
                     t.get('left')   in left
-                    ): coordinates.append((x, y))
+                    ):
+                    coordinates.append((x, y))
+                # else:
+                #     coordinates.append('none')
         return coordinates
 
 
@@ -126,7 +135,7 @@ def one_liner_script():
     script.print_target_pixels(directory, files)
 
 
-def get_input() -> str:
+def get_input(cropped=False) -> str:
     """accepts the user's input"""
     # def is_empty(files_list: list) -> list:
     #     if not files_list:
@@ -158,11 +167,11 @@ def get_input() -> str:
         case '':
             print(print_time(), 'Current directory is being used.\n')
             directory = os.getcwd()
-            files_list = get_files(directory, cropped=False)
+            files_list = get_files(directory, cropped)
             return directory, files_list
         # match the user input
         case _:
             directory = process_input(user_input)
-            files_list = get_files(directory, cropped=False)
+            files_list = get_files(directory, cropped)
             # e.g. (D:/folder, [screenshot_1.png, screenshot_2.png, ...])
             return directory, files_list
