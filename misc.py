@@ -13,14 +13,17 @@ import os
 import sys
 from pathlib import Path
 
-
+# time
+#############
 def print_time() -> str:
     """prints the current time."""
     now = datetime.datetime.now()
     formatted_time = now.strftime("%Y-%m-%d %H:%M:%S")
     return formatted_time
+#############
 
-
+# close
+#############
 def close_script() -> None:
     """closes the script"""
     # add an empty line before the closing statetement
@@ -32,12 +35,24 @@ def close_script() -> None:
 def close_script_by_conflicting_flags() -> None:
     """closes the script"""
     # add an empty line before the closing statetement
-    print() 
+    print()
     print('Given flags cannot be used together.')
     input('Press Enter to close the program.')
     sys.exit(1)
 
+def script_close(flags=False) -> None:
+    """closes the script"""
+    # add an empty line before the closing statetement
+    print()
+    if flags:
+        input('Given flags cannot be used together.\nPress Enter to close the program.')
+        sys.exit(1)
+    else:
+    input('Press Enter to close the program.')
+    sys.exit(0)
+#############
 
+#############
 def process_input(user_input: str) -> str:
     """validates the user's input"""
     p = Path(user_input)
@@ -49,6 +64,45 @@ def process_input(user_input: str) -> str:
     else:
         return user_input
 
+
+def process_single_input(user_input: str):
+    """process the path to a single file"""
+    def check_path(path):
+        user_input = Path(path)
+        if not user_input.exists() and not user_input.is_dir() and user_input.is_file():
+            print('No valid path is provided or the file does not exist.')
+            input('Press Enter to close to programm.')
+            sys.exit(1)
+        else:
+            return p.parent, p.name
+    directory, file = check_path(p)
+    str_directory = str(directory)
+    return str_directory, [file]
+    
+
+def process_inputs(user_input: str, single_file=False):
+    if singe_file:
+        def check_path(path):
+            user_input = Path(path)
+            if not user_input.exists() and not user_input.is_dir() and user_input.is_file():
+                print('No valid path is provided or the file does not exist.')
+                input('Press Enter to close to programm.')
+                sys.exit(1)
+            else:
+                return p.parent, p.name
+        directory, file = check_path(user_input)
+        str_directory = str(directory)
+        return str_directory, [file]
+    else:
+        p = Path(user_input)
+        # the entered path must exist and be a folder
+        if not p.exists() and not p.is_dir():
+            print('No valid path is provided.')
+            input('Press Enter to close to programm.')
+            sys.exit(1)
+        else:
+            return user_input
+#############
 
 def get_targets(image, x: int, y: int) -> dict:
     """finds target pixels and their neighbours"""
@@ -104,21 +158,6 @@ def find_targets(
                 # else:
                 #     coordinates.append('none')
         return coordinates
-
-
-def process_single_input(p):
-    """process the path to a single file"""
-    def check_path(path):
-        p = Path(path)
-        if not p.exists() and not p.is_dir() and p.is_file():
-            print('No valid path is provided or the file does not exist.')
-            input('Press Enter to close to programm.')
-            sys.exit(1)
-        else:
-            return p.parent, p.name
-    directory, file = check_path(p)
-    str_directory = str(directory)
-    return str_directory, [file]
 
 
 def get_files(folder: str, cropped=False) -> list:
