@@ -112,11 +112,11 @@ def process_single_input(p):
     return str_directory, [file]
 
 
-def get_files(folder: str, cropped=True) -> list:
-    if cropped:
+def get_files(folder: str, cropped=False) -> list:
+    if not cropped:
         files = [file for file in os.listdir(folder) if file.lower().endswith('.png') and not file.startswith('Cropped_')]
     else:
-        files = [file for file in os.listdir(folder) if file.lower().endswith('.png')]    
+        files = [file for file in os.listdir(folder) if file.lower().endswith('.png') and file.startswith('Cropped_')]    
     return files
 
 
@@ -128,12 +128,12 @@ def one_liner_script():
 
 def get_input() -> str:
     """accepts the user's input"""
-    def is_empty(files_list: list) -> list:
-        if not files_list:
-            print(print_time(), 'The folder is empty. The program is about to close.')
-            close_script()
-        else:
-            return files_list
+    # def is_empty(files_list: list) -> list:
+    #     if not files_list:
+    #         print(print_time(), 'The folder is empty. The program is about to close.')
+    #         close_script()
+    #     else:
+    #         return files_list
     user_input = input('Enter a path to the PNG files to crop (e.g. D:/screens) or press Enter to use a current directory (type exit to quit): ')
     # add an empty line before the script start
     print()
@@ -158,11 +158,11 @@ def get_input() -> str:
         case '':
             print(print_time(), 'Current directory is being used.\n')
             directory = os.getcwd()
-            files_list = get_files(directory, cropped=True)
+            files_list = get_files(directory, cropped=False)
             return directory, files_list
         # match the user input
         case _:
             directory = process_input(user_input)
-            files_list = get_files(directory, cropped=True)
+            files_list = get_files(directory, cropped=False)
             # e.g. (D:/folder, [screenshot_1.png, screenshot_2.png, ...])
             return directory, files_list

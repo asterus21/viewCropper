@@ -10,8 +10,7 @@ import misc
 
 # create a list of coordinates for the target pixels
 def process_targets(directory: str, file: list, targets: list, wizard=True):
-    # concatenate a path and file, e.g. 'D:/folder/screenshot_1.png')
-    # and convert to the RGB format
+    # concatenate a path and file, e.g. 'D:/folder/screenshot_1.png') then convert to the RGB format
     image = Image.open(os.path.join(directory, file)).convert('RGB')
     width, height = image.size
     if wizard:
@@ -100,8 +99,6 @@ def crop_corners(directory: str, files: list, target_pixels: list, wizard=True, 
         # main logic of the script, i.e. screens cropping
         if not wizard:
             crop = image.crop((
-                # target_pixels[i][0][0] - 12,
-                # target_pixels[i][0][1] - 15,
                 target_pixels[i][0] - 12,
                 target_pixels[i][1] - 15,
                 view_width,
@@ -121,24 +118,45 @@ def crop_corners(directory: str, files: list, target_pixels: list, wizard=True, 
     # print(f'{misc.print_time()}', str(len(cropped_files)) + ' file(s) processed.')
 
 
-def main(wizard, view_width, view_height, file_path=None):
-    if file_path is not None:
-        directory, files = misc.process_single_input(file_path)
-    else: 
-        directory, files = misc.get_input()
-    
-    # directory, files = misc.process_single_input(file_path) if file_path else misc.get_input()
+def start_script_in_current_folder(view_width, view_height, wizard=True, cropped=False):
+    if not cropped:
+        print(f'{misc.print_time()}', 'Current folder is being used...')
+        import os
+        directory = os.getcwd()
+        files = misc.get_files(directory, cropped=True)
+        targets = find_target_pixels(directory, files, wizard)
+        non_empty_files = get_new_list_of_files(targets)
+        edited_coordinates = edit_coordinates(targets, wizard)    
+        crop_corners(
+            directory, 
+            non_empty_files, 
+            edited_coordinates, 
+            wizard,
+            view_width,
+            view_height
+            )
+        print(f'{misc.print_time()}', 'The script is finished.')
+        misc.close_script()
+    else:
+        pass
 
-    targets = find_target_pixels(directory, files, wizard)
-    non_empty_files = get_new_list_of_files(targets)
-    edited_coordinates = edit_coordinates(targets, wizard)
-    crop_corners(
-        directory, 
-        non_empty_files, 
-        edited_coordinates, 
-        wizard, 
-        view_width, 
-        view_height
-        )
-    print(f'{misc.print_time()}', 'The script is finished.')
-    misc.close_script()
+
+
+def main(wizard, view_width, view_height, file_path=None, cropped=False):
+    if not cropped:
+        directory, files = misc.process_single_input(file_path) if file_path else misc.get_input()
+        targets = find_target_pixels(directory, files, wizard)
+        non_empty_files = get_new_list_of_files(targets)
+        edited_coordinates = edit_coordinates(targets, wizard)
+        crop_corners(
+            directory, 
+            non_empty_files, 
+            edited_coordinates, 
+            wizard, 
+            view_width, 
+            view_height
+            )
+        print(f'{misc.print_time()}', 'The script is finished.')
+        misc.close_script()
+    else:
+        pass
