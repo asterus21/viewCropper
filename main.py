@@ -44,7 +44,7 @@ if __name__ == '__main__':
         # script -f -d
         case(False, False, True, False, True, False):    misc.close_script_by_conflicting_flags()
 
-
+# TODO: split the find_targets() function into two and check for a different type of screenshots if there are no wizards or views found
 # TODO: add -c (or --cropped) flag to process ONLY those screenshots which start with "Cropped_", e.g. to edit already cropped screenshots
 # TODO: add -b (or --both) flag to process both views and wizards at the same time
 # TODO: add docstrings and type hints
