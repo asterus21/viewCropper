@@ -60,7 +60,7 @@ def process_single_input(user_input: str):
     return str_directory, [file]
     
 
-def process_user_input(user_input: str, single_file=False):
+def process_user_input(user_input: str, single_file: bool):
     if single_file:
         def check_path(path):
             user_input = Path(path)

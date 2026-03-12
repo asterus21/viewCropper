@@ -73,7 +73,7 @@ def process_views(directory: str, files: list, targets: list):
     return targets
 
 
-def find_target_pixels(directory: str, files: list, wizard=True) -> list:
+def find_target_pixels(directory: str, files: list, wizard: bool) -> list:
     targets = []
     print(f'{misc.print_time()}', 'Getting a list of files...')
     for file in files:
@@ -87,7 +87,7 @@ def find_target_pixels(directory: str, files: list, wizard=True) -> list:
     return coordinates
 
 
-def print_target_pixels(directory: str, files: list, wizard=True) -> list:
+def print_target_pixels(directory: str, files: list, wizard: bool) -> list:
     targets = []
     for file in files: 
         process_targets(directory, file, targets, wizard)
@@ -111,7 +111,7 @@ def get_new_list_of_files(files: dict) -> list:
     return(list(files.keys()))
 
 
-def edit_coordinates(coordinates: dict, wizard=True) -> list:
+def get_coordinates(coordinates: dict, wizard: bool) -> list:
     # fetch only the first target in case there are several ones
     if not wizard:
         coordinates_list = [
@@ -126,7 +126,7 @@ def edit_coordinates(coordinates: dict, wizard=True) -> list:
 
 
 # main logic of the script, i.e. image cropping
-def crop_corners(directory: str, files: list, target_pixels: list, wizard=True, view_width=1271, view_height=761) -> None:
+def crop_corners(directory: str, files: list, target_pixels: list, wizard: bool, view_width: int, view_height: int) -> None:
     file_number = 1
     for i in range(len(files)):
         # skip empty coordinates
@@ -167,57 +167,24 @@ def start_script_for_both_wizards_and_views(file_path=None, cropped=False):
     return wizards, views
 
 
-# merge the functions below into one
-def start_script_in_current_folder(view_width, view_height, wizard=True, cropped=False):
-    if not cropped:
-        print(f'{misc.print_time()}', 'Current folder is being used...')
-        import os
-        directory = os.getcwd()
-        files = misc.get_files(directory, cropped=False)
-        targets = find_target_pixels(directory, files, wizard)
-        non_empty_files = get_new_list_of_files(targets)
-        edited_coordinates = edit_coordinates(targets, wizard)    
-        crop_corners(
-            directory, 
-            non_empty_files,
-            edited_coordinates,
-            wizard,
-            view_width,
-            view_height
-            )
-        print(f'{misc.print_time()}', 'The script is finished.')
-        misc.script_close(False)
-    else:
-        files = misc.get_files(directory, cropped=True)
-        print(f'{misc.print_time()}', 'Current folder is being used...')
-        import os
-        directory = os.getcwd()        
-        targets = find_target_pixels(directory, files, wizard)
-        non_empty_files = get_new_list_of_files(targets)
-        edited_coordinates = edit_coordinates(targets, wizard)
-        crop_corners(
-            directory,
-            non_empty_files,
-            edited_coordinates,
-            wizard,
-            view_width,
-            view_height
-            )
-        print(f'{misc.print_time()}', 'The script is finished.')
-        misc.script_close(False)
-
-
-def main(wizard, view_width, view_height, file_path=None, cropped=False):
-    if not cropped:
-        directory, files = misc.process_user_input(file_path, single_file=True) if file_path else misc.get_input(cropped=False)
-    else:
-        directory, files = misc.process_user_input(file_path, single_file=True) if file_path else misc.get_input(cropped=True)
+def main(wizard: bool, file_path: bool, cropped: bool, current_folder: bool, view_width: int, view_height: int):
+    match (current_folder, cropped):
+        case(False, False): 
+            directory, files = misc.process_user_input(file_path, single_file=True) if file_path else misc.get_input(cropped=False)
+        case(False, True):  
+            directory, files = misc.process_user_input(file_path, single_file=True) if file_path else misc.get_input(cropped=True)
+        case(True, True):   
+            directory = os.getcwd()
+            files = misc.get_files(directory, cropped=True)
+        case(True, False):  
+            directory = os.getcwd()
+            files = misc.get_files(directory, cropped=False)        
     targets = find_target_pixels(directory, files, wizard)
-    non_empty_files = get_new_list_of_files(targets)
-    edited_coordinates = edit_coordinates(targets, wizard)
+    files_list = get_new_list_of_files(targets)
+    edited_coordinates = get_coordinates(targets, wizard)
     crop_corners(
         directory, 
-        non_empty_files, 
+        files_list, 
         edited_coordinates, 
         wizard, 
         view_width, 
