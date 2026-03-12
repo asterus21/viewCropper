@@ -2,7 +2,7 @@ import subprocess
 import datetime
 
 
-valid_script_commands = [
+valid_commands = [
     'py main.py',                                                       # default script, i.e. processing wizards only
     'py main.py -v',                                                    # processing views
     'py main.py -w',                                                    # processing wizards
@@ -24,7 +24,7 @@ valid_script_commands = [
 ] 
 
 
-not_valid_script_commands = [
+invalid_commands = [
     'py main.py -x 100 -a 100',
     'py main.py -y 100 -a 100',
     'py main.py -a 100 -b 100',
@@ -32,7 +32,8 @@ not_valid_script_commands = [
     'py main.py -a',
 ]
 
-def test_start(commands: list):
+
+def test_start(commands: list) -> tuple: 
     script_number = 0
     print('starting the test...')
     print() 
@@ -45,7 +46,11 @@ def test_start(commands: list):
             text    = True
             )
         stdout, stderr = process.communicate(input='\n')
-        print(f'"{valid_script_commands[script_number]}" finished at {datetime.datetime.now().strftime("%H:%M:%S")}')
+        print(f'"{commands[script_number]}" finished at {datetime.datetime.now().strftime("%H:%M:%S")}')
         script_number +=1
     print('the test is finshed')
     return stdout, stderr
+
+
+if __name__ == '__main__':
+    test_start(valid_commands)

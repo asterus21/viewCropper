@@ -25,7 +25,7 @@ if __name__ == '__main__':
         # script -v
         case(False,  True, False, False, False, False, False): script.main(wizard=False, view_width=args.width, view_height=args.height,  file_path=None, cropped=False)
         # script -w -v
-        case(True, True,  False, False, False, False, False):  misc.close_script_by_conflicting_flags()
+        case(True, True,  False, False, False, False, False):  misc.script_close(True)
         # script -c
         case(False, False, False, False, False, True, False):  script.main(wizard=True,  view_width=args.width, view_height=args.height,  file_path=None, cropped=True)
         # script -w -c
@@ -59,7 +59,7 @@ if __name__ == '__main__':
         # script -v -d
         case(False, True, False, False, True, True, False):    script.start_script_in_current_folder(wizard=False, view_width=args.width, view_height=args.height, cropped=True)
         # script -f -d
-        case(False, False, True, False, True, False, False):   misc.close_script_by_conflicting_flags()
+        case(False, False, True, False, True, False, False):   misc.script_close(True)
         # script -b
         case(False, False, False, False, False, False, True):  script.start_script_for_both_wizards_and_views(cropped=False, file_path=None)
 

@@ -13,32 +13,13 @@ import os
 import sys
 from pathlib import Path
 
-# time
-#############
+
 def print_time() -> str:
     """prints the current time."""
     now = datetime.datetime.now()
     formatted_time = now.strftime("%Y-%m-%d %H:%M:%S")
     return formatted_time
-#############
 
-# close
-#############
-def close_script() -> None:
-    """closes the script"""
-    # add an empty line before the closing statetement
-    print() 
-    input('Press Enter to close the program.')
-    sys.exit(0)
-
-
-def close_script_by_conflicting_flags() -> None:
-    """closes the script"""
-    # add an empty line before the closing statetement
-    print()
-    print('Given flags cannot be used together.')
-    input('Press Enter to close the program.')
-    sys.exit(1)
 
 def script_close(flags=False) -> None:
     """closes the script"""
@@ -49,10 +30,9 @@ def script_close(flags=False) -> None:
         sys.exit(1)
     else:
         input('Press Enter to close the program.')
-    sys.exit(0)
-#############
+        sys.exit(0)
 
-#############
+
 def process_input(user_input: str) -> str:
     """validates the user's input"""
     p = Path(user_input)
@@ -74,13 +54,13 @@ def process_single_input(user_input: str):
             input('Press Enter to close to programm.')
             sys.exit(1)
         else:
-            return p.parent, p.name
-    directory, file = check_path(p)
+            return path.parent, path.name
+    directory, file = check_path(user_input)
     str_directory = str(directory)
     return str_directory, [file]
     
 
-def process_inputs(user_input: str, single_file=False):
+def process_user_input(user_input: str, single_file=False):
     if single_file:
         def check_path(path):
             user_input = Path(path)
@@ -102,7 +82,7 @@ def process_inputs(user_input: str, single_file=False):
             sys.exit(1)
         else:
             return user_input
-#############
+
 
 def get_targets(image, x: int, y: int) -> dict:
     """finds target pixels and their neighbours"""
@@ -179,7 +159,7 @@ def get_input(cropped=False) -> str:
     def is_empty(files_list: list) -> list:
         if not files_list:
             print(print_time(), 'The folder is empty. The program is about to close.')
-            close_script()
+            script_close(False)
         else:
             return files_list
     user_input = input('Enter a path to the PNG files to crop (e.g. D:/screens) or press Enter to use a current directory (type exit to quit): ')
@@ -210,7 +190,7 @@ def get_input(cropped=False) -> str:
             return directory, files_list
         # match the user input
         case _:
-            directory = process_input(user_input)
+            directory = process_user_input(user_input, single_file=False)
             files_list = get_files(directory, cropped)
             # e.g. (D:/folder, [screenshot_1.png, screenshot_2.png, ...])
             return directory, files_list

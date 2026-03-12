@@ -52,9 +52,6 @@ def process_wizards(directory: str, files: list, targets: list):
             lower=data.lower_targets,
             lower_neighbor=data.lower_neighbor_targets
             )
-    t =  {
-        key: value if value else 'none' for key, value in files 
-    }
     targets.append(coordinates)
     return targets
 
@@ -160,9 +157,9 @@ def crop_corners(directory: str, files: list, target_pixels: list, wizard=True, 
 
 def start_script_for_both_wizards_and_views(file_path=None, cropped=False):
     if not cropped:
-        directory, files = misc.process_single_input(file_path) if file_path else misc.get_input(cropped=False)
+        directory, files = misc.process_user_input(file_path, single_file=True) if file_path else misc.get_input(cropped=False)
     else:
-        directory, files = misc.process_single_input(file_path) if file_path else misc.get_input(cropped=True)
+        directory, files = misc.process_user_input(file_path, single_file=True) if file_path else misc.get_input(cropped=True)
     list_wizards, list_views = [], []
     wizards = process_wizards(directory, files, list_wizards)
     views = process_views(directory, files, list_views)
@@ -189,12 +186,12 @@ def start_script_in_current_folder(view_width, view_height, wizard=True, cropped
             view_height
             )
         print(f'{misc.print_time()}', 'The script is finished.')
-        misc.close_script()
+        misc.script_close(False)
     else:
+        files = misc.get_files(directory, cropped=True)
         print(f'{misc.print_time()}', 'Current folder is being used...')
         import os
-        directory = os.getcwd()
-        files = misc.get_files(directory, cropped=True)
+        directory = os.getcwd()        
         targets = find_target_pixels(directory, files, wizard)
         non_empty_files = get_new_list_of_files(targets)
         edited_coordinates = edit_coordinates(targets, wizard)
@@ -207,35 +204,24 @@ def start_script_in_current_folder(view_width, view_height, wizard=True, cropped
             view_height
             )
         print(f'{misc.print_time()}', 'The script is finished.')
-        misc.close_script()
+        misc.script_close(False)
+
+
 def main(wizard, view_width, view_height, file_path=None, cropped=False):
     if not cropped:
-        directory, files = misc.process_single_input(file_path) if file_path else misc.get_input(cropped=False)
-        targets = find_target_pixels(directory, files, wizard)
-        non_empty_files = get_new_list_of_files(targets)
-        edited_coordinates = edit_coordinates(targets, wizard)
-        crop_corners(
-            directory, 
-            non_empty_files, 
-            edited_coordinates, 
-            wizard, 
-            view_width, 
-            view_height
-            )
-        print(f'{misc.print_time()}', 'The script is finished.')
-        misc.close_script()
+        directory, files = misc.process_user_input(file_path, single_file=True) if file_path else misc.get_input(cropped=False)
     else:
-        directory, files = misc.process_single_input(file_path) if file_path else misc.get_input(cropped=True)
-        targets = find_target_pixels(directory, files, wizard)
-        non_empty_files = get_new_list_of_files(targets)
-        edited_coordinates = edit_coordinates(targets, wizard)
-        crop_corners(
-            directory, 
-            non_empty_files, 
-            edited_coordinates, 
-            wizard, 
-            view_width, 
-            view_height
-            )
-        print(f'{misc.print_time()}', 'The script is finished.')
-        misc.close_script()
+        directory, files = misc.process_user_input(file_path, single_file=True) if file_path else misc.get_input(cropped=True)
+    targets = find_target_pixels(directory, files, wizard)
+    non_empty_files = get_new_list_of_files(targets)
+    edited_coordinates = edit_coordinates(targets, wizard)
+    crop_corners(
+        directory, 
+        non_empty_files, 
+        edited_coordinates, 
+        wizard, 
+        view_width, 
+        view_height
+        )
+    print(f'{misc.print_time()}', 'The script is finished.')
+    misc.script_close(False)
