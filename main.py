@@ -1,5 +1,7 @@
 import argparse
+import os
 import misc
+import script
 
 
 if __name__ == '__main__':
@@ -15,41 +17,45 @@ if __name__ == '__main__':
     parser.add_argument('-f', '--file',    action='store',      dest='path',      help='path value',   type=str, default=None)
     args = parser.parse_args()
 
-    import script
-    import os
     match (args.wizard, args.view, args.path is not None, args.type, args.directory, args.cropped, args.both):
         # script
-        case(False, False, False, False, False, False, False): script.main(wizard=True,  view_width=args.width, view_height=args.height,  file_path=None, cropped=False, current_folder=False)
+        case(False, False, False, False, False, False, False): script.main(wizard=True, file_path=None, cropped=False, current_folder=False,  view_width=args.width, view_height=args.height)
         # script -w
-        case(True,  False, False, False, False, False, False): script.main(wizard=True,  view_width=args.width, view_height=args.height,  file_path=None, cropped=False, current_folder=False)
+        case(True,  False, False, False, False, False, False): script.main(wizard=True, file_path=None, cropped=False, current_folder=False,  view_width=args.width, view_height=args.height)
         # script -v
-        case(False,  True, False, False, False, False, False): script.main(wizard=False, view_width=args.width, view_height=args.height,  file_path=None, cropped=False, current_folder=False)
+        case(False,  True, False, False, False, False, False): script.main(wizard=False, file_path=None, cropped=False, current_folder=False, view_width=args.width, view_height=args.height)
         # script -w -v
-        case(True, True,  False, False, False, False, False):  misc.script_close(True)
+        case(True, True,  False, False, False, False, False):  misc.script_close(flags=True)
         # script -c
-        case(False, False, False, False, False, True, False):  script.main(wizard=True,  view_width=args.width, view_height=args.height,  file_path=None, cropped=True, current_folder=False)
+        case(False, False, False, False, False, True, False):  script.main(wizard=True, file_path=None, cropped=True, current_folder=False,  view_width=args.width, view_height=args.height)
         # script -w -c
-        case(True, False, False, False, False, True, False):   script.main(wizard=True,  view_width=args.width, view_height=args.height,  file_path=None, cropped=True, current_folder=False)
-        # script -v-c
-        case(False, True, False, False, False, True, False):   script.main(wizard=True,  view_width=args.width, view_height=args.height,  file_path=None, cropped=True, current_folder=False)
+        case(True, False, False, False, False, True, False):   script.main(wizard=True, file_path=None, cropped=True, current_folder=False,  view_width=args.width, view_height=args.height)
+        # script -v -c
+        case(False, True, False, False, False, True, False):   script.main(wizard=True, file_path=None, cropped=True, current_folder=False,  view_width=args.width, view_height=args.height)
         # script -f
-        case(False, False, True, False, False, False, False):  script.main(wizard=True,  view_width=args.width, view_height=args.height,  file_path=args.path, cropped=False, current_folder=False)
-        # script -w -f
-        case(True,  False, True, False, False, False, False):  script.main(wizard=True,  view_width=args.width, view_height=args.height,  file_path=args.path, cropped=False, current_folder=False)
-        # script -v -f 
-        case(False, True, True, False, False, False, False):   script.main(wizard=False, view_width=args.width, view_height=args.height,  file_path=args.path, cropped=False, current_folder=False)
-        # script -c -f
-        case(True, False, True, False, False, True, False):    script.main(wizard=False, view_width=args.width, view_height=args.height,  file_path=args.path, cropped=False, current_folder=False)
+        case(False, False, True, False, False, False, False):  script.main(wizard=True, file_path=args.path, cropped=False, current_folder=False,  view_width=args.width, view_height=args.height)
+        # script -f -w 
+        case(True,  False, True, False, False, False, False):  script.main(wizard=True, file_path=args.path, cropped=False, current_folder=False,  view_width=args.width, view_height=args.height)
+        # script -f -v 
+        case(False, True, True, False, False, False, False):   script.main(wizard=False, file_path=args.path, cropped=False, current_folder=False, view_width=args.width, view_height=args.height)
+        # script -f -c
+        case(True, False, True, False, False, True, False):    script.main(wizard=False, file_path=args.path, cropped=False, current_folder=False, view_width=args.width, view_height=args.height)
+        # script -f -w -c
+        case(True, False, True, False, False, True, False):    script.main(wizard=False, file_path=args.path, cropped=False, current_folder=False, view_width=args.width, view_height=args.height)
+        # script -f -v -c
+        case(False, True, True, False, False, False, False):   script.main(wizard=False, file_path=args.path, cropped=False, current_folder=True, view_width=args.width, view_height=args.height)
         # script -d
-        case(False, False, False, False, True, False, False):  script.main(wizard=True, file_path=False, cropped=False, current_folder=True, view_width=args.width, view_height=args.height)
+        case(False, False, False, False, True, True, False):   script.main(wizard=True, file_path=False, cropped=False, current_folder=True, view_width=args.width, view_height=args.height)
+        # script -d -w
+        case(True, False, False, False, True, True, False):    script.main(wizard=True, file_path=False, cropped=False, current_folder=True, view_width=args.width, view_height=args.height)
         # script -d -c
         case(False, False, False, False, True, True, False):   script.main(wizard=True, file_path=False, cropped=True, current_folder=True, view_width=args.width, view_height=args.height)
         # script -t
-        case(False, False, False, True, False, False, False):  misc.one_liner_script()
+        case(False, False, False, True, False, False, False):  misc.show_screenshot_types()
         # script -t -d
-        case(False, False, False, True, True, False, False):   script.print_target_pixels(os.getcwd(), misc.get_files(os.getcwd(), cropped=False))
+        case(False, False, False, True, True, False, False):   script.get_target_pixels(os.getcwd(), misc.get_files(os.getcwd(), cropped=False))
         # script -t -с
-        case(False, False, False, True, True, True, False):    script.print_target_pixels(os.getcwd(), misc.get_files(os.getcwd(), cropped=True))
+        case(False, False, False, True, True, True, False):    script.get_target_pixels(os.getcwd(), misc.get_files(os.getcwd(), cropped=True))
         # script -w -d
         case(True, False, False, False, True, False, False):   script.main(wizard=True, file_path=False, cropped=False, current_folder=True, view_width=args.width, view_height=args.height)
         # script -w -d -с
@@ -59,9 +65,9 @@ if __name__ == '__main__':
         # script -v -d -c
         case(False, True, False, False, True, True, False):    script.main(wizard=False, file_path=False, cropped=True, current_folder=True, view_width=args.width, view_height=args.height)
         # script -f -d
-        case(False, False, True, False, True, False, False):   misc.script_close(True)
+        case(False, False, True, False, True, False, False):   misc.script_close(flags=True)
         # script -b
-        case(False, False, False, False, False, False, True):  script.start_script_for_both_wizards_and_views(cropped=False, file_path=None)
+        case(False, False, False, False, False, False, True):  script.start_script_for_both_wizards_and_views(current_folder=False, view_width=args.width, view_height=args.height)
 
 
 # TODO: split the find_targets() function into two and check for a different type of screenshots if there are no wizards or views found

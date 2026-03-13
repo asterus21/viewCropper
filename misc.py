@@ -1,4 +1,4 @@
-"""
+'''
 This module contains miscellaneous functions, i.e. those which
 - print the current time
 - close the script
@@ -6,7 +6,7 @@ This module contains miscellaneous functions, i.e. those which
 - get a list of target pixels
 - find target pixels for views
 - find target pixels for wizards
-"""
+'''
 
 import datetime
 import os
@@ -15,14 +15,14 @@ from pathlib import Path
 
 
 def print_time() -> str:
-    """prints the current time."""
+    '''prints the current time.'''
     now = datetime.datetime.now()
     formatted_time = now.strftime("%Y-%m-%d %H:%M:%S")
     return formatted_time
 
 
-def script_close(flags=False) -> None:
-    """closes the script"""
+def script_close(flags: bool) -> None:
+    '''closes the script'''
     # add an empty line before the closing statetement
     print()
     if flags:
@@ -33,33 +33,6 @@ def script_close(flags=False) -> None:
         sys.exit(0)
 
 
-def process_input(user_input: str) -> str:
-    """validates the user's input"""
-    p = Path(user_input)
-    # the entered path must exist and be a folder
-    if not p.exists() and not p.is_dir():
-        print('No valid path is provided.')
-        input('Press Enter to close to programm.')
-        sys.exit(1)
-    else:
-        return user_input
-
-
-def process_single_input(user_input: str):
-    """process the path to a single file"""
-    def check_path(path):
-        user_input = Path(path)
-        if not user_input.exists() and not user_input.is_dir() and user_input.is_file():
-            print('No valid path is provided or the file does not exist.')
-            input('Press Enter to close to programm.')
-            sys.exit(1)
-        else:
-            return path.parent, path.name
-    directory, file = check_path(user_input)
-    str_directory = str(directory)
-    return str_directory, [file]
-    
-
 def process_user_input(user_input: str, single_file: bool):
     if single_file:
         def check_path(path):
@@ -69,14 +42,14 @@ def process_user_input(user_input: str, single_file: bool):
                 input('Press Enter to close to programm.')
                 sys.exit(1)
             else:
-                return p.parent, p.name
+                return user_input.parent, user_input.name
         directory, file = check_path(user_input)
         str_directory = str(directory)
         return str_directory, [file]
     else:
-        p = Path(user_input)
+        path = Path(user_input)
         # the entered path must exist and be a folder
-        if not p.exists() and not p.is_dir():
+        if not path.exists() and not path.is_dir():
             print('No valid path is provided.')
             input('Press Enter to close to programm.')
             sys.exit(1)
@@ -85,7 +58,7 @@ def process_user_input(user_input: str, single_file: bool):
 
 
 def get_targets(image, x: int, y: int) -> dict:
-    """finds target pixels and their neighbours"""
+    '''finds target pixels and their neighbours'''
     targets = dict(
         target = image.getpixel((x, y)),
         right  = image.getpixel((x + 1, y)),
@@ -140,7 +113,7 @@ def find_targets(
         return coordinates
 
 
-def get_files(folder: str, cropped=False) -> list:
+def get_files(folder: str, cropped: bool) -> list:
     if not cropped:
         files = [file for file in os.listdir(folder) if file.lower().endswith('.png') and not file.startswith('Cropped_')]
     else:
@@ -148,14 +121,14 @@ def get_files(folder: str, cropped=False) -> list:
     return files
 
 
-def one_liner_script():
+def show_screenshot_types():
     import script
     directory, files = get_input()
-    script.print_target_pixels(directory, files)
+    script.get_target_pixels(directory, files)
 
 
 def get_input(cropped=False) -> str:
-    """accepts the user's input"""
+    '''accepts the user's input'''
     def is_empty(files_list: list) -> list:
         if not files_list:
             print(print_time(), 'The folder is empty. The program is about to close.')
