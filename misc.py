@@ -35,14 +35,17 @@ def script_close(flags: bool) -> None:
 
 def process_user_input(user_input: str, single_file: bool):
     if single_file:
+
         def check_path(path):
             user_input = Path(path)
+            # the entered path must exist and be a file and not a folder
             if not user_input.exists() and not user_input.is_dir() and user_input.is_file():
                 print('No valid path is provided or the file does not exist.')
                 input('Press Enter to close to programm.')
                 sys.exit(1)
             else:
                 return user_input.parent, user_input.name
+    
         directory, file = check_path(user_input)
         str_directory = str(directory)
         return str_directory, [file]
@@ -72,7 +75,7 @@ def get_targets(image, x: int, y: int) -> dict:
 def find_targets(
     image, height: int, width: int, wizard: bool, 
     central=None, right=None, left=None,
-    upper=None, upper_neighbor=None, lower=None, lower_neighbor=None):
+    upper=None, upper_neighbor=None, lower=None, lower_neighbor=None) -> list:
     if wizard:
         target_left_coordinates  = []
         target_right_coordinates = []
@@ -115,15 +118,27 @@ def get_files(folder: str, cropped: bool) -> list:
     return files
 
 
+def remove_empty_values(list_files, list_values):
+    coordinates = {
+        list_files[i]: list_values[i] for i in range(0, len(list_files))
+        if list_values[i]
+    }
+    return coordinates
+
+
+def is_empty(files_list: list) -> list:
+    '''Checks if the given list of files is empty.'''
+    if not files_list:
+        print(print_time(), 'The folder is empty. The program is about to close.')
+        script_close(False)
+    else:
+        return files_list
+
+
 def get_input(cropped: bool) -> str:
     '''Accepts the user's input.'''
-    def is_empty(files_list: list) -> list:
-        if not files_list:
-            print(print_time(), 'The folder is empty. The program is about to close.')
-            script_close(False)
-        else:
-            return files_list
-    user_input = input('Enter a path to the PNG files to crop (e.g. D:/screens) or press Enter to use a current directory (type exit to quit): ')
+    user_input = input('Enter a path to the PNG files to crop (e.g. D:/screens) \
+                       or press Enter to use a current directory (type exit to quit): ')
     # add an empty line before the script start
     print()
     # check for a single volume letter
@@ -148,10 +163,12 @@ def get_input(cropped: bool) -> str:
             print(print_time(), 'Current directory is being used.\n')
             directory = os.getcwd()
             files_list = get_files(directory, cropped)
+            is_empty(files_list)
             return directory, files_list
         # match the user input
         case _:
             directory = process_user_input(user_input, single_file=False)
             files_list = get_files(directory, cropped)
+            is_empty(files_list)
             # e.g. (D:/folder, [screenshot_1.png, screenshot_2.png, ...])
             return directory, files_list

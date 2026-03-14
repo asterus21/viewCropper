@@ -14,7 +14,6 @@ import misc
 def process_targets(directory: str, file: str, targets: list, wizard: bool):
     '''Finds targets for both wizards and views.'''
     # concatenate a path and file, e.g. 'D:/folder/screenshot_1.png') then convert to the RGB format
-    # for file in files:
     image = Image.open(os.path.join(directory, file)).convert('RGB')
     width, height = image.size
     if wizard:
@@ -39,43 +38,40 @@ def process_targets(directory: str, file: str, targets: list, wizard: bool):
             left=data.left_targets
             )
     targets.append(coordinates)
-    # targets = dict(zip(files, targets))
     return targets
 
 
-def process_wizards(directory: str, files: list, targets: list):
-    '''finds targets only for wizards'''
-    for file in files:
-        image = Image.open(os.path.join(directory, file)).convert('RGB')
-        width, height = image.size
-        coordinates = misc.find_targets(
-            image,
-            height,
-            width,
-            wizard=True,
-            upper=data.upper_targets,
-            upper_neighbor=data.upper_neighbor_targets,
-            lower=data.lower_targets,
-            lower_neighbor=data.lower_neighbor_targets
-            )
+def process_wizards(directory: str, file: str, targets: list):
+    '''Finds targets only for wizards.'''
+    image = Image.open(os.path.join(directory, file)).convert('RGB')
+    width, height = image.size
+    coordinates = misc.find_targets(
+        image,
+        height,
+        width,
+        wizard=True,
+        upper=data.upper_targets,
+        upper_neighbor=data.upper_neighbor_targets,
+        lower=data.lower_targets,
+        lower_neighbor=data.lower_neighbor_targets
+        )
     targets.append(coordinates)
     return targets
 
 
-def process_views(directory: str, files: list, targets: list):
-    '''finds targets only for views'''
-    for file in files:
-        image = Image.open(os.path.join(directory, file)).convert('RGB')
-        width, height = image.size
-        coordinates = misc.find_targets(
-            image,
-            height,
-            width,
-            wizard=False,
-            central=data.central_targets,
-            right=data.right_targets,
-            left=data.left_targets
-        )
+def process_views(directory: str, file: str, targets: list):
+    '''Finds targets only for views.'''
+    image = Image.open(os.path.join(directory, file)).convert('RGB')
+    width, height = image.size
+    coordinates = misc.find_targets(
+        image,
+        height,
+        width,
+        wizard=False,
+        central=data.central_targets,
+        right=data.right_targets,
+        left=data.left_targets
+    )
     targets.append(coordinates)
     return targets
 
@@ -88,10 +84,7 @@ def find_target_pixels(directory: str, files: list, wizard: bool) -> list:
         print(f'{misc.print_time()}', 'Processing: ' + file)
         process_targets(directory, file, targets, wizard)
     # remove empty coordinates
-    coordinates = {
-        files[i]: targets[i] for i in range(0, len(files))
-        if targets[i]
-    }
+    coordinates = misc.remove_empty_values(files, targets)
     return coordinates
 
 
@@ -108,7 +101,7 @@ def get_coordinates(coordinates: dict, wizard: bool) -> list:
         coordinates_list = [
             item[0] for item in coordinates.values() if item
         ]
-    # fetch only the first and last targets for wizards
+    # fetch only the first and last targets for wizards in case there are several ones
     else:
         coordinates_list = [
             (item[0], item[-1]) for item in coordinates.values() if item
@@ -120,7 +113,7 @@ def get_coordinates(coordinates: dict, wizard: bool) -> list:
 def crop_corners(directory: str, files: list, target_pixels: list, wizard: bool, view_width: int, view_height: int) -> None:
     file_number = 1
     for i in range(len(files)):
-        # skip empty coordinates
+        # skip empty coordinates if present
         if not target_pixels[i]: continue
         # concatenate a path and file, e.g. 'D:/folder/screenshot_1.png')
         image = Image.open(os.path.join(directory, files[i]))
@@ -143,21 +136,20 @@ def crop_corners(directory: str, files: list, target_pixels: list, wizard: bool,
             crop.save(f'Cropped_{file_number}.png')
         file_number += 1
     # cropped_files = [file for file in os.listdir(directory) if file.startswith('Cropped_')]
-    # print(f'{misc.print_time()}', str(len(cropped_files)) + ' file(s) processed.')
+    print(f'{misc.print_time()}', str(len(files)) + ' file(s) processed.')
 
 
-def show_screenshot_types() -> list:    
-    directory, files = misc.get_input(cropped=False)
+def show_screenshot_types(current_folder: bool) -> list:
+    if current_folder:
+        directory = os.getcwd()
+        files = misc.get_files(directory, cropped=False)
+    else:
+        directory, files = misc.get_input(cropped=False)
     views_targets, wizards_targtes = [], []
     for file in files:
         process_targets(directory, file, views_targets, wizard=False)
         process_targets(directory, file, wizards_targtes, wizard=True)
-    def remove_empty_values(list_files, list_values):
-        coordinates = {
-            list_files[i]: list_values[i] for i in range(0, len(list_files))
-            if list_values[i]
-        }
-        return coordinates
+
     def get_target_pixels(directory: str, files: list) -> list:
         '''Shows the type of screenshots.'''
         targets = []
@@ -174,8 +166,11 @@ def show_screenshot_types() -> list:
             print(str(key) + ': ' + str(value))
         print()
         return types
-    merged = list(remove_empty_values(files, views_targets).keys()) + list(remove_empty_values(files, wizards_targtes).keys())
+
+    merged = list(misc.remove_empty_values(files, views_targets).keys()) + list(misc.remove_empty_values(files, wizards_targtes).keys())
+
     get_target_pixels(directory, sorted(merged))
+
     return sorted(merged)
 
 
@@ -185,9 +180,11 @@ def main(wizard: bool, file_path: bool, cropped: bool, current_folder: bool, vie
         case(True, True):
             directory = os.getcwd()
             files = misc.get_files(directory, cropped=True)
+            misc.is_empty(files)
         case(True, False):
             directory = os.getcwd()
             files = misc.get_files(directory, cropped=False)
+            misc.is_empty(files)
         case(False, False):
             directory, files = misc.process_user_input(file_path, single_file=True) if file_path else misc.get_input(cropped=False)
         case(False, True):
