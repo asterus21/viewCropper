@@ -77,7 +77,6 @@ if __name__ == '__main__':
         case(False, False, False, False, False, False, True):  script.start_script_for_both_wizards_and_views(current_folder=False, view_width=args.width, view_height=args.height)
 
 
-# TODO: split the find_targets() function into two and check for a different type of screenshots if there are no wizards or views found
 # TODO: add -b (or --both) flag to process both views and wizards at the same time
 # TODO: add docstrings and type hints
 # TODO: expand the description for the arguments
