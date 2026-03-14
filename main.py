@@ -1,5 +1,12 @@
-import argparse
+'''Main module of the script.
+
+The module handles script arguments to pass them to the main() function.
+'''
+
 import os
+
+import argparse
+
 import misc
 import script
 
@@ -19,7 +26,7 @@ if __name__ == '__main__':
 
     match (args.wizard, args.view, args.path is not None, args.type, args.directory, args.cropped, args.both):
         # script
-        case(False, False, False, False, False, False, False): script.main(wizard=True, file_path=None, cropped=False, current_folder=False,  view_width=args.width, view_height=args.height)
+        case(False, False, False, False, False, False, False): script.main(wizard=True, file_path=False, cropped=False, current_folder=False,  view_width=args.width, view_height=args.height)
         # script -w
         case(True,  False, False, False, False, False, False): script.main(wizard=True, file_path=None, cropped=False, current_folder=False,  view_width=args.width, view_height=args.height)
         # script -v

@@ -70,7 +70,7 @@ def get_targets(image, x: int, y: int) -> dict:
 
 
 def find_targets(
-    image, height: int, width: int, wizard=True, 
+    image, height: int, width: int, wizard: bool, 
     central=None, right=None, left=None,
     upper=None, upper_neighbor=None, lower=None, lower_neighbor=None):
     if wizard:
@@ -85,16 +85,12 @@ def find_targets(
                     t.get('down')   in upper_neighbor
                     ):
                     target_left_coordinates.append((x, y))
-                # else:
-                #     target_left_coordinates.append('none')
                 if  (
                     t.get('target') in lower and
                     t.get('left')   in lower_neighbor and
                     t.get('up')     in lower_neighbor
                     ):
                     target_right_coordinates.append((x, y))
-                # else:
-                #     target_right_coordinates.append('none')
             coordinates = target_left_coordinates + target_right_coordinates
         return coordinates
     else:
@@ -108,8 +104,6 @@ def find_targets(
                     t.get('left')   in left
                     ):
                     coordinates.append((x, y))
-                # else:
-                #     coordinates.append('none')
         return coordinates
 
 
@@ -128,8 +122,8 @@ def remove_empty_dictionary_values(dictionary: dict):
     return files
 
 
-def get_input(cropped=False) -> str:
-    '''accepts the user's input'''
+def get_input(cropped: bool) -> str:
+    '''Accepts the user's input.'''
     def is_empty(files_list: list) -> list:
         if not files_list:
             print(print_time(), 'The folder is empty. The program is about to close.')
