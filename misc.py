@@ -118,7 +118,7 @@ def get_files(folder: str, cropped: bool) -> list:
     return files
 
 
-def remove_empty_values(list_files, list_values):
+def remove_empty_values(list_files: list, list_values: list) -> dict:
     coordinates = {
         list_files[i]: list_values[i] for i in range(0, len(list_files))
         if list_values[i]
@@ -137,8 +137,7 @@ def is_empty(files_list: list) -> list:
 
 def get_input(cropped: bool) -> str:
     '''Accepts the user's input.'''
-    user_input = input('Enter a path to the PNG files to crop (e.g. D:/screens) \
-                       or press Enter to use a current directory (type exit to quit): ')
+    user_input = input('Enter a path to the PNG files to crop (e.g. D:/screens) or press Enter to use a current directory (type exit to quit): ')
     # add an empty line before the script start
     print()
     # check for a single volume letter
