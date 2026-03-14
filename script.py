@@ -95,24 +95,6 @@ def find_target_pixels(directory: str, files: list, wizard: bool) -> list:
     return coordinates
 
 
-def get_target_pixels(directory: str, files: list, targets=[]) -> list:
-    '''Shows the type of screenshots.'''
-    # targets = []
-    for file in files: 
-        process_targets(directory, file, targets=[], wizard=True)
-    coordinates = {
-        files[i]: targets[i] for i in range(0, len(files))
-    }
-    types = {
-        key: "wizard" if value else "view" for key, value in coordinates.items()
-    }
-    print()
-    for key, value in types.items(): 
-        print(str(key) + ': ' + str(value))
-    print()
-    return types
-
-
 def get_new_list_of_files(files: dict) -> list:
     # fetch only the keys of the dictionary, i.e. files names
     # because those file names are then given as arguments
@@ -164,15 +146,37 @@ def crop_corners(directory: str, files: list, target_pixels: list, wizard: bool,
     # print(f'{misc.print_time()}', str(len(cropped_files)) + ' file(s) processed.')
 
 
-def show_screenshot_types() -> tuple:
-    directory, files = misc.get_input()
-    views = process_targets(directory, files, targets=[], wizard=False)
-    wizards = process_targets(directory, files, targets=[], wizard=True)
-    v = misc.remove_empty_dictionary_values(views)
-    w = misc.remove_empty_dictionary_values(wizards)
-    l = get_new_list_of_files(v) + get_new_list_of_files(w)
-    l.sort()
-    get_target_pixels(directory, l)
+def show_screenshot_types() -> list:    
+    directory, files = misc.get_input(cropped=False)
+    views_targets, wizards_targtes = [], []
+    for file in files:
+        process_targets(directory, file, views_targets, wizard=False)
+        process_targets(directory, file, wizards_targtes, wizard=True)
+    def remove_empty_values(list_files, list_values):
+        coordinates = {
+            list_files[i]: list_values[i] for i in range(0, len(list_files))
+            if list_values[i]
+        }
+        return coordinates
+    def get_target_pixels(directory: str, files: list) -> list:
+        '''Shows the type of screenshots.'''
+        targets = []
+        for file in files:
+            process_targets(directory, file, targets, wizard=True)
+        coordinates = {
+            files[i]: targets[i] for i in range(0, len(files))
+        }
+        types = {
+            key: "wizard" if value else "view" for key, value in coordinates.items()
+        }
+        print()
+        for key, value in types.items(): 
+            print(str(key) + ': ' + str(value))
+        print()
+        return types
+    merged = list(remove_empty_values(files, views_targets).keys()) + list(remove_empty_values(files, wizards_targtes).keys())
+    get_target_pixels(directory, sorted(merged))
+    return sorted(merged)
 
 
 def main(wizard: bool, file_path: bool, cropped: bool, current_folder: bool, view_width: int, view_height: int) -> None:

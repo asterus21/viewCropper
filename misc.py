@@ -115,13 +115,6 @@ def get_files(folder: str, cropped: bool) -> list:
     return files
 
 
-def remove_empty_dictionary_values(dictionary: dict):
-    files =  {
-        key: value for key, value in dictionary.items() if value
-    }
-    return files
-
-
 def get_input(cropped: bool) -> str:
     '''Accepts the user's input.'''
     def is_empty(files_list: list) -> list:
