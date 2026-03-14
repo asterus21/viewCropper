@@ -10,10 +10,9 @@ import misc
 
 # create a list of coordinates for the target pixels
 def process_targets(directory: str, files: list, wizard: bool, targets: list):
-    '''finds targets for both wizards and views'''
-    targets = []
+    '''finds targets for both wizards and views'''    
     # concatenate a path and file, e.g. 'D:/folder/screenshot_1.png') then convert to the RGB format
-    for file in files:
+    for file in files:  
         image = Image.open(os.path.join(directory, file)).convert('RGB')
         width, height = image.size
         if wizard:
@@ -26,7 +25,7 @@ def process_targets(directory: str, files: list, wizard: bool, targets: list):
                 upper_neighbor=data.upper_neighbor_targets,
                 lower=data.lower_targets,
                 lower_neighbor=data.lower_neighbor_targets
-                )
+                )            
         else: 
             coordinates = misc.find_targets(
                 image,
@@ -37,9 +36,9 @@ def process_targets(directory: str, files: list, wizard: bool, targets: list):
                 right=data.right_targets,
                 left=data.left_targets
                 )
-        targets.append(coordinates)
-    targets_as_dictionary = dict(zip(files, targets))
-    return targets_as_dictionary
+    targets.append(coordinates)
+    # targets = dict(zip(files, targets))
+    return targets
 
 
 def process_wizards(directory: str, files: list, targets: list):
@@ -85,7 +84,7 @@ def find_target_pixels(directory: str, files: list, wizard: bool) -> list:
     print(f'{misc.print_time()}', 'Getting a list of files...')
     for file in files:
         print(f'{misc.print_time()}', 'Processing: ' + file)
-        process_targets(directory, file, targets, wizard)
+        process_targets(directory, files, wizard, targets)
     # remove empty coordinates
     coordinates = {
         files[i]: targets[i] for i in range(0, len(files))
@@ -94,11 +93,11 @@ def find_target_pixels(directory: str, files: list, wizard: bool) -> list:
     return coordinates
 
 
-def get_target_pixels(directory: str, files: list) -> list:
+def get_target_pixels(directory: str, files: list, targets=[]) -> list:
     '''shows the type of screenshots'''
-    targets = []
+    # targets = []
     for file in files: 
-        process_targets(directory, file, targets, wizard=True)
+        process_targets(directory, file, targets=[], wizard=True)
     coordinates = {
         files[i]: targets[i] for i in range(0, len(files))
     }
@@ -163,14 +162,15 @@ def crop_corners(directory: str, files: list, target_pixels: list, wizard: bool,
     # print(f'{misc.print_time()}', str(len(cropped_files)) + ' file(s) processed.')
 
 
-def start_script_for_both_wizards_and_views(current_folder: bool, view_width: int, view_height: int) -> tuple:
-    if current_folder:
-        directory, files = os.getcwd(), misc.get_files(directory, cropped=False)
-    else:
-        directory, files = misc.get_input(cropped=False)
+def show_screenshot_types() -> tuple:
+    directory, files = misc.get_input()
     views = process_targets(directory, files, targets=[], wizard=False)
     wizards = process_targets(directory, files, targets=[], wizard=True)
-    print(views, wizards)
+    v = misc.remove_empty_dictionary_values(views) 
+    w = misc.remove_empty_dictionary_values(wizards)
+    l = get_new_list_of_files(v) + get_new_list_of_files(w)
+    l.sort()    
+    get_target_pixels(directory, l)
 
 
 def main(wizard: bool, file_path: bool, cropped: bool, current_folder: bool, view_width: int, view_height: int) -> None:

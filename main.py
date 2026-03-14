@@ -51,11 +51,11 @@ if __name__ == '__main__':
         # script -d -c
         case(False, False, False, False, True, True, False):   script.main(wizard=True, file_path=False, cropped=True, current_folder=True, view_width=args.width, view_height=args.height)
         # script -t
-        case(False, False, False, True, False, False, False):  misc.show_screenshot_types()
+        case(False, False, False, True, False, False, False):  script.show_screenshot_types()
         # script -t -d
         case(False, False, False, True, True, False, False):   script.get_target_pixels(os.getcwd(), misc.get_files(os.getcwd(), cropped=False))
         # script -t -с
-        case(False, False, False, True, True, True, False):    script.get_target_pixels(os.getcwd(), misc.get_files(os.getcwd(), cropped=True))
+        case(False, False, False, True, True, True, False):    misc.script_close(flags=True)
         # script -w -d
         case(True, False, False, False, True, False, False):   script.main(wizard=True, file_path=False, cropped=False, current_folder=True, view_width=args.width, view_height=args.height)
         # script -w -d -с

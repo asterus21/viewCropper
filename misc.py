@@ -121,10 +121,11 @@ def get_files(folder: str, cropped: bool) -> list:
     return files
 
 
-def show_screenshot_types():
-    import script
-    directory, files = get_input()
-    script.get_target_pixels(directory, files)
+def remove_empty_dictionary_values(dictionary: dict):
+    files =  {
+        key: value for key, value in dictionary.items() if value
+    }
+    return files
 
 
 def get_input(cropped=False) -> str:
