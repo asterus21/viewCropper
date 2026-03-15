@@ -112,6 +112,7 @@ def get_coordinates(coordinates: dict, wizard: bool) -> list:
 # main logic of the script, i.e. image cropping
 def crop_corners(directory: str, files: list, target_pixels: list, wizard: bool, view_width: int, view_height: int) -> None:
     file_number = 1
+    cropped_files = len(misc.get_files(os.getcwd(), cropped=True))
     for i in range(len(files)):
         # skip empty coordinates if present
         if not target_pixels[i]: continue
@@ -126,18 +127,25 @@ def crop_corners(directory: str, files: list, target_pixels: list, wizard: bool,
                     view_width,
                     view_height
                     ))
-                crop.save(f'Cropped_{file_number}.png')
-                file_number += 1
+                if cropped_files:
+                    crop.save(f'Cropped_{cropped_files+1}.png')
+                    cropped_files += 1
+                else:
+                    crop.save(f'Cropped_{file_number}.png')
+                    file_number += 1
             else:
-                file_number = 1
                 crop = image.crop((
                     target_pixels[i][0][0],
                     target_pixels[i][0][1],
                     target_pixels[i][1][0] + 1,
                     target_pixels[i][1][1] + 1
                     ))
-                crop.save(f'Cropped_{file_number}.png')
-                file_number += 1
+                if cropped_files:
+                    crop.save(f'Cropped_{cropped_files+1}.png')
+                    cropped_files += 1
+                else:
+                    crop.save(f'Cropped_{file_number}.png')
+                    file_number += 1
         except Exception as E:
             print(f'{E}: no wizard screenshot or view one is found.')
     print(f'{misc.print_time()}', str(len(files)) + ' file(s) processed.')
@@ -173,9 +181,7 @@ def show_screenshot_types(current_folder: bool) -> list:
         return types
 
     merged = list(misc.remove_empty_values(files, views_targets).keys()) + list(misc.remove_empty_values(files, wizards_targtes).keys())
-
     get_target_pixels(directory, sorted(merged))
-
     return sorted(merged)
 
 
