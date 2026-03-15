@@ -1,8 +1,7 @@
 '''data module
 
 This module contains data, i.e. color of the target pixels given
-- as central targets for views
-called 'RIGHT_TARGETS'
+- as central targets for views called 'RIGHT_TARGETS'
 - one pixel to the left called 'LEFT_TARGETS'
 - the same is for wizards where go
 - one pixel to the right of the target one

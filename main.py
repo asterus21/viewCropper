@@ -13,15 +13,15 @@ import script
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('-w', '--wizard',  action='store_true', dest='wizard',    help='wizard flag')
-    parser.add_argument('-v', '--view',    action='store_true', dest='view',      help='view flag')
-    parser.add_argument('-t', '--type',    action='store_true', dest='type',      help='type flag')
-    parser.add_argument('-d', '--dir',     action='store_true', dest='directory', help='directory flag')
-    parser.add_argument('-c', '--cropped', action='store_true', dest='cropped',   help='name flag')
-    parser.add_argument('-b', '--both',    action='store_true', dest='both',      help='process both wizards and views')
-    parser.add_argument('-x', '--width',   action='store',      dest='width',     help='width value',  type=int, default=1271)
-    parser.add_argument('-y', '--height',  action='store',      dest='height',    help='height value', type=int, default=761)
-    parser.add_argument('-f', '--file',    action='store',      dest='path',      help='path value',   type=str, default=None)
+    parser.add_argument('-w', '--wizard',  action='store_true', dest='wizard',    help='flag to process only wizards')
+    parser.add_argument('-v', '--view',    action='store_true', dest='view',      help='flag to process only views')
+    parser.add_argument('-t', '--type',    action='store_true', dest='type',      help='flag to show types of screenshots')
+    parser.add_argument('-d', '--dir',     action='store_true', dest='directory', help='flag to start the script in the current folder')
+    parser.add_argument('-c', '--cropped', action='store_true', dest='cropped',   help='flag to process those screenshots which start with "Cropped_"')
+    parser.add_argument('-b', '--both',    action='store_true', dest='both',      help='flag to process both wizards and views')
+    parser.add_argument('-x', '--width',   action='store',      dest='width',     help='width value to process views',  type=int, default=1271)
+    parser.add_argument('-y', '--height',  action='store',      dest='height',    help='height value to process views', type=int, default=761)
+    parser.add_argument('-f', '--file',    action='store',      dest='path',      help='path value to process a single file',   type=str, default=None)
     args = parser.parse_args()
 
     # matching different flags
@@ -128,7 +128,5 @@ if __name__ == '__main__':
             misc.script_close(flags=True)
 
 
-# TODO: add -b (or --both) flag to process both views and wizards at the same time
-# TODO: add docstrings and type hints
 # TODO: expand the description for the arguments
 # handle the script -w -f /path/to_file.png file not found exception

@@ -8,21 +8,23 @@ This module contains miscellaneous functions, i.e. those which
 - find target pixels for wizards
 '''
 
+
 import datetime
 import os
 import sys
+
 from pathlib import Path
 
 
 def print_time() -> str:
-    '''prints the current time.'''
+    '''Prints the current time.'''
     now = datetime.datetime.now()
     formatted_time = now.strftime("%Y-%m-%d %H:%M:%S")
     return formatted_time
 
 
 def script_close(flags: bool) -> None:
-    '''closes the script'''
+    '''Сloses the script.'''
     # add an empty line before the closing statetement
     print()
     if flags:
@@ -33,19 +35,21 @@ def script_close(flags: bool) -> None:
         sys.exit(0)
 
 
-def process_user_input(user_input: str, single_file: bool):
-    if single_file:
+def check_path(path):
+    '''Checks if the entered path is a file.'''
+    user_input = Path(path)
+    # the entered path must exist and be a file and not a folder
+    if not user_input.exists() and not user_input.is_dir() and user_input.is_file():
+        print('No valid path is provided or the file does not exist.')
+        input('Press Enter to close to programm.')
+        sys.exit(1)
+    else:
+        return user_input.parent, user_input.name
 
-        def check_path(path):
-            user_input = Path(path)
-            # the entered path must exist and be a file and not a folder
-            if not user_input.exists() and not user_input.is_dir() and user_input.is_file():
-                print('No valid path is provided or the file does not exist.')
-                input('Press Enter to close to programm.')
-                sys.exit(1)
-            else:
-                return user_input.parent, user_input.name
-    
+
+def process_user_input(user_input: str, single_file: bool):
+    '''Processes user's input.'''
+    if single_file:    
         directory, file = check_path(user_input)
         str_directory = str(directory)
         return str_directory, [file]
@@ -61,7 +65,7 @@ def process_user_input(user_input: str, single_file: bool):
 
 
 def get_targets(image, x: int, y: int) -> dict:
-    '''finds target pixels and their neighbours'''
+    '''Finds target pixels and their neighbours'''
     targets = dict(
         target = image.getpixel((x, y)),
         right  = image.getpixel((x + 1, y)),
@@ -76,6 +80,7 @@ def find_targets(
     image, height: int, width: int, wizard: bool, 
     central=None, right=None, left=None,
     upper=None, upper_neighbor=None, lower=None, lower_neighbor=None) -> list:
+    '''Finds target pixels by their RGB value'''
     if wizard:
         target_left_coordinates  = []
         target_right_coordinates = []
@@ -111,6 +116,7 @@ def find_targets(
 
 
 def get_files(folder: str, cropped: bool) -> list:
+    '''Gets list of screenshots from a folder.'''
     if not cropped:
         files = [file for file in os.listdir(folder) if file.lower().endswith('.png') and not file.startswith('Cropped_')]
     else:
@@ -119,6 +125,7 @@ def get_files(folder: str, cropped: bool) -> list:
 
 
 def remove_empty_values(list_files: list, list_values: list) -> dict:
+    '''Removes empty values in a list of found targets.'''
     coordinates = {
         list_files[i]: list_values[i] for i in range(0, len(list_files))
         if list_values[i]
@@ -141,7 +148,8 @@ def get_input(cropped: bool) -> str:
     # add an empty line before the script start
     print()
     # check for a single volume letter
-    if user_input.endswith(':'): user_input = user_input + '/'
+    if user_input.endswith(':'):
+        user_input = user_input + '/'
     match user_input:
         case 'exit':
             print(print_time(), 'The program is about to close.')
@@ -164,10 +172,9 @@ def get_input(cropped: bool) -> str:
             files_list = get_files(directory, cropped)
             is_empty(files_list)
             return directory, files_list
-        # match the user input
         case _:
             directory = process_user_input(user_input, single_file=False)
             files_list = get_files(directory, cropped)
             is_empty(files_list)
-            # e.g. (D:/folder, [screenshot_1.png, screenshot_2.png, ...])
+            # D:/folder, [screenshot_1.png, screenshot_2.png, ...]
             return directory, files_list

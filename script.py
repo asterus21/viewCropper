@@ -166,7 +166,6 @@ def show_screenshot_types(current_folder: bool) -> list:
     for file in files:
         process_targets(directory, file, views_targets, wizard=False)
         process_targets(directory, file, wizards_targtes, wizard=True)
-
     def get_target_pixels(directory: str, files: list) -> list:
         '''Creates a dictionary with the types of screenshots.'''
         targets = []
@@ -183,7 +182,6 @@ def show_screenshot_types(current_folder: bool) -> list:
             print(str(key) + ': ' + str(value))
         print()
         return types
-
     merged = list(misc.remove_empty_values(files, views_targets).keys()) + list(misc.remove_empty_values(files, wizards_targtes).keys())
     get_target_pixels(directory, sorted(merged))
     return sorted(merged)
@@ -226,6 +224,7 @@ def start_script(folder: str, screens: bool, width: int, height: int, wizard: bo
 def main(wizard: bool, file_path: bool, cropped: bool, current_folder: bool, both: bool, view_width: int, view_height: int) -> None:
     '''Main function of the script.'''
     directory, files = match_path_and_screenshots(current_folder, file_path, cropped)
+    # TODO: fix the block
     if both:
         start_script(directory, files, view_width, view_height, wizard=True)
         start_script(directory, files, view_width, view_height, wizard=False)
