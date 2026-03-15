@@ -10,6 +10,18 @@ import data
 import misc
 
 
+def find_target_pixels(directory: str, files: list, wizard: bool) -> dict:
+    '''Calls the targets processing function and removes not processed screenshots.'''
+    targets = []
+    print(f'{misc.print_time()}', 'Getting a list of files...')
+    for file in files:
+        print(f'{misc.print_time()}', 'Processing: ' + file)
+        process_targets(directory, file, targets, wizard)
+    # remove empty coordinates
+    coordinates = misc.remove_empty_values(files, targets)
+    return coordinates
+
+
 # create a list of coordinates for the target pixels
 def process_targets(directory: str, file: str, targets: list, wizard: bool):
     '''Finds targets for both wizards and views.'''
@@ -76,26 +88,16 @@ def process_views(directory: str, file: str, targets: list):
     return targets
 
 
-def find_target_pixels(directory: str, files: list, wizard: bool) -> dict:
-    '''Calls the targets processing function and removes not processed screenshots.'''
-    targets = []
-    print(f'{misc.print_time()}', 'Getting a list of files...')
-    for file in files:
-        print(f'{misc.print_time()}', 'Processing: ' + file)
-        process_targets(directory, file, targets, wizard)
-    # remove empty coordinates
-    coordinates = misc.remove_empty_values(files, targets)
-    return coordinates
-
-
 def get_new_list_of_files(files: dict) -> list:
+    '''Returns dictionary keys with only the screenshots to be processed.'''
     # fetch only the keys of the dictionary, i.e. files names
     # because those file names are then given as arguments
-    # to crop the screenshots as we don't want to crop extra ones
+    # to crop only needed screenshots as we don't want to crop extra ones
     return(list(files.keys()))
 
 
 def get_coordinates(coordinates: dict, wizard: bool) -> list:
+    '''Filters out the target pixels.'''
     # fetch only the first target in case there are several ones
     if not wizard:
         coordinates_list = [
@@ -110,7 +112,8 @@ def get_coordinates(coordinates: dict, wizard: bool) -> list:
 
 
 # main logic of the script, i.e. image cropping
-def crop_corners(directory: str, files: list, target_pixels: list, wizard: bool, view_width: int, view_height: int) -> None:
+def crop_corners(directory: str, files: list, target_pixels: list, view_width: int, view_height: int, wizard: bool) -> None:
+    '''Crops the screenshots according to the target pixels.'''
     file_number = 1
     cropped_files = len(misc.get_files(os.getcwd(), cropped=True))
     for i in range(len(files)):
@@ -153,6 +156,7 @@ def crop_corners(directory: str, files: list, target_pixels: list, wizard: bool,
 
 
 def show_screenshot_types(current_folder: bool) -> list:
+    '''Returns the types of screenshots.'''
     if current_folder:
         directory = os.getcwd()
         files = misc.get_files(directory, cropped=False)
@@ -164,7 +168,7 @@ def show_screenshot_types(current_folder: bool) -> list:
         process_targets(directory, file, wizards_targtes, wizard=True)
 
     def get_target_pixels(directory: str, files: list) -> list:
-        '''Shows the type of screenshots.'''
+        '''Creates a dictionary with the types of screenshots.'''
         targets = []
         for file in files:
             process_targets(directory, file, targets, wizard=True)
@@ -185,9 +189,9 @@ def show_screenshot_types(current_folder: bool) -> list:
     return sorted(merged)
 
 
-def main(wizard: bool, file_path: bool, cropped: bool, current_folder: bool, view_width: int, view_height: int) -> None:
-    '''Main function of the script.'''
-    match (current_folder, cropped):
+def match_path_and_screenshots(folder: bool, path: str, screens: bool) -> tuple:
+    '''Filters out a file, folder and cropped screens.'''
+    match (folder, screens):
         case(True, True):
             directory = os.getcwd()
             files = misc.get_files(directory, cropped=True)
@@ -197,19 +201,35 @@ def main(wizard: bool, file_path: bool, cropped: bool, current_folder: bool, vie
             files = misc.get_files(directory, cropped=False)
             misc.is_empty(files)
         case(False, False):
-            directory, files = misc.process_user_input(file_path, single_file=True) if file_path else misc.get_input(cropped=False)
+            directory, files = misc.process_user_input(path, single_file=True) if path else misc.get_input(cropped=False)
         case(False, True):
-            directory, files = misc.process_user_input(file_path, single_file=True) if file_path else misc.get_input(cropped=True)
-    targets = find_target_pixels(directory, files, wizard)
+            directory, files = misc.process_user_input(path, single_file=True) if path else misc.get_input(cropped=True)
+    return directory, files
+
+
+def start_script(folder: str, screens: bool, width: int, height: int, wizard: bool) -> None:
+    '''Performs the screenshot cropping process.'''
+    targets = find_target_pixels(folder, screens, wizard)
     files_list = get_new_list_of_files(targets)
     edited_coordinates = get_coordinates(targets, wizard)
     crop_corners(
-        directory,
+        folder,
         files_list,
         edited_coordinates,
-        wizard,
-        view_width,
-        view_height
+        width,
+        height,     
+        wizard
         )
     print(f'{misc.print_time()}', 'The script is finished.')
-    misc.script_close(False)
+
+
+def main(wizard: bool, file_path: bool, cropped: bool, current_folder: bool, both: bool, view_width: int, view_height: int) -> None:
+    '''Main function of the script.'''
+    directory, files = match_path_and_screenshots(current_folder, file_path, cropped)
+    if both:
+        start_script(directory, files, view_width, view_height, wizard=True)
+        start_script(directory, files, view_width, view_height, wizard=False)
+        misc.script_close(False)
+    else:
+        start_script(directory, files, wizard, view_width, view_height)
+        misc.script_close(False)
