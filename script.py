@@ -34,10 +34,10 @@ def process_targets(directory: str, file: str, targets: list, wizard: bool):
             height,
             width,
             wizard=True,
-            upper=data.upper_targets,
-            upper_neighbor=data.upper_neighbor_targets,
-            lower=data.lower_targets,
-            lower_neighbor=data.lower_neighbor_targets
+            upper=data.UPPER_TARGETS,
+            upper_neighbor=data.UPPER_NEIGHBOR_TARGETS,
+            lower=data.LOWER_TARGETS,
+            lower_neighbor=data.LOWER_NEIGHBOR_TARGETS
             )
     else:
         coordinates = misc.find_targets(
@@ -45,9 +45,9 @@ def process_targets(directory: str, file: str, targets: list, wizard: bool):
             height,
             width,
             wizard=False,
-            central=data.central_targets,
-            right=data.right_targets,
-            left=data.left_targets
+            central=data.CENTRAL_TARGETS,
+            right=data.RIGHT_TARGETS,
+            left=data.LEFT_TARGETS
             )
     targets.append(coordinates)
     return targets
@@ -62,10 +62,10 @@ def process_wizards(directory: str, file: str, targets: list):
         height,
         width,
         wizard=True,
-        upper=data.upper_targets,
-        upper_neighbor=data.upper_neighbor_targets,
-        lower=data.lower_targets,
-        lower_neighbor=data.lower_neighbor_targets
+        upper=data.UPPER_TARGETS,
+        upper_neighbor=data.UPPER_NEIGHBOR_TARGETS,
+        lower=data.LOWER_TARGETS,
+        lower_neighbor=data.LOWER_NEIGHBOR_TARGETS
         )
     targets.append(coordinates)
     return targets
@@ -80,9 +80,9 @@ def process_views(directory: str, file: str, targets: list):
         height,
         width,
         wizard=False,
-        central=data.central_targets,
-        right=data.right_targets,
-        left=data.left_targets
+        central=data.CENTRAL_TARGETS,
+        right=data.RIGHT_TARGETS,
+        left=data.LEFT_TARGETS
     )
     targets.append(coordinates)
     return targets

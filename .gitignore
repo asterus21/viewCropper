@@ -4,3 +4,4 @@ dist/
 *.png
 *.spec
 draft.py
+TODO.md

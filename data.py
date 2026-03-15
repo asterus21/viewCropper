@@ -1,37 +1,37 @@
-"""data module
+'''data module
 
 This module contains data, i.e. color of the target pixels given
 - as central targets for views
-- one pixel to the right called 'right_targets'
-- one pixel to the left called 'left_targets'
+called 'RIGHT_TARGETS'
+- one pixel to the left called 'LEFT_TARGETS'
 - the same is for wizards where go
 - one pixel to the right of the target one
 - one pixel below the target one
 - and the same for the target pixel on the bottom left cornen
-"""
+'''
 
-# view targets
-central_targets = [
+# targets for views
+CENTRAL_TARGETS = [
     (229, 165, 90),
     (229, 168, 97),
     (137, 99, 54),
     (82, 61, 35)
     ]
 
-right_targets = [
+RIGHT_TARGETS = [
     (51, 51, 51),
     (31, 31, 31),
     (19, 19, 19)
 ]
 
-left_targets = [
+LEFT_TARGETS = [
     (255, 255, 255),
     (153, 153, 153),
     (92, 92, 92)
     ]
 
-# wizard targets
-upper_targets = [
+# targets for wizards
+UPPER_TARGETS = [
     (187, 187, 187),
     (186, 186, 186),
     (112, 112, 112),
@@ -41,13 +41,13 @@ upper_targets = [
     (161, 161, 161)
 ]
 
-upper_neighbor_targets = [
+UPPER_NEIGHBOR_TARGETS = [
     (239, 239, 239),
     (143, 143, 143),
     (238, 238, 238)
 ]
 
-lower_targets = [
+LOWER_TARGETS = [
     (176, 176, 176),
     (175, 175, 175),
     (106, 106, 106),
@@ -57,7 +57,7 @@ lower_targets = [
     (149, 149, 149)
 ]
 
-lower_neighbor_targets = [
+LOWER_NEIGHBOR_TARGETS = [
     (238, 238, 238),
     (143, 143, 143),
     (237, 237, 237),
