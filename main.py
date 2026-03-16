@@ -108,11 +108,11 @@ if __name__ == '__main__':
         # script -t
         # args.wizard=False, args.view=False, args.path=False, args.type=False, args.directory=False, args.cropped=False, args.both=False
         case(False, False, False, True, False, False, False):
-            script.show_screenshot_types(current_folder=False)
+            script.show_screenshot_types(current_folder=False, stdout=True)
         # script -t -d
         # args.wizard=False, args.view=False, args.path=False, args.type=False, args.directory=False, args.cropped=False, args.both=False
         case(False, False, False, True, True, False, False):
-            script.show_screenshot_types(current_folder=True)
+            script.show_screenshot_types(current_folder=True, stdout=True)
         # script -w -v
         # args.wizard=False, args.view=False, args.path=False, args.type=False, args.directory=False, args.cropped=False, args.both=False
         case(True, True, False, False, False, False, False):

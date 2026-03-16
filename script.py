@@ -120,7 +120,7 @@ def get_coordinates(coordinates: dict, wizard: bool) -> list:
 
 # main logic of the script, i.e. image cropping
 # TODO: split the function into two functions
-def crop_corners(directory: str, files: list, target_pixels: list, view_width: int, view_height: int, wizard: bool) -> None:
+def crop_corners(directory: str, files: list, target_pixels: list, view_width: int, view_height: int, wizard: bool, stdout: bool) -> None:
     '''Crops the screenshots according to the target pixels.'''
     file_number = 1
     cropped_files = len(misc.get_files(os.getcwd(), cropped=True))
@@ -159,22 +159,23 @@ def crop_corners(directory: str, files: list, target_pixels: list, view_width: i
                     file_number += 1
         except Exception as E:
             print(f'{E}: no wizard screenshot or view one is found.')
-    print(f'{misc.print_time()}', str(len(files)) + ' file(s) processed.')
+    if stdout:
+        print(f'{misc.print_time()}', str(len(files)) + ' file(s) processed.')
     return None
 
 
-def show_screenshot_types(current_folder: bool) -> tuple:
+def show_screenshot_types(current_folder: bool, stdout: bool) -> tuple:
     '''Returns the types of screenshots.'''
     if current_folder:
         directory = os.getcwd()
         files = misc.get_files(directory, cropped=False)
     else:
         directory, files = misc.get_input(cropped=False)
-    views_targets, wizards_targtes = [], []
+    views_targets, wizards_targets = [], []
     for file in files:
         process_targets(directory, file, views_targets, wizard=False)
-        process_targets(directory, file, wizards_targtes, wizard=True)
-
+        process_targets(directory, file, wizards_targets, wizard=True)
+    #########################################################################
     def get_target_pixels(directory: str, files: list, stdout: bool) -> dict:
         '''Creates a dictionary with the types of screenshots.'''
         targets = []
@@ -194,11 +195,12 @@ def show_screenshot_types(current_folder: bool) -> tuple:
             return types
         else:
             return types
-    
-    merged = list(misc.remove_empty_values(files, views_targets).keys()) + list(misc.remove_empty_values(files, wizards_targtes).keys())
-    types = get_target_pixels(directory, sorted(merged), stdout=False)
-    # print(directory, files, types, sep='\n')
-    return directory, files, types
+    #########################################################################
+    views = list(misc.remove_empty_values(files, views_targets).keys())
+    wizards   = list(misc.remove_empty_values(files, wizards_targets).keys())
+    merged  = wizards + views
+    types   = get_target_pixels(directory, sorted(merged), stdout)
+    return directory, files, types, wizards, views
 
 
 def match_path_and_screenshots(folder: bool, path: str, screens: bool) -> tuple:
@@ -219,7 +221,7 @@ def match_path_and_screenshots(folder: bool, path: str, screens: bool) -> tuple:
     return directory, files
 
 
-def start_script(folder: str, screens: bool, width: int, height: int, wizard: bool, stdout: bool) -> None:
+def start_script(folder: str, screens: list, width: int, height: int, wizard: bool, stdout: bool) -> None:
     '''Performs the screenshot cropping process.'''
     targets = find_target_pixels(folder, screens, wizard, stdout)
     files_list = get_new_list_of_files(targets)
@@ -230,24 +232,20 @@ def start_script(folder: str, screens: bool, width: int, height: int, wizard: bo
         edited_coordinates,
         width,
         height,
-        wizard
+        wizard,
+        stdout
         )
 
 
 def main(wizard: bool, file_path: bool, cropped: bool, current_folder: bool, both: bool, view_width: int, view_height: int) -> None:
     '''Main function of the script.'''   
     # TODO: use the crop_corners_wizard() and crop_corners_view()
-    if both:
-        wizards, views = [], []
-        directory, files, types = show_screenshot_types(current_folder)
-        for screenshot_name, screenshot_type in list(types.items()):
-            if screenshot_type == 'wizard': wizards.append(screenshot_name)
-            else: views.append(screenshot_name)
-        # print(wizards, views)
+    if both:        
+        directory, files, _, wizards, views = show_screenshot_types(current_folder, stdout=False)
         start_script(directory, wizards, view_width, view_height, wizard=True, stdout=False)
         start_script(directory, views, view_width, view_height, wizard=False, stdout=False)
         print(f'{misc.print_time()}', 'The script is finished.')
-        misc.script_close(False)
+        misc.script_close(False)        
     else:
         directory, files = match_path_and_screenshots(current_folder, file_path, cropped)
         print(f'{misc.print_time()}', 'Getting a list of files...')     
