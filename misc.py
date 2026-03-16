@@ -1,5 +1,6 @@
-'''
-This module contains miscellaneous functions, i.e. those which
+'''Miscellaneuos functions module.
+
+The module contains miscellaneous functions, i.e. those which
 - print the current time
 - close the script
 - process the user's input
@@ -49,7 +50,7 @@ def check_path(path):
 
 def process_user_input(user_input: str, single_file: bool):
     '''Processes user's input.'''
-    if single_file:    
+    if single_file:
         directory, file = check_path(user_input)
         str_directory = str(directory)
         return str_directory, [file]
@@ -120,7 +121,7 @@ def get_files(folder: str, cropped: bool) -> list:
     if not cropped:
         files = [file for file in os.listdir(folder) if file.lower().endswith('.png') and not file.startswith('Cropped_')]
     else:
-        files = [file for file in os.listdir(folder) if file.lower().endswith('.png') and file.startswith('Cropped_')]    
+        files = [file for file in os.listdir(folder) if file.lower().endswith('.png') and file.startswith('Cropped_')]
     return files
 
 
