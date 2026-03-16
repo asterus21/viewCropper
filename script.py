@@ -242,6 +242,7 @@ def main(wizard: bool, file_path: bool, cropped: bool, current_folder: bool, bot
     # TODO: use the crop_corners_wizard() and crop_corners_view()
     if both:        
         directory, files, _, wizards, views = show_screenshot_types(current_folder, stdout=False)
+        print(f'{misc.print_time()}', 'Getting a list of files...')
         start_script(directory, wizards, view_width, view_height, wizard=True, stdout=False)
         start_script(directory, views, view_width, view_height, wizard=False, stdout=False)
         print(f'{misc.print_time()}', 'The script is finished.')
