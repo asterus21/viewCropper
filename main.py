@@ -102,9 +102,13 @@ if __name__ == '__main__':
         case(False, True, False, False, True, True, False):
             script.main(wizard=False, file_path=args.path, cropped=True, current_folder=True, both=False, view_width=args.width, view_height=args.height)
         # script -b
-        # args.wizard=False, args.view=False, args.path=False, args.type=False, args.directory=False, args.cropped=False, args.both=False
+        # args.wizard=False, args.view=False, args.path=False, args.type=False, args.directory=False, args.cropped=False, args.both=True
         case(False, False, False, False, False, False, True):
             script.main(wizard=None, current_folder=False, file_path=args.path, cropped=False, both=True, view_width=args.width, view_height=args.height)
+        # script -b -d
+        # args.wizard=False, args.view=False, args.path=False, args.type=False, args.directory=False, args.cropped=False, args.both=True
+        case(False, False, False, False, True, False, True):
+            script.main(wizard=None, current_folder=True, file_path=args.path, cropped=False, both=True, view_width=args.width, view_height=args.height)
         # script -t
         # args.wizard=False, args.view=False, args.path=False, args.type=False, args.directory=False, args.cropped=False, args.both=False
         case(False, False, False, True, False, False, False):
@@ -128,4 +132,3 @@ if __name__ == '__main__':
 
 # TODO: change the -b flag module logic
 # TODO: test each script value
-# TODO: store a log
