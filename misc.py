@@ -80,7 +80,7 @@ def get_targets(image, x: int, y: int) -> dict:
 
 def find_targets(
     image, height: int, width: int, wizard: bool,
-    central, right, left, upper, upper_neighbor, lower, lower_neighbor: tuple) -> list:
+    central=None, right=None, left=None, upper=None, upper_neighbor=None, lower=None, lower_neighbor=None) -> list:
     '''Finds target pixels by their RGB value.'''
     if wizard:
         target_left_coordinates  = []

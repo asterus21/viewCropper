@@ -76,39 +76,39 @@ if __name__ == '__main__':
         # script -d
         # args.wizard=False, args.view=False, args.path=False, args.type=False, args.directory=True, args.cropped=False, args.both=False
         case(False, False, False, False, True, False, False):
-            script.main(wizard=True, file_path=args.path, cropped=False, current_folder=True, both=False, view_width=args.width, view_height=args.height)
+            script.main(wizard=True, file_path=args.path, cropped_screens=False, current_folder=True, both=False, view_width=args.width, view_height=args.height)
         # script -d -w
         # args.wizard=False, args.view=False, args.path=False, args.type=False, args.directory=False, args.cropped=False, args.both=False
         case(True, False, False, False, True, True, False):
-            script.main(wizard=True, file_path=args.path, cropped=False, current_folder=True, both=False, view_width=args.width, view_height=args.height)
+            script.main(wizard=True, file_path=args.path, cropped_screens=False, current_folder=True, both=False, view_width=args.width, view_height=args.height)
         # script -d -c
         # args.wizard=False, args.view=False, args.path=False, args.type=False, args.directory=False, args.cropped=False, args.both=False
         case(False, False, False, False, True, True, False):
-            script.main(wizard=True, file_path=args.path, cropped=True, current_folder=True, both=False, view_width=args.width, view_height=args.height)
+            script.main(wizard=True, file_path=args.path, cropped_screens=True, current_folder=True, both=False, view_width=args.width, view_height=args.height)
         # script -w -d
         # args.wizard=False, args.view=False, args.path=False, args.type=False, args.directory=False, args.cropped=False, args.both=False
         case(True, False, False, False, True, False, False):
-            script.main(wizard=True, file_path=args.path, cropped=False, current_folder=True, both=False, view_width=args.width, view_height=args.height)
+            script.main(wizard=True, file_path=args.path, cropped_screens=False, current_folder=True, both=False, view_width=args.width, view_height=args.height)
         # script -w -d -с
         # args.wizard=False, args.view=False, args.path=False, args.type=False, args.directory=False, args.cropped=False, args.both=False
         case(True, False, False, False, True, True, False):
-            script.main(wizard=True, file_path=args.path, cropped=True, current_folder=True, both=False, view_width=args.width, view_height=args.height)
+            script.main(wizard=True, file_path=args.path, cropped_screens=True, current_folder=True, both=False, view_width=args.width, view_height=args.height)
         # script -v -d
         # args.wizard=False, args.view=False, args.path=False, args.type=False, args.directory=False, args.cropped=False, args.both=False
         case(False, True, False, False, True, False, False):
-            script.main(wizard=False, file_path=args.path, cropped=False, current_folder=True, both=False, view_width=args.width, view_height=args.height)
+            script.main(wizard=False, file_path=args.path, cropped_screens=False, current_folder=True, both=False, view_width=args.width, view_height=args.height)
         # script -v -d -c
         # args.wizard=False, args.view=False, args.path=False, args.type=False, args.directory=False, args.cropped=False, args.both=False
         case(False, True, False, False, True, True, False):
-            script.main(wizard=False, file_path=args.path, cropped=True, current_folder=True, both=False, view_width=args.width, view_height=args.height)
+            script.main(wizard=False, file_path=args.path, cropped_screens=True, current_folder=True, both=False, view_width=args.width, view_height=args.height)
         # script -b
         # args.wizard=False, args.view=False, args.path=False, args.type=False, args.directory=False, args.cropped=False, args.both=True
         case(False, False, False, False, False, False, True):
-            script.main(wizard=None, current_folder=False, file_path=args.path, cropped=False, both=True, view_width=args.width, view_height=args.height)
+            script.main(wizard=None, current_folder=False, file_path=args.path, cropped_screens=False, both=True, view_width=args.width, view_height=args.height)
         # script -b -d
         # args.wizard=False, args.view=False, args.path=False, args.type=False, args.directory=False, args.cropped=False, args.both=True
         case(False, False, False, False, True, False, True):
-            script.main(wizard=None, current_folder=True, file_path=args.path, cropped=False, both=True, view_width=args.width, view_height=args.height)
+            script.main(wizard=None, current_folder=True, file_path=args.path, cropped_screens=False, both=True, view_width=args.width, view_height=args.height)
         # script -t
         # args.wizard=False, args.view=False, args.path=False, args.type=False, args.directory=False, args.cropped=False, args.both=False
         case(False, False, False, True, False, False, False):

@@ -1,6 +1,7 @@
 __pycache__/
 build/
 dist/
+screenshots/
 *.png
 *.spec
 draft.py

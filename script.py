@@ -72,11 +72,13 @@ def process_wizards(directory: str, file: str, targets: list) -> list:
         height,
         width,
         wizard=True,
+        central=None,
+        right=None,
+        left=None,
         upper=data.UPPER_TARGETS,
-        upper_neighbor=data.UPPER_NEIGHBOR_TARGETS
-        # ,
-        # lower=data.LOWER_TARGETS,
-        # lower_neighbor=data.LOWER_NEIGHBOR_TARGETS
+        upper_neighbor=data.UPPER_NEIGHBOR_TARGETS,
+        lower=data.LOWER_TARGETS,
+        lower_neighbor=data.LOWER_NEIGHBOR_TARGETS
         )
     targets.append(coordinates)
     return targets
@@ -93,7 +95,11 @@ def process_views(directory: str, file: str, targets: list) -> list:
         wizard=False,
         central=data.CENTRAL_TARGETS,
         right=data.RIGHT_TARGETS,
-        left=data.LEFT_TARGETS
+        left=data.LEFT_TARGETS,
+        upper=None,
+        upper_neighbor=None,
+        lower=None,
+        lower_neighbor=None
     )
     targets.append(coordinates)
     return targets
@@ -126,7 +132,7 @@ def get_coordinates(coordinates: dict, wizard: bool) -> list:
 def crop_corners(directory: str, files: list, target_pixels: list, view_width: int, view_height: int, wizard: bool, stdout: bool) -> None:
     '''Crops the screenshots according to the target pixels.'''
     file_number = 1
-    cropped_files = len(misc.get_files(os.getcwd(), cropped=True))
+    cropped_files = len(misc.get_files(folder=os.getcwd(), cropped=True))
     for i in range(len(files)):
         # skip empty coordinates if present
         if not target_pixels[i]: continue
@@ -176,20 +182,28 @@ def show_screenshot_types(current_folder: bool, stdout: bool) -> tuple:
     else:
         directory, files = misc.get_input(cropped=False)
     views_targets, wizards_targets, targets = [], [], []
+
     for file in files:
         targets_views   = process_targets(directory, file, views_targets, wizard=False)
         targets_wizards = process_targets(directory, file, wizards_targets, wizard=True)
-    views = list(misc.remove_empty_values(files, targets_views).keys())
+        # 70-90 seconds!
+        # targets_views   = process_views(directory, file, views_targets)
+        # targets_wizards = process_wizards(directory, file, wizards_targets)
+
+    views   = list(misc.remove_empty_values(files, targets_views).keys())
     wizards = list(misc.remove_empty_values(files, targets_wizards).keys())
+
     for file in files:
         both            = process_targets(directory, file, targets, wizard=True)
+
     coordinates = {
         files[i]: both[i] for i in range(0, len(files))
     }
     types = {
         key: "wizard" if value else "view" for key, value in coordinates.items()
     }
-    print()
+
+    # print()
     if stdout:
         for key, value in types.items():
             print(str(key) + ': ' + str(value))
@@ -237,16 +251,19 @@ def start_script(folder: str, screens: list, width: int, height: int, wizard: bo
 def main(wizard: bool, file_path: bool, cropped_screens: bool, current_folder: bool, both: bool, view_width: int, view_height: int) -> None:
     '''Main function of the script.'''
     # TODO: use the crop_corners_wizard() and crop_corners_view()
+    import time
+    start_time = time.perf_counter()
     if both:        
         directory, files, _, wizards, views, _ = show_screenshot_types(current_folder, stdout=False)
         print(f'{misc.print_time()}', 'Getting a list of files...')
         start_script(directory, wizards, view_width, view_height, wizard=True, stdout=False)
         start_script(directory, views, view_width, view_height, wizard=False, stdout=False)
-        print(f'{misc.print_time()}', 'The script is finished.')
-        misc.script_close(flags=False)
+        print(f'{misc.print_time()}', 'The script is finished.')        
     else:
         directory, files = match_path_and_screenshots(current_folder, file_path, cropped_screens)
         print(f'{misc.print_time()}', 'Getting a list of files...')
         start_script(directory, files, wizard, view_width, view_height, stdout=True)
-        print(f'{misc.print_time()}', 'The script is finished.')
-        misc.script_close(flags=False)
+        print(f'{misc.print_time()}', 'The script is finished.')        
+    end_time = time.perf_counter()
+    print(misc.print_time(), f'finished within: {end_time-start_time}')
+    misc.script_close(flags=False)
