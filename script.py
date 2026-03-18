@@ -73,9 +73,10 @@ def process_wizards(directory: str, file: str, targets: list) -> list:
         width,
         wizard=True,
         upper=data.UPPER_TARGETS,
-        upper_neighbor=data.UPPER_NEIGHBOR_TARGETS,
-        lower=data.LOWER_TARGETS,
-        lower_neighbor=data.LOWER_NEIGHBOR_TARGETS
+        upper_neighbor=data.UPPER_NEIGHBOR_TARGETS
+        # ,
+        # lower=data.LOWER_TARGETS,
+        # lower_neighbor=data.LOWER_NEIGHBOR_TARGETS
         )
     targets.append(coordinates)
     return targets
