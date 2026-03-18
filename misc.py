@@ -118,6 +118,11 @@ def find_targets(
 
 def get_files(folder: str, cropped: bool) -> list:
     '''Gets list of screenshots from a folder.'''
+    # think about a match block
+    # to process such cases
+    # as 'cropped' for Cropped_ files
+    # 'default' for Screenshot_ files
+    # _ for for all files
     if not cropped:
         files = [
             file for file in os.listdir(folder)
