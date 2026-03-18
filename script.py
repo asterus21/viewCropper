@@ -64,7 +64,7 @@ def process_targets(directory: str, file: str, targets: list, wizard: bool):
 
 
 def process_wizards(directory: str, file: str, targets: list) -> list:
-    '''Finds targets only for wizards.'''    
+    '''Finds targets only for wizards.'''
     image = Image.open(os.path.join(directory, file)).convert('RGB')
     width, height = image.size
     coordinates = misc.find_targets(
@@ -182,7 +182,7 @@ def show_screenshot_types(current_folder: bool, stdout: bool) -> tuple:
     views = list(misc.remove_empty_values(files, targets_views).keys())
     wizards = list(misc.remove_empty_values(files, targets_wizards).keys())
     for file in files:
-        both            = process_targets(directory, file, targets, wizard=True)    
+        both            = process_targets(directory, file, targets, wizard=True)
     coordinates = {
         files[i]: both[i] for i in range(0, len(files))
     }
@@ -198,9 +198,9 @@ def show_screenshot_types(current_folder: bool, stdout: bool) -> tuple:
     return directory, files, types, wizards, views, merged
 
 
-def match_path_and_screenshots(folder: bool, path: str, screens: bool) -> tuple:
+def match_path_and_screenshots(folder: bool, path: bool, cropped_screens: bool) -> tuple:
     '''Filters out a file, folder and cropped screens.'''
-    match (folder, screens):
+    match (folder, cropped_screens):
         case(True, True):
             print(misc.print_time(), 'Current directory is being used...')
             directory = os.getcwd()
@@ -234,8 +234,8 @@ def start_script(folder: str, screens: list, width: int, height: int, wizard: bo
         )
 
 
-def main(wizard: bool, file_path: bool, cropped: bool, current_folder: bool, both: bool, view_width: int, view_height: int) -> None:
-    '''Main function of the script.'''   
+def main(wizard: bool, file_path: bool, cropped_screens: bool, current_folder: bool, both: bool, view_width: int, view_height: int) -> None:
+    '''Main function of the script.'''
     # TODO: use the crop_corners_wizard() and crop_corners_view()
     if both:        
         directory, files, _, wizards, views, _ = show_screenshot_types(current_folder, stdout=False)
@@ -243,10 +243,10 @@ def main(wizard: bool, file_path: bool, cropped: bool, current_folder: bool, bot
         start_script(directory, wizards, view_width, view_height, wizard=True, stdout=False)
         start_script(directory, views, view_width, view_height, wizard=False, stdout=False)
         print(f'{misc.print_time()}', 'The script is finished.')
-        misc.script_close(False)        
+        misc.script_close(flags=False)
     else:
-        directory, files = match_path_and_screenshots(current_folder, file_path, cropped)
-        print(f'{misc.print_time()}', 'Getting a list of files...')     
+        directory, files = match_path_and_screenshots(current_folder, file_path, cropped_screens)
+        print(f'{misc.print_time()}', 'Getting a list of files...')
         start_script(directory, files, wizard, view_width, view_height, stdout=True)
         print(f'{misc.print_time()}', 'The script is finished.')
-        misc.script_close(False)
+        misc.script_close(flags=False)

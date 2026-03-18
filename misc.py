@@ -52,12 +52,13 @@ def process_user_input(user_input: str, single_file: bool):
     '''Processes user's input.'''
     if single_file:
         directory, file = check_path(user_input)
-        str_directory = str(directory)
-        return str_directory, [file]
+        folder = str(directory)
+        return folder, [file]
     else:
         path = Path(user_input)
         # the entered path must exist and be a folder
-        if not path.exists() and not path.is_dir():
+        # if not path.exists() and not path.is_dir():
+        if not path.exists() and path.is_dir():
             print('No valid path is provided.')
             input('Press Enter to close to programm.')
             sys.exit(1)
@@ -66,7 +67,7 @@ def process_user_input(user_input: str, single_file: bool):
 
 
 def get_targets(image, x: int, y: int) -> dict:
-    '''Finds target pixels and their neighbours'''
+    '''Finds target pixels and their neighbours.'''
     targets = dict(
         target = image.getpixel((x, y)),
         right  = image.getpixel((x + 1, y)),
@@ -78,10 +79,9 @@ def get_targets(image, x: int, y: int) -> dict:
 
 
 def find_targets(
-    image, height: int, width: int, wizard: bool, 
-    central=None, right=None, left=None,
-    upper=None, upper_neighbor=None, lower=None, lower_neighbor=None) -> list:
-    '''Finds target pixels by their RGB value'''
+    image, height: int, width: int, wizard: bool,
+    central, right, left, upper, upper_neighbor, lower, lower_neighbor: tuple) -> list:
+    '''Finds target pixels by their RGB value.'''
     if wizard:
         target_left_coordinates  = []
         target_right_coordinates = []
@@ -119,17 +119,25 @@ def find_targets(
 def get_files(folder: str, cropped: bool) -> list:
     '''Gets list of screenshots from a folder.'''
     if not cropped:
-        files = [file for file in os.listdir(folder) if file.lower().endswith('.png') and not file.startswith('Cropped_')]
+        files = [
+            file for file in os.listdir(folder)
+            if file.lower().endswith('.png') 
+            and not file.startswith('Cropped_')
+        ]
     else:
-        files = [file for file in os.listdir(folder) if file.lower().endswith('.png') and file.startswith('Cropped_')]
+        files = [
+            file for file in os.listdir(folder)
+            if file.lower().endswith('.png') 
+            and file.startswith('Cropped_')
+        ]
     return files
 
 
-def remove_empty_values(list_files: list, list_values: list) -> dict:
+def remove_empty_values(files: list, values: list) -> dict:
     '''Removes empty values in a list of found targets.'''
     coordinates = {
-        list_files[i]: list_values[i] for i in range(0, len(list_files))
-        if list_values[i]
+        files[i]: values[i] for i in range(0, len(files))
+        if values[i]
     }
     return coordinates
 
@@ -137,7 +145,7 @@ def remove_empty_values(list_files: list, list_values: list) -> dict:
 def is_empty(files_list: list) -> list:
     '''Checks if the given list of files is empty.'''
     if not files_list:
-        print(print_time(), 'The folder is empty. The program is about to close.')
+        print(print_time(), 'No PNG files found. The program is about to close.')
         script_close(False)
     else:
         return files_list
@@ -149,8 +157,7 @@ def get_input(cropped: bool) -> str:
     # add an empty line before the script start
     print()
     # check for a single volume letter
-    if user_input.endswith(':'):
-        user_input = user_input + '/'
+    if user_input.endswith(':'): user_input = user_input + '/'
     match user_input:
         case 'exit':
             print(print_time(), 'The program is about to close.')
