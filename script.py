@@ -196,6 +196,10 @@ def show_screenshot_types(current_folder: bool, stdout: bool) -> tuple:
     # IMPORTANT: it will be needed
     # IMPORTANT: to add a a flag
     # IMPORTANT: for the new and old behaviour
+    # add type and name flags
+    # if both true, then show types for Screenshot_ only files
+    # if true and false, then use the old behavior
+    # if false and none, then process Screenshot_ only files
     if current_folder:
         print(misc.print_time(), 'Current directory is being used...')
         directory = os.getcwd()
