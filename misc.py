@@ -140,6 +140,9 @@ def get_files(folder: str, cropped: bool) -> list:
 
 def remove_empty_values(files: list, values: list) -> dict:
     '''Removes empty values in a list of found targets.'''
+    # rename the function to process_values()
+    # add the empty flag to create a dictionary below 
+    # otherwise create a dictionary with empty values
     coordinates = {
         files[i]: values[i] for i in range(0, len(files))
         if values[i]
