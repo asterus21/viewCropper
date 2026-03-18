@@ -175,6 +175,17 @@ def crop_corners(directory: str, files: list, target_pixels: list, view_width: i
 
 def show_screenshot_types(current_folder: bool, stdout: bool) -> tuple:
     '''Returns the types of screenshots.'''
+    # make a restriction that only files named 'Screenshot_'
+    # can be used for the -b flag
+    # then call the process_targets() function
+    # to process only views and not wisards
+    # as there are less targets to process
+    # then call coordinates() and types()
+    # perhaps there's a way to merge these functions
+    # and make a restriction to use the -b and -f flags
+    # as well as the -b and -v and -w and -c ones
+    # in this case we call the process_targets() function 
+    # only once and not more
     if current_folder:
         print(misc.print_time(), 'Current directory is being used...')
         directory = os.getcwd()
