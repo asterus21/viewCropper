@@ -186,6 +186,16 @@ def show_screenshot_types(current_folder: bool, stdout: bool) -> tuple:
     # as well as the -b and -v and -w and -c ones
     # in this case we call the process_targets() function 
     # only once and not more
+    # IMPORTANT: leave the old behaviour 
+    # IMPORTANT: for the -t flag
+    # IMPORTANT: and let the user decide
+    # IMPORTANT: whether to use the 'screenshot' value
+    # IMPORTANT: in the misc.get_files()
+    # IMPORTANT: to show the types of only those files
+    # IMPORTANT: which start with Screenshot_
+    # IMPORTANT: it will be needed
+    # IMPORTANT: to add a a flag
+    # IMPORTANT: for the new and old behaviour
     if current_folder:
         print(misc.print_time(), 'Current directory is being used...')
         directory = os.getcwd()
@@ -224,6 +234,7 @@ def show_screenshot_types(current_folder: bool, stdout: bool) -> tuple:
 
 
 def match_path_and_screenshots(folder: bool, path: bool, cropped_screens: bool) -> tuple:
+    # rename the function
     '''Filters out a file, folder and cropped screens.'''
     match (folder, cropped_screens):
         case(True, True):
