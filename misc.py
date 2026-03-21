@@ -78,6 +78,34 @@ def get_targets(image, x: int, y: int) -> dict:
     return targets
 
 
+def find_wizards(image, height: int, width: int, upper=None, upper_neighbor=None):
+    coordinates = []
+    for x in range(width - 1):
+        for y in range(height - 1):
+            t = get_targets(image, x, y)
+            if  (
+                t.get('target') in upper and
+                t.get('right')  in upper_neighbor and
+                t.get('down')   in upper_neighbor
+                ):
+                coordinates.append((x, y))
+    return coordinates
+
+
+def find_views(image, height: int, width: int, central=None, right=None, left=None):
+    coordinates = []
+    for x in range(width - 1):
+        for y in range(height - 1):
+            t = get_targets(image, x, y)
+            if  (
+                t.get('target') in central and 
+                t.get('right')  in right and
+                t.get('left')   in left
+                ):
+                coordinates.append((x, y))
+    return coordinates
+
+# TODO: test with the simplified version of the wizards search
 def find_targets(
     image, height: int, width: int, wizard: bool,
     central=None, right=None, left=None, upper=None, upper_neighbor=None, lower=None, lower_neighbor=None) -> list:

@@ -26,9 +26,6 @@ def find_target_pixels(directory: str, files: list, wizard: bool, stdout: bool) 
     return coordinates
 
 
-# create a list of coordinates for the target pixels
-# TODO: it is needed to simplify that function 
-# TODO: as to look only for upper values and not lower values
 def process_targets(directory: str, file: str, targets: list, wizard: bool):
     '''Finds targets for both wizards and views.'''
     # concatenate a path and file, e.g. 'D:/folder/screenshot_1.png') then convert to the RGB format
@@ -63,46 +60,33 @@ def process_targets(directory: str, file: str, targets: list, wizard: bool):
     return targets
 
 
-def process_wizards(directory: str, file: str, targets: list) -> list:
+def process_wizards(directory: str, file: str) -> list:
     '''Finds targets only for wizards.'''
     image = Image.open(os.path.join(directory, file)).convert('RGB')
     width, height = image.size
-    coordinates = misc.find_targets(
+    processed = misc.find_wizards(
         image,
         height,
         width,
-        wizard=True,
-        central=None,
-        right=None,
-        left=None,
         upper=data.UPPER_TARGETS,
-        upper_neighbor=data.UPPER_NEIGHBOR_TARGETS,
-        lower=data.LOWER_TARGETS,
-        lower_neighbor=data.LOWER_NEIGHBOR_TARGETS
+        upper_neighbor=data.UPPER_NEIGHBOR_TARGETS
         )
-    targets.append(coordinates)
-    return targets
+    return processed
 
 
-def process_views(directory: str, file: str, targets: list) -> list:
+def process_views(directory: str, file: str) -> list:
     '''Finds targets only for views.'''
     image = Image.open(os.path.join(directory, file)).convert('RGB')
     width, height = image.size
-    coordinates = misc.find_targets(
+    processed = misc.find_views(
         image,
         height,
         width,
-        wizard=False,
         central=data.CENTRAL_TARGETS,
         right=data.RIGHT_TARGETS,
-        left=data.LEFT_TARGETS,
-        upper=None,
-        upper_neighbor=None,
-        lower=None,
-        lower_neighbor=None
-    )
-    targets.append(coordinates)
-    return targets
+        left=data.LEFT_TARGETS
+        )
+    return processed
 
 
 def get_new_list_of_files(files: dict) -> list:
@@ -173,7 +157,7 @@ def crop_corners(directory: str, files: list, target_pixels: list, view_width: i
     return None
 
 
-def show_screenshot_types(current_folder: bool, stdout: bool) -> tuple:
+def show_screenshot_types(current_folder: bool, stdout: bool, test: bool) -> tuple:
     '''Returns the types of screenshots.'''
     # make a restriction that only files named 'Screenshot_'
     # can be used for the -b flag
@@ -206,39 +190,68 @@ def show_screenshot_types(current_folder: bool, stdout: bool) -> tuple:
         files = misc.get_files(directory, cropped=False)
     else:
         directory, files = misc.get_input(cropped=False)
-    views_targets, wizards_targets, targets = [], [], []
 
-    for file in files:
-        targets_views   = process_targets(directory, file, views_targets, wizard=False)
-        targets_wizards = process_targets(directory, file, wizards_targets, wizard=True)
-        # 70-90 seconds!
-        # targets_views   = process_views(directory, file, views_targets)
-        # targets_wizards = process_wizards(directory, file, wizards_targets)
+    def get_values(directory: str, files: list, wizard: bool) -> dict:
+        '''Gets values for wizards or views.'''
+        if wizard:
+            values = {
+                file: process_wizards(directory, file)
+                for file in files
+            }
+        else:
+            values = {
+                file: process_views(directory, file)
+                for file in files
+            }
+        return values
+    
+    def get_keys(values: dict) -> list:
+        '''Gets empty keys to process'''
+        keys = [
+            key for key in values if not values[key]
+        ]
+        return keys
 
-    views   = list(misc.remove_empty_values(files, targets_views).keys())
-    wizards = list(misc.remove_empty_values(files, targets_wizards).keys())
+    def get_types(values: dict, wizard: bool) -> dict:
+        '''Returns a file type for a screenshot'''
+        if wizard:
+            types = {
+                key: 'wizard' for key, value in values.items() if value
+            }
+        else:
+            types = {
+                key: 'view' for key, value in values.items() if value
+            }
+        return types
 
-    for file in files:
-        both            = process_targets(directory, file, targets, wizard=True)
-
-    coordinates = {
-        files[i]: both[i] for i in range(0, len(files))
-    }
-    types = {
-        key: "wizard" if value else "view" for key, value in coordinates.items()
-    }
-
-    # print()
+    # TODO: add test:bool to test the current behavior
+    # TODO: old one with the call of the process_targets() function
+    # TODO: and the use of the dictionary comprehensions for both wizards and views
+    # TODO: then merge the dictionaries without calling the get_key() function
+    if test:
+        wizards      = get_values(directory, files, wizard=True)
+        keys         = get_keys(wizards)
+        views        = get_values(directory, keys, wizard=False)
+        wizard_types = get_types(wizards, wizard=True)
+        view_types   = get_types(views, wizard=False)
+        types        = wizard_types | view_types
+        sorts        = dict(sorted(types.items()))
+    else:
+        wizards      = get_values(directory, files, wizard=True)
+        views        = get_values(directory, files, wizard=False)
+        wizard_types = get_types(wizards, wizard=True)
+        view_types   = get_types(views, wizard=False)
+        wizard_types.update({key: value for key, value in view_types.items()})        
+        sorts        = dict(sorted(wizard_types.items()))
+        
     if stdout:
-        for key, value in types.items():
+        for key, value in sorts.items():
             print(str(key) + ': ' + str(value))
-        print()   
-    merged = wizards + views
-    return directory, files, types, wizards, views, merged
+    else:
+        return sorts
 
 
-def match_path_and_screenshots(folder: bool, path: bool, cropped_screens: bool) -> tuple:
-    # rename the function
+def match_path(folder: bool, path: bool, cropped_screens: bool) -> tuple:
     '''Filters out a file, folder and cropped screens.'''
     match (folder, cropped_screens):
         case(True, True):
@@ -276,20 +289,16 @@ def start_script(folder: str, screens: list, width: int, height: int, wizard: bo
 
 def main(wizard: bool, file_path: bool, cropped_screens: bool, current_folder: bool, both: bool, view_width: int, view_height: int) -> None:
     '''Main function of the script.'''
-    # TODO: use the crop_corners_wizard() and crop_corners_view()
     import time
     start_time = time.perf_counter()
-    if both:        
-        directory, files, _, wizards, views, _ = show_screenshot_types(current_folder, stdout=False)
-        print(f'{misc.print_time()}', 'Getting a list of files...')
-        start_script(directory, wizards, view_width, view_height, wizard=True, stdout=False)
-        start_script(directory, views, view_width, view_height, wizard=False, stdout=False)
-        print(f'{misc.print_time()}', 'The script is finished.')        
+    if both:
+        show_screenshot_types(current_folder, stdout=True, test=False)
     else:
-        directory, files = match_path_and_screenshots(current_folder, file_path, cropped_screens)
+        directory, files = match_path(current_folder, file_path, cropped_screens)
         print(f'{misc.print_time()}', 'Getting a list of files...')
         start_script(directory, files, wizard, view_width, view_height, stdout=True)
         print(f'{misc.print_time()}', 'The script is finished.')        
     end_time = time.perf_counter()
-    print(misc.print_time(), f'finished within: {end_time-start_time}')
+    finished = end_time - start_time
+    print(misc.print_time(), f'finished within: {finished:.2f}')
     misc.script_close(flags=False)

@@ -19,17 +19,17 @@ CENTRAL_TARGETS = [
     (82, 61, 35)
     ]
 
-LEFT_TARGETS = [
-    (255, 255, 255),
-    (153, 153, 153),
-    (92, 92, 92)
-    ]
-
 RIGHT_TARGETS = [
     (51, 51, 51),
     (31, 31, 31),
     (19, 19, 19)
 ]
+
+LEFT_TARGETS = [
+    (255, 255, 255),
+    (153, 153, 153),
+    (92, 92, 92)
+    ]
 
 # targets for wizards
 UPPER_TARGETS = [
