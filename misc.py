@@ -131,12 +131,12 @@ def match_path(folder: bool, cropped_screens: bool, path: str) -> tuple:
         case(True, True):
             print(print_time(), 'Current directory is being used...')
             directory = os.getcwd()
-            files = get_files(directory, cropped=True)
+            files = get_files(directory, cropped=True, strict=False)
             is_empty(files)
         case(True, False):
             print(print_time(), 'Current directory is being used...')
             directory = os.getcwd()
-            files = get_files(directory, cropped=False)
+            files = get_files(directory, cropped=False, strict=False)
             is_empty(files)
         case(False, False):
             directory, files = process_user_input(path, single_file=True) if path else get_input(cropped=False)
@@ -183,25 +183,35 @@ def find_targets(
         return coordinates
 
 
-def get_files(folder: str, cropped: bool) -> list:
+def get_files(folder: str, cropped: bool, strict: bool) -> list:
     '''Gets list of screenshots from a folder.'''
-    # think about a match block
-    # to process such cases
-    # as 'cropped' for Cropped_ files
-    # 'default' for Screenshot_ files
-    # _ for for all files
-    if not cropped:
-        files = [
-            file for file in os.listdir(folder)
-            if file.lower().endswith('.png') 
-            and not file.startswith('Cropped_')
-        ]
-    else:
-        files = [
-            file for file in os.listdir(folder)
-            if file.lower().endswith('.png') 
-            and file.startswith('Cropped_')
-        ]
+    match (cropped, strict):
+        case(True, True):
+            script_close(flags=True)
+        case(True, False):
+            files = [
+                file for file in os.listdir(folder)
+                if file.lower().endswith('.png') 
+                and file.startswith('Cropped_')
+            ]
+        case(False, True):
+            files = [
+                file for file in os.listdir(folder)
+                if file.lower().endswith('.png') 
+                and file.startswith('Screenshot_')
+            ]
+        case(False, False):
+            files = [
+                file for file in os.listdir(folder)
+                if file.lower().endswith('.png') 
+                and not file.startswith('Cropped_')
+            ]
+        case _:
+            files = [
+                file for file in os.listdir(folder)
+                if file.lower().endswith('.png') 
+                and not file.startswith('Cropped_')
+            ]
     return files
 
 
@@ -241,12 +251,12 @@ def get_input(cropped: bool) -> str:
         case '':
             print(print_time(), 'Current directory is being used.\n')
             directory = os.getcwd()
-            files_list = get_files(directory, cropped)
+            files_list = get_files(directory, cropped, strict=False)
             is_empty(files_list)
             return directory, files_list
         case _:
             directory = process_user_input(user_input, single_file=False)
-            files_list = get_files(directory, cropped)
+            files_list = get_files(directory, cropped, strict=False)
             is_empty(files_list)
             # D:/folder, [screenshot_1.png, screenshot_2.png, ...]
             return directory, files_list

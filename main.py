@@ -352,6 +352,10 @@ if __name__ == '__main__':
         # wizard, view, path, type, directory, cropped, both
         case(False, False, True, False, True, True, False):
             misc.script_close(flags=True)
+        # script -f -t -c
+        # wizard, view, path, type, directory, cropped, both
+        case(False, False, True, True, True, False, False):
+            misc.script_close(flags=True)
         # script -f -w -c
         # wizard, view, path, type, directory, cropped, both
         case(True, False, True, False, False, True, False):
@@ -367,6 +371,14 @@ if __name__ == '__main__':
         # script -f -v -c -d
         # wizard, view, path, type, directory, cropped, both
         case(False, True, True, False, True, False, False):
+            misc.script_close(flags=True)
+        # script -t -d -b
+        # wizard, view, path, type, directory, cropped, both
+        case(False, False, False, True, True, True, True):
+            misc.script_close(flags=True)
+        # script -t -b
+        # wizard, view, path, type, directory, cropped, both
+        case(False, False, False, True, False, True, True):
             misc.script_close(flags=True)
 
 # TODO: change the -b flag module logic
