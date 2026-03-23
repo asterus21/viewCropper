@@ -25,8 +25,8 @@ def print_time() -> str:
 
 
 def script_close(flags: bool) -> None:
-    '''Сloses the script.'''
-    # add an empty line before the closing statetement
+    '''Closes the script.'''
+    # adds an empty line before the closing statetement
     print()
     if flags:
         input('Given flags cannot be used together.\nPress Enter to close the program.')
@@ -57,7 +57,6 @@ def process_user_input(user_input: str, single_file: bool):
     else:
         path = Path(user_input)
         # the entered path must exist and be a folder
-        # if not path.exists() and not path.is_dir():
         if not path.exists() and path.is_dir():
             print('No valid path is provided.')
             input('Press Enter to close to programm.')
@@ -78,17 +77,37 @@ def get_targets(image, x: int, y: int) -> dict:
     return targets
 
 
-def find_wizards(image, height: int, width: int, upper=None, upper_neighbor=None):
-    coordinates = []
-    for x in range(width - 1):
-        for y in range(height - 1):
-            t = get_targets(image, x, y)
-            if  (
-                t.get('target') in upper and
-                t.get('right')  in upper_neighbor and
-                t.get('down')   in upper_neighbor
-                ):
-                coordinates.append((x, y))
+def find_wizards(image, height: int, width: int, whole: bool, upper=None, upper_neighbor=None, lower=None, lower_neighbor=None):
+    if whole:
+        target_left_coordinates  = []
+        target_right_coordinates = []
+        for x in range(width - 1):
+            for y in range(height - 1):
+                t = get_targets(image, x, y)
+                if  (
+                    t.get('target') in upper and
+                    t.get('right')  in upper_neighbor and
+                    t.get('down')   in upper_neighbor
+                    ):
+                    target_left_coordinates.append((x, y))
+                if  (
+                    t.get('target') in lower and
+                    t.get('left')   in lower_neighbor and
+                    t.get('up')     in lower_neighbor
+                    ):
+                    target_right_coordinates.append((x, y))
+            coordinates = target_left_coordinates + target_right_coordinates
+    else:
+        coordinates = []
+        for x in range(width - 1):
+            for y in range(height - 1):
+                t = get_targets(image, x, y)
+                if  (
+                    t.get('target') in upper and
+                    t.get('right')  in upper_neighbor and
+                    t.get('down')   in upper_neighbor
+                    ):
+                    coordinates.append((x, y))
     return coordinates
 
 
@@ -105,7 +124,27 @@ def find_views(image, height: int, width: int, central=None, right=None, left=No
                 coordinates.append((x, y))
     return coordinates
 
-# TODO: test with the simplified version of the wizards search
+
+def match_path(folder: bool, cropped_screens: bool, path: str) -> tuple:
+    '''Filters out a file, folder and cropped screens.'''
+    match (folder, cropped_screens):
+        case(True, True):
+            print(print_time(), 'Current directory is being used...')
+            directory = os.getcwd()
+            files = get_files(directory, cropped=True)
+            is_empty(files)
+        case(True, False):
+            print(print_time(), 'Current directory is being used...')
+            directory = os.getcwd()
+            files = get_files(directory, cropped=False)
+            is_empty(files)
+        case(False, False):
+            directory, files = process_user_input(path, single_file=True) if path else get_input(cropped=False)
+        case(False, True):
+            directory, files = process_user_input(path, single_file=True) if path else get_input(cropped=True)
+    return directory, files
+
+
 def find_targets(
     image, height: int, width: int, wizard: bool,
     central=None, right=None, left=None, upper=None, upper_neighbor=None, lower=None, lower_neighbor=None) -> list:
@@ -166,18 +205,6 @@ def get_files(folder: str, cropped: bool) -> list:
     return files
 
 
-def remove_empty_values(files: list, values: list) -> dict:
-    '''Removes empty values in a list of found targets.'''
-    # rename the function to process_values()
-    # add the empty flag to create a dictionary below 
-    # otherwise create a dictionary with empty values
-    coordinates = {
-        files[i]: values[i] for i in range(0, len(files))
-        if values[i]
-    }
-    return coordinates
-
-
 def is_empty(files_list: list) -> list:
     '''Checks if the given list of files is empty.'''
     if not files_list:
@@ -190,10 +217,11 @@ def is_empty(files_list: list) -> list:
 def get_input(cropped: bool) -> str:
     '''Accepts the user's input.'''
     user_input = input('Enter a path to the PNG files to crop (e.g. D:/screens) or press Enter to use a current directory (type exit to quit): ')
-    # add an empty line before the script start
+    # adds an empty line before the script start
     print()
-    # check for a single volume letter
-    if user_input.endswith(':'): user_input = user_input + '/'
+    # checks for a single volume letter
+    if user_input.endswith(':'):
+        user_input = user_input + '/'
     match user_input:
         case 'exit':
             print(print_time(), 'The program is about to close.')
