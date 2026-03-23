@@ -36,7 +36,7 @@ def find_target_pixels(directory: str, files: list, wizard: bool, stdout: bool) 
 
 def process_targets(directory: str, file: str, targets: list, wizard: bool):
     '''Finds targets for both wizards and views.'''
-    try:        
+    try:
         # concatenate a path and file, e.g. 'D:/folder/screenshot_1.png') then convert to the RGB format
         image = Image.open(os.path.join(directory, file)).convert('RGB')
         width, height = image.size
@@ -80,7 +80,7 @@ def process_wizards(directory: str, file: str, whole: bool) -> list:
         upper=data.UPPER_TARGETS,
         upper_neighbor=data.UPPER_NEIGHBOR_TARGETS,
         lower=data.LOWER_TARGETS,
-        lower_neighbor=data.LOWER_NEIGHBOR_TARGETS   
+        lower_neighbor=data.LOWER_NEIGHBOR_TARGETS
         )
     return processed
 
@@ -100,7 +100,6 @@ def process_views(directory: str, file: str) -> list:
     return processed
 
 
-# TODO: use the dictionary comprehension for every file in a list
 def get_new_list_of_files(files: dict) -> list:
     '''Returns dictionary keys with only the screenshots to be processed.'''
     # fetches only the keys of the dictionary, i.e. files names
@@ -263,65 +262,26 @@ def get_types(values: dict, wizard: bool) -> dict:
 
 def get_screenshot_types(directory, files, stdout: bool) -> tuple:
     '''Returns the types of screenshots.'''
-    # finds values for wizards and views
-    wizards      = get_values(directory, files, wizard=True, whole=False)    
+    wizards      = get_values(directory, files, wizard=True, whole=False)
     views        = get_values(directory, get_keys(wizards), wizard=False, whole=False)
-    # gets a type for each screenshot
     wizard_types = get_types(wizards, wizard=True)
     view_types   = get_types(views, wizard=False)
-    # merges and sorts dictionary values
     types        = wizard_types | view_types
     sorts        = dict(sorted(types.items()))
     if stdout:
-        for key, value in sorts.items():
-            print(str(key) + ': ' + str(value))
+        for key, value in sorts.items(): print(str(key) + ': ' + str(value))
+        return sorts, wizard_types, view_types, views
     else:
         return sorts, wizard_types, view_types, views
 
 
-def process_wizards_and_views(directory, wizard_types: dict, view_types: dict, wizards: dict, views: dict, width: int, height: int) -> None:
+def process_views_and_wizards(directory: str, files: list, width: int, height: int) -> None:
     '''Processes both wizards and views.'''
-    crop_wizards(directory, list(wizard_types.keys()), get_coordinates(wizards, wizard=True), stdout=True)    
-    crop_views(directory, list(view_types.keys()), get_coordinates(views, wizard=False), width, height, stdout=True)
-    return None
-
-
-def process_views_and_wizards(directory, files, width: int, height: int, strict: bool) -> None:
-    # make a restriction that only files named 'Screenshot_'
-    # can be used for the -b flag
-    # then call the process_targets() function
-    # to process only views and not wizards
-    # as there are less targets to process
-    # then call coordinates() and types()
-    # perhaps there's a way to merge these functions
-    # and make a restriction to use the -b and -f flags
-    # as well as the -b and -v and -w and -c ones
-    # in this case we call the process_targets() function
-    # only once and not more
-    # IMPORTANT: leave the old behaviour 
-    # IMPORTANT: for the -t flag
-    # IMPORTANT: and let the user decide
-    # IMPORTANT: whether to use the 'screenshot' value
-    # IMPORTANT: in the misc.get_files()
-    # IMPORTANT: to show the types of only those files
-    # IMPORTANT: which start with Screenshot_
-    # IMPORTANT: it will be needed
-    # IMPORTANT: to add a a flag
-    # IMPORTANT: for the new and old behaviour
-    # add type and name flags
-    # if both true, then show types for Screenshot_ only files
-    # if true and false, then use the old behavior
-    # if false and none, then process Screenshot_ only files
-    '''Processes both wizards and views.'''
-    if strict:
-        files = [
-            file for file in files if file.startswith('Screenshot_')
-        ]    
     wizards      = get_values(directory, files, wizard=True, whole=True)
     views        = get_values(directory, get_keys(wizards), wizard=False, whole=False)
     wizard_types = get_types(wizards, wizard=True)
     view_types   = get_types(views, wizard=False)
-    crop_wizards(directory, list(wizard_types.keys()), get_coordinates(wizards, wizard=True), stdout=True)    
+    crop_wizards(directory, list(wizard_types.keys()), get_coordinates(wizards, wizard=True), stdout=True)
     crop_views(directory, list(view_types.keys()), get_coordinates(views, wizard=False), width, height, stdout=True)
     return None
 
@@ -354,8 +314,7 @@ def main(wizard: bool, cropped_screens: bool, current_folder: bool, both: bool, 
                 directory,
                 files,
                 view_width,
-                view_height,                
-                strict
+                view_height
             )
         case(False, True):
             print(f'{misc.print_time()}', 'Getting a list of files...')

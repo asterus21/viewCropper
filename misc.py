@@ -117,7 +117,7 @@ def find_views(image, height: int, width: int, central=None, right=None, left=No
         for y in range(height - 1):
             t = get_targets(image, x, y)
             if  (
-                t.get('target') in central and 
+                t.get('target') in central and
                 t.get('right')  in right and
                 t.get('left')   in left
                 ):
@@ -127,21 +127,14 @@ def find_views(image, height: int, width: int, central=None, right=None, left=No
 
 def match_path(folder: bool, cropped_screens: bool, path: str, strict: bool) -> tuple:
     '''Filters out a file, folder and cropped screens.'''
-    match (folder, cropped_screens):
-        case(True, True):
+    if folder:
             print(print_time(), 'Current directory is being used...')
             directory = os.getcwd()
-            files = get_files(directory, strict, cropped=True)
+            files = get_files(directory, cropped_screens, strict)
+            print(directory, files)
             is_empty(files)
-        case(True, False):
-            print(print_time(), 'Current directory is being used...')
-            directory = os.getcwd()
-            files = get_files(directory, strict, cropped=False)
-            is_empty(files)
-        case(False, False):
-            directory, files = process_user_input(path, single_file=True) if path else get_input(cropped=False)
-        case(False, True):
-            directory, files = process_user_input(path, single_file=True) if path else get_input(cropped=True)
+    else:
+        directory, files = process_user_input(path, single_file=True) if path else get_input(cropped_screens, strict)
     return directory, files
 
 
@@ -173,9 +166,9 @@ def find_targets(
         coordinates = []
         for x in range(width - 1):
             for y in range(height - 1):
-                t = get_targets(image, x, y) 
+                t = get_targets(image, x, y)
                 if  (
-                    t.get('target') in central and 
+                    t.get('target') in central and
                     t.get('right')  in right and
                     t.get('left')   in left
                     ):
@@ -191,25 +184,19 @@ def get_files(folder: str, cropped: bool, strict: bool) -> list:
         case(True, False):
             files = [
                 file for file in os.listdir(folder)
-                if file.lower().endswith('.png') 
+                if file.lower().endswith('.png')
                 and file.startswith('Cropped_')
             ]
         case(False, True):
             files = [
                 file for file in os.listdir(folder)
-                if file.lower().endswith('.png') 
+                if file.lower().endswith('.png')
                 and file.startswith('Screenshot_')
             ]
         case(False, False):
             files = [
                 file for file in os.listdir(folder)
-                if file.lower().endswith('.png') 
-                and not file.startswith('Cropped_')
-            ]
-        case _:
-            files = [
-                file for file in os.listdir(folder)
-                if file.lower().endswith('.png') 
+                if file.lower().endswith('.png')
                 and not file.startswith('Cropped_')
             ]
     return files
@@ -224,7 +211,7 @@ def is_empty(files_list: list) -> list:
         return files_list
 
 
-def get_input(cropped: bool) -> str:
+def get_input(cropped: bool, strict: bool) -> str:
     '''Accepts the user's input.'''
     user_input = input('Enter a path to the PNG files to crop (e.g. D:/screens) or press Enter to use a current directory (type exit to quit): ')
     # adds an empty line before the script start
@@ -251,12 +238,12 @@ def get_input(cropped: bool) -> str:
         case '':
             print(print_time(), 'Current directory is being used.\n')
             directory = os.getcwd()
-            files_list = get_files(directory, cropped, strict=False)
+            files_list = get_files(directory, cropped, strict)
             is_empty(files_list)
             return directory, files_list
         case _:
             directory = process_user_input(user_input, single_file=False)
-            files_list = get_files(directory, cropped, strict=False)
+            files_list = get_files(directory, cropped, strict)
             is_empty(files_list)
             # D:/folder, [screenshot_1.png, screenshot_2.png, ...]
             return directory, files_list
