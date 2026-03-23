@@ -264,8 +264,7 @@ def get_types(values: dict, wizard: bool) -> dict:
 def get_screenshot_types(directory, files, stdout: bool) -> tuple:
     '''Returns the types of screenshots.'''
     # finds values for wizards and views
-    wizards      = get_values(directory, files, wizard=True, whole=False)
-    full_wizards = get_values(directory, files, wizard=True, whole=True)
+    wizards      = get_values(directory, files, wizard=True, whole=False)    
     views        = get_values(directory, get_keys(wizards), wizard=False, whole=False)
     # gets a type for each screenshot
     wizard_types = get_types(wizards, wizard=True)
@@ -277,7 +276,7 @@ def get_screenshot_types(directory, files, stdout: bool) -> tuple:
         for key, value in sorts.items():
             print(str(key) + ': ' + str(value))
     else:
-        return sorts, wizard_types, view_types, full_wizards, views
+        return sorts, wizard_types, view_types, views
 
 
 def process_wizards_and_views(directory, wizard_types: dict, view_types: dict, wizards: dict, views: dict, width: int, height: int) -> None:
@@ -287,7 +286,7 @@ def process_wizards_and_views(directory, wizard_types: dict, view_types: dict, w
     return None
 
 
-def process_views_and_wizards(directory, files, strict: bool, width: int, height: int) -> None:
+def process_views_and_wizards(directory, files, width: int, height: int, strict: bool) -> None:
     # make a restriction that only files named 'Screenshot_'
     # can be used for the -b flag
     # then call the process_targets() function
@@ -344,44 +343,29 @@ def start_script(folder: str, screens: list, width: int, height: int, wizard: bo
     return None
 
 
-def main(wizard: bool, cropped_screens: bool, current_folder: bool, both: bool, type: bool, file_path: str, view_width: int, view_height: int) -> None:
+def main(wizard: bool, cropped_screens: bool, current_folder: bool, both: bool, type: bool, strict: bool, file_path: str, view_width: int, view_height: int) -> None:
     '''Main function of the script.'''
-    directory, files = misc.match_path(current_folder, cropped_screens, file_path)
-    match(both, current_folder, type):
-        case(True, True, True):
+    directory, files = misc.match_path(current_folder, cropped_screens, file_path, strict)
+    match(both, type):
+        case(True, True):
             misc.script_close(flags=True)
-        case(True, True, False):
-            _, wizard_types, view_types, full_wizards, views = get_screenshot_types(directory, files, stdout=False)
-            process_wizards_and_views(
+        case(True, False):
+            process_views_and_wizards(
                 directory,
-                wizard_types,
-                view_types,
-                full_wizards,
-                views,
+                files,
                 view_width,
-                view_height
-                )
-        case(True, False, False):
-            print(f'{misc.print_time()}', 'Getting a list of files...')
-            _, wizard_types, view_types, full_wizards, views = get_screenshot_types(directory, files, stdout=False)
-            process_wizards_and_views(
-                directory,
-                wizard_types,
-                view_types,
-                full_wizards,
-                views,
-                view_width,
-                view_height
-                )
-        case(False, False, False):
-            print(f'{misc.print_time()}', 'Getting a list of files...')
-            start_script(directory, files, view_width, view_height, wizard, stdout=True)
-        case(False, True, False):
-            print(f'{misc.print_time()}', 'Getting a list of files...')
-            start_script(directory, files, view_width, view_height, wizard, stdout=True)            
-        case(False, False, True):
+                view_height,                
+                strict
+            )
+        case(False, True):
             print(f'{misc.print_time()}', 'Getting a list of files...')
             get_screenshot_types(directory, files, stdout=True)
+        case(False, False):
+            print(f'{misc.print_time()}', 'Getting a list of files...')
+            start_script(directory, files, view_width, view_height, wizard, stdout=True)
+        case _:
+            print(f'{misc.print_time()}', 'Getting a list of files...')
+            start_script(directory, files, view_width, view_height, wizard, stdout=True)
     print(f'{misc.print_time()}', 'The script is finished.')
     misc.script_close(flags=False)
     return None

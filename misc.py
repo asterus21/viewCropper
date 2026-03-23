@@ -125,18 +125,18 @@ def find_views(image, height: int, width: int, central=None, right=None, left=No
     return coordinates
 
 
-def match_path(folder: bool, cropped_screens: bool, path: str) -> tuple:
+def match_path(folder: bool, cropped_screens: bool, path: str, strict: bool) -> tuple:
     '''Filters out a file, folder and cropped screens.'''
     match (folder, cropped_screens):
         case(True, True):
             print(print_time(), 'Current directory is being used...')
             directory = os.getcwd()
-            files = get_files(directory, cropped=True, strict=False)
+            files = get_files(directory, strict, cropped=True)
             is_empty(files)
         case(True, False):
             print(print_time(), 'Current directory is being used...')
             directory = os.getcwd()
-            files = get_files(directory, cropped=False, strict=False)
+            files = get_files(directory, strict, cropped=False)
             is_empty(files)
         case(False, False):
             directory, files = process_user_input(path, single_file=True) if path else get_input(cropped=False)
