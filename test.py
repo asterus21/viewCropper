@@ -1,5 +1,4 @@
 import subprocess
-import datetime
 
 
 valid_commands = [
@@ -20,7 +19,11 @@ valid_commands = [
     'py main.py -y 200 -f D:/py/viewCropper/Screenshot_2.png -x 200',   # processing a view with a Y-coordinate first and an X-coordinate last
     'py main.py -y 200 -x 200 -f D:/py/viewCropper/Screenshot_2.png',   # processing a view with a Y-coordinate and an X-coordinate first
     'py main.py -f D:/py/viewCropper/Screenshot_2.png -x 200 -y 200',   # processing a view with an X-coordinate and a Y-coordinate last where X is before Y
-    'py main.py -f D:/py/viewCropper/Screenshot_2.png -y 200 -x 200'    # processing a view with an X-coordinate and a Y-coordinate last where Y is before X
+    'py main.py -f D:/py/viewCropper/Screenshot_2.png -y 200 -x 200',   # processing a view with an X-coordinate and a Y-coordinate last where Y is before 
+    'py main.py -d -w',                                                 # processing wizards in the current folder
+    'py main.py -d -v',                                                 # processing views in the current folder
+    'py main.py -d -v -c',                                              # processing views in the current folder starting with Cropped_
+    'py main.py -d -w -c'                                               # processing wizards in the current folder starting with Cropped_
 ]
 
 
@@ -29,15 +32,17 @@ invalid_commands = [
     'py main.py -y 100 -a 100',
     'py main.py -a 100 -b 100',
     'py main.py -a -b',
-    'py main.py -a',
+    'py main.py -a'
 ]
 
 
 def test_start(commands: list) -> tuple:
-    script_number = 0
-    print('starting the test...')
+    script_number = 0    
     print()
+    import datetime    
     for script in commands:
+        print(f'starting the test: { script } ')
+        start_time = datetime.now()
         process = subprocess.Popen(
             script,
             stdin   = subprocess.PIPE,
@@ -46,7 +51,9 @@ def test_start(commands: list) -> tuple:
             text    = True
             )
         stdout, stderr = process.communicate(input='\n')
-        print(f'"{commands[script_number]}" finished at {datetime.datetime.now().strftime("%H:%M:%S")}')
+        end_time = datetime.now()
+        time_difference = end_time - start_time        
+        print(f'"{ commands[script_number] }" finished at { time_difference.total_seconds() % 60 }')
         script_number +=1
     print('the test is finshed')
     return stdout, stderr
