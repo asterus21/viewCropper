@@ -478,7 +478,7 @@ if __name__ == '__main__':
 
 # TODO: use the --strict flag by default
 # TODO: if given, then process all screenshots
-# TODO: or name as -a or -all
+# TODO: or name it as -a or --all
 # TODO: then process views only
 # TODO: as it is faster
 # TODO: try to use a simplified mode of wizards searching
