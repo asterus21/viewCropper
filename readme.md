@@ -30,19 +30,19 @@ Examples (via Windows PowerShell):
 
 - process views by 100 pixels (and 761 high by default):
 
-`py .\main.py -x 100`
+`py .\main.py -v -x 100`
 
 - process views 100 pixels high (and 1271 wide by default):
 
-`py .\main.py -y 100`
+`py .\main.py -v -y 100`
 
 - process views 100 pixels wide and 100 high:
 
-`py .\main.py -x 100 -y 100`
+`py .\main.py -v -x 100 -y 100`
 
 - process views 200 pixels high and 400 wide:
 
-`py .\main.py -y 200 -x 400`
+`py .\main.py -v -y 200 -x 400`
 
 - process a single file (only a wizard):
 
@@ -122,19 +122,19 @@ Examples (via Windows PowerShell):
 
 - обрезать вьюшки на 100 пикселей в ширину (и 761 в высоту по умолчанию):
 
-`py .\main.py -x 100`
+`py .\main.py -v -x 100`
 
 - обрезать вьюшки на 100 пикселей в высоту (и 1271 в ширину по умолчанию):
 
-`py .\main.py -y 100`
+`py .\main.py -v -y 100`
 
 - обрезать вьюшки на 100 пикселей в ширину и 100 в высоту:
 
-`py .\main.py -x 100 -y 100`
+`py .\main.py -v -x 100 -y 100`
 
 - обрезать вьюшки на 200 пикселей в высоту и 400 в ширину:
 
-`py .\main.py -y 200 -x 400`
+`py .\main.py -v -y 200 -x 400`
 
 - обрезать отдельный файл (только визард):
 

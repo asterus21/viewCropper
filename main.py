@@ -466,5 +466,6 @@ if __name__ == '__main__':
         case(False, False, False, True, False, True, True, False):
             misc.script_close(flags=True)
 
+# TODO: try to use -x and/or -y flags without -v
 # TODO: test each script value
 # TODO: use classes
