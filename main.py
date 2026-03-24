@@ -24,9 +24,12 @@ if __name__ == '__main__':
     parser.add_argument('-f', '--file',    action='store',      dest='path',      help='path value to process a single file', type=str, default=None)
     args = parser.parse_args()
 
-    # from Claude
-    if (args.width != 1271 or args.height != 761) and not args.view and not args.wizard: args.view = True
-
+    # from Claude:
+    # for the use of -x and -y flags without -v
+    if (args.width != 1271 or args.height != 761) and not args.view and not args.wizard:
+        args.view = True
+    else:
+        pass
     match (args.wizard, args.view, args.path is not None, args.type, args.directory, args.cropped, args.both, args.strict):
         # script
         # wizard, view, path, type, directory, cropped, both, strict
