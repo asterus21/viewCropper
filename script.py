@@ -263,16 +263,16 @@ def get_types(values: dict, wizard: bool) -> dict:
 def get_screenshot_types(directory, files, stdout: bool) -> tuple:
     '''Returns the types of screenshots.'''
     wizards      = get_values(directory, files, wizard=True, whole=False)
-    views        = get_values(directory, get_keys(wizards), wizard=False, whole=False)
+    views        = get_values(directory, get_keys(wizards), wizard=False, whole=None)
     wizard_types = get_types(wizards, wizard=True)
     view_types   = get_types(views, wizard=False)
     types        = wizard_types | view_types
     sorts        = dict(sorted(types.items()))
     if stdout:
         for key, value in sorts.items(): print(str(key) + ': ' + str(value))
-        return sorts, wizard_types, view_types, views
+        return sorts
     else:
-        return sorts, wizard_types, view_types, views
+        return sorts
 
 
 def process_views_and_wizards(directory: str, files: list, width: int, height: int) -> None:

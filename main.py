@@ -467,3 +467,4 @@ if __name__ == '__main__':
             misc.script_close(flags=True)
 
 # TODO: test each script value
+# TODO: use classes

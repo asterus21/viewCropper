@@ -125,19 +125,6 @@ def find_views(image, height: int, width: int, central=None, right=None, left=No
     return coordinates
 
 
-def match_path(folder: bool, cropped_screens: bool, path: str, strict: bool) -> tuple:
-    '''Filters out a file, folder and cropped screens.'''
-    if folder:
-            print(print_time(), 'Current directory is being used...')
-            directory = os.getcwd()
-            files = get_files(directory, cropped_screens, strict)
-            print(directory, files)
-            is_empty(files)
-    else:
-        directory, files = process_user_input(path, single_file=True) if path else get_input(cropped_screens, strict)
-    return directory, files
-
-
 def find_targets(
     image, height: int, width: int, wizard: bool,
     central=None, right=None, left=None, upper=None, upper_neighbor=None, lower=None, lower_neighbor=None) -> list:
@@ -176,6 +163,19 @@ def find_targets(
         return coordinates
 
 
+def match_path(folder: bool, cropped_screens: bool, path: str, strict: bool) -> tuple:
+    '''Filters out a file, folder and cropped screens.'''
+    if folder:
+            print(print_time(), 'Current directory is being used...')
+            directory = os.getcwd()
+            files = get_files(directory, cropped_screens, strict)
+            print(directory, files)
+            is_empty(files)
+    else:
+        directory, files = process_user_input(path, single_file=True) if path else get_input(cropped_screens, strict)
+    return directory, files
+
+
 def get_files(folder: str, cropped: bool, strict: bool) -> list:
     '''Gets list of screenshots from a folder.'''
     match (cropped, strict):
@@ -206,7 +206,7 @@ def is_empty(files_list: list) -> list:
     '''Checks if the given list of files is empty.'''
     if not files_list:
         print(print_time(), 'No PNG files found. The program is about to close.')
-        script_close(False)
+        script_close(flags=False)
     else:
         return files_list
 
