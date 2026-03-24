@@ -473,5 +473,7 @@ if __name__ == '__main__':
         case(False, False, False, True, False, True, True, False):
             misc.script_close(flags=True)
 
+# TODO: try to use a simplified mode of wizards searching
+# TODO: try to use dictionary comprehensions when cropping screenshots
 # TODO: test each script value
 # TODO: use classes
