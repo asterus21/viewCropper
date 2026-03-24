@@ -39,7 +39,7 @@ invalid_commands = [
 def test_start(commands: list) -> tuple:
     script_number = 0    
     print()
-    import datetime    
+    from datetime import datetime  
     for script in commands:
         print(f'starting the test: { script } ')
         start_time = datetime.now()
