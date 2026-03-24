@@ -442,7 +442,7 @@ if __name__ == '__main__':
             misc.script_close(flags=True)
         # script -f -t -c
         # wizard, view, path, type, directory, cropped, both, strict
-        case(False, False, True, True, True, False, False, False):
+        case(False, False, True, True, False, True, False, False):
             misc.script_close(flags=True)
         # script -f -w -c
         # wizard, view, path, type, directory, cropped, both, strict
@@ -454,13 +454,17 @@ if __name__ == '__main__':
             misc.script_close(flags=True)
         # script -f -v -c
         # wizard, view, path, type, directory, cropped, both, strict
-        case(False, True, True, False, False, False, False, False):
+        case(False, True, True, False, False, True, False, False):
             misc.script_close(flags=True)
         # script -f -v -c -d
         # wizard, view, path, type, directory, cropped, both, strict
-        case(False, True, True, False, True, False, False, False):
+        case(False, True, True, False, True, True, False, False):
             misc.script_close(flags=True)
         # script -t -d -b
+        # wizard, view, path, type, directory, cropped, both, strict
+        case(False, False, False, True, True, False, True, False):
+            misc.script_close(flags=True)
+        # script -t -d -b -c
         # wizard, view, path, type, directory, cropped, both, strict
         case(False, False, False, True, True, True, True, False):
             misc.script_close(flags=True)
@@ -469,6 +473,5 @@ if __name__ == '__main__':
         case(False, False, False, True, False, True, True, False):
             misc.script_close(flags=True)
 
-# TODO: try to use -x and/or -y flags without -v
 # TODO: test each script value
 # TODO: use classes
