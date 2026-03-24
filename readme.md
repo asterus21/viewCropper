@@ -12,6 +12,7 @@ The script logic is defined via a use of flags, i.e.
 * `-x`, `--width`   – width value to process views
 * `-y`, `--height`  – height value to process views
 * `-f`, `--file`    – path value to process a single file
+* `-s`, `--strict`  – flag to process only those screenshots which start with "Screenshot_"
 
 Examples (via Windows PowerShell):
 
@@ -79,26 +80,31 @@ Examples (via Windows PowerShell):
 
 `py .\main.py -b -d`
 
-- process all views screenshot files that start with "Cropped_":
+- process all view screenshot files that start with "Cropped_":
 
 `py .\main.py -c -v`
+
+- process all wizard screenshot files that start with "Screenshot_":
+
+`py .\main.py -s -w`
 
 ---
 
 Данный скрипт используется для автоматического "нарезания" окон узлов в PolyAnalyst, что позволит команде Технических писателей сократить время на ручное "нарезание" скриншотов (см. папку examples).
 
-Работа скрипта определяется с помощью флагов, т.е.
+Работа скрипта определяется с помощью флагов:
 
-* `-h`, `--help`– показать флаги и завершить работу
-* `-w`, `--wizard`– флаг для работы только с визардами (используется по умолчанию, если флаг не задан)
-* `-v`, `--view`– флаг для работы только с вьюшками
-* `-t`, `--type`– флаг для отображения типов скриншотов
-* `-d`, `--dir` – флаг для запуска скрипта в текущей папке
+* `-h`, `--help`    – показать флаги и завершить работу
+* `-w`, `--wizard`  – флаг для работы только с визардами (используется по умолчанию, если флаг не задан)
+* `-v`, `--view`    – флаг для работы только с вьюшками
+* `-t`, `--type`    – флаг для отображения типов скриншотов
+* `-d`, `--dir`     – флаг для запуска скрипта в текущей папке
 * `-c`, `--cropped` – флаг для обработки только тех скриншотов, которые начинаются с "Cropped_"
-* `-b`, `--both`– флаг для обработки как визардов, так и вьюшек
-* `-x`, `--width` – значение ширины для обработки вьюшек
-* `-y`, `--height`– значение высоты для обработки вьюшек
-* `-f`, `--file`– путь к файлу для обработки одного файла
+* `-b`, `--both`    – флаг для обработки как визардов, так и вьюшек
+* `-x`, `--width`   – значение ширины для обработки вьюшек
+* `-y`, `--height`  – значение высоты для обработки вьюшек
+* `-f`, `--file`    – путь к файлу для обработки одного файла
+* `-s`, `--strict`  – флаг для обработки только тех скриншотов, которые начинаются с "Screenshot_"
 
 Примеры (через Windows PowerShell):
 
@@ -169,3 +175,7 @@ Examples (via Windows PowerShell):
 - обрезать вьюшки, которые начинаются на "Cropped_":
 
 `py .\main.py -c -v`
+
+- обрезать визарды, которые начинаются на "Screenshot_":
+
+`py .\main.py -s -w`
