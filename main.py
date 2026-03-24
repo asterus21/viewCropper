@@ -476,6 +476,11 @@ if __name__ == '__main__':
         case(False, False, False, True, False, True, True, False):
             misc.script_close(flags=True)
 
+# TODO: use the --strict flag by default
+# TODO: if given, then process all screenshots
+# TODO: or name as -a or -all
+# TODO: then process views only
+# TODO: as it is faster
 # TODO: try to use a simplified mode of wizards searching
 # TODO: try to use dictionary comprehensions when cropping screenshots
 # TODO: test each script value
