@@ -58,7 +58,7 @@ Examples (via Windows PowerShell):
 
 - process a single view by на 600 pixels wide and 300 high:
 
-`py .\main.py -x 600 -y 300 -f D:/folder/Screenshot_1.png`
+`py .\main.py -v -x 600 -y 300 -f D:/folder/Screenshot_1.png`
 
 - show screenshot types:
 
@@ -150,7 +150,7 @@ Examples (via Windows PowerShell):
 
 - обрезать отдельный файл вьюшки на 600 пикселей в ширину и 300 в высоту:
 
-`py .\main.py -x 600 -y 300 -f D:/folder/Screenshot_1.png `
+`py .\main.py -v -x 600 -y 300 -f D:/folder/Screenshot_1.png `
 
 - показать только типы скриншотов:
 
