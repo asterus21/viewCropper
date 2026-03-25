@@ -163,22 +163,22 @@ def find_targets(
         return coordinates
 
 
-def match_path(folder: bool, cropped_screens: bool, path: str, strict: bool) -> tuple:
+def match_path(folder: bool, cropped_screens: bool, path: str, all: bool) -> tuple:
     '''Filters out a file, folder and cropped screens.'''
     if folder:
             print(print_time(), 'Current directory is being used...')
             directory = os.getcwd()
-            files = get_files(directory, cropped_screens, strict)
+            files = get_files(directory, cropped_screens, all)
             # print(directory, files)
             is_empty(files)
     else:
-        directory, files = process_user_input(path, single_file=True) if path else get_input(cropped_screens, strict)
+        directory, files = process_user_input(path, single_file=True) if path else get_input(cropped_screens, all)
     return directory, files
 
 
-def get_files(folder: str, cropped_screens: bool, strict: bool) -> list:
+def get_files(folder: str, cropped_screens: bool, all: bool) -> list:
     '''Gets list of screenshots from a folder.'''
-    match (cropped_screens, strict):
+    match (cropped_screens, all):
         case(True, True):
             script_close(flags=True)
         case(True, False):
@@ -191,14 +191,15 @@ def get_files(folder: str, cropped_screens: bool, strict: bool) -> list:
             files = [
                 file for file in os.listdir(folder)
                 if file.lower().endswith('.png')
-                and file.startswith('Screenshot_')
+                and not file.startswith('Cropped_')
             ]
         case(False, False):
             files = [
                 file for file in os.listdir(folder)
                 if file.lower().endswith('.png')
-                and not file.startswith('Cropped_')
+                and file.startswith('Screenshot_')
             ]
+    print(files)
     return files
 
 
@@ -211,7 +212,7 @@ def is_empty(files_list: list) -> list:
         return files_list
 
 
-def get_input(cropped_screens: bool, strict: bool) -> str:
+def get_input(cropped_screens: bool, all: bool) -> str:
     '''Accepts the user's input.'''
     user_input = input('Enter a path to the PNG files to crop (e.g. D:/screens) or press Enter to use a current directory (type exit to quit): ')
     # adds an empty line before the script start
@@ -238,12 +239,12 @@ def get_input(cropped_screens: bool, strict: bool) -> str:
         case '':
             print(print_time(), 'Current directory is being used.\n')
             directory = os.getcwd()
-            files_list = get_files(directory, cropped_screens, strict)
+            files_list = get_files(directory, cropped_screens, all)
             is_empty(files_list)
             return directory, files_list
         case _:
             directory = process_user_input(user_input, single_file=False)
-            files_list = get_files(directory, cropped_screens, strict)
+            files_list = get_files(directory, cropped_screens, all)
             is_empty(files_list)
             # D:/folder, [screenshot_1.png, screenshot_2.png, ...]
             return directory, files_list

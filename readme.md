@@ -1,4 +1,4 @@
-The current script is aimed to automatically crop windows of the PolyAnalyst nodes to save time for the Technincal writers team when making nodes settings windows screenshots (see examples).
+The current script is aimed to automatically crop windows of the PolyAnalyst nodes to save time for the Technincal writers team when making nodes settings windows screenshots (see examples). Only those files starting with "Screenshot_" are processed by default.
 
 The script logic is defined via a use of flags, i.e.
 
@@ -12,7 +12,7 @@ The script logic is defined via a use of flags, i.e.
 * `-x`, `--width`   – width value to process views
 * `-y`, `--height`  – height value to process views
 * `-f`, `--file`    – path value to process a single file
-* `-s`, `--strict`  – flag to process only those screenshots which start with "Screenshot_"
+* `-a`, `--all`     – flag to process not only those screenshots which start with "Screenshot_" but all of them (except "Cropped_")
 
 Examples (via Windows PowerShell):
 
@@ -84,13 +84,13 @@ Examples (via Windows PowerShell):
 
 `py .\main.py -c -v`
 
-- process all wizard screenshot files that start with "Screenshot_":
+- process all wizard screenshot files that start with any character, i.e. not only with "Screenshot_" (but not "Cropped_"):
 
-`py .\main.py -s -w`
+`py .\main.py -a -w`
 
 ---
 
-Данный скрипт используется для автоматического "нарезания" окон узлов в PolyAnalyst, что позволит команде Технических писателей сократить время на ручное "нарезание" скриншотов (см. папку examples).
+Данный скрипт используется для автоматического "нарезания" окон узлов в PolyAnalyst, что позволит команде Технических писателей сократить время на ручное "нарезание" скриншотов (см. папку examples). По умолчанию обрабатываются только скриншоты, которые начинаются на "Screenshot_".
 
 Работа скрипта определяется с помощью флагов:
 
@@ -104,7 +104,7 @@ Examples (via Windows PowerShell):
 * `-x`, `--width`   – значение ширины для обработки вьюшек
 * `-y`, `--height`  – значение высоты для обработки вьюшек
 * `-f`, `--file`    – путь к файлу для обработки одного файла
-* `-s`, `--strict`  – флаг для обработки только тех скриншотов, которые начинаются с "Screenshot_"
+* `-a`, `--all`     – флаг для обработки только всех скриншотов, которые начинаются не только с "Screenshot_" (кроме "Cropped_")
 
 Примеры (через Windows PowerShell):
 
@@ -176,6 +176,6 @@ Examples (via Windows PowerShell):
 
 `py .\main.py -c -v`
 
-- обрезать визарды, которые начинаются на "Screenshot_":
+- обрезать визарды, которые начинаются на любую последовательность символов, включая "Screenshot_" (кроме "Cropped_"):
 
-`py .\main.py -s -w`
+`py .\main.py -a -w`

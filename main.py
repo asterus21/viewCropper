@@ -18,7 +18,7 @@ if __name__ == '__main__':
     parser.add_argument('-d', '--dir',     action='store_true', dest='directory', help='flag to start the script in the current folder')
     parser.add_argument('-c', '--cropped', action='store_true', dest='cropped',   help='flag to process only those screenshots which start with "Cropped_"')
     parser.add_argument('-b', '--both',    action='store_true', dest='both',      help='flag to process both wizards and views')
-    parser.add_argument('-s', '--strict',  action='store_true', dest='strict',    help='flag to process only those screenshots which start with "Screenshot_"')
+    parser.add_argument('-a', '--all',     action='store_true', dest='all',       help='flag to process all screenshots')
     parser.add_argument('-x', '--width',   action='store',      dest='width',     help='width value to process views',        type=int, default=1271)
     parser.add_argument('-y', '--height',  action='store',      dest='height',    help='height value to process views',       type=int, default=761)
     parser.add_argument('-f', '--file',    action='store',      dest='path',      help='path value to process a single file', type=str, default=None)
@@ -30,9 +30,9 @@ if __name__ == '__main__':
         args.view = True
     else:
         pass
-    match (args.wizard, args.view, args.path is not None, args.type, args.directory, args.cropped, args.both, args.strict):
+    match (args.wizard, args.view, args.path is not None, args.type, args.directory, args.cropped, args.both, args.all):
         # script
-        # wizard, view, path, type, directory, cropped, both, strict
+        # wizard, view, path, type, directory, cropped, both, all
         case(False, False, False, False, False, False, False, False):
             script.main(
                 wizard=True,
@@ -40,13 +40,13 @@ if __name__ == '__main__':
                 current_folder=False,
                 both=False,
                 type=False,
-				strict=False,
+				all=False,
                 file_path=args.path,
                 view_width=args.width,
                 view_height=args.height
                 )
         # script -w
-        # wizard, view, path, type, directory, cropped, both, strict
+        # wizard, view, path, type, directory, cropped, both, all
         case(True, False, False, False, False, False, False, False):
             script.main(
                 wizard=True,
@@ -54,13 +54,13 @@ if __name__ == '__main__':
                 current_folder=False,
                 both=False,
                 type=False,
-				strict=False,
+				all=False,
                 file_path=args.path,
                 view_width=args.width,
                 view_height=args.height
                 )
         # script -v
-        # wizard, view, path, type, directory, cropped, both, strict
+        # wizard, view, path, type, directory, cropped, both, all
         case(False, True, False, False, False, False, False, False):
             script.main(
                 wizard=False,
@@ -68,13 +68,13 @@ if __name__ == '__main__':
                 current_folder=False,
                 both=False,
                 type=False,
-				strict=False,
+				all=False,
                 file_path=args.path,
                 view_width=args.width,
                 view_height=args.height
                 )
         # script -c
-        # wizard, view, path, type, directory, cropped, both, strict
+        # wizard, view, path, type, directory, cropped, both, all
         case(False, False, False, False, False, True, False, False):
             script.main(
                 wizard=True,
@@ -82,13 +82,13 @@ if __name__ == '__main__':
                 current_folder=False,
                 both=False,
                 type=False,
-				strict=False,
+				all=False,
                 file_path=args.path,
                 view_width=args.width,
                 view_height=args.height
                 )
         # script -s
-        # wizard, view, path, type, directory, cropped, both, strict
+        # wizard, view, path, type, directory, cropped, both, all
         case(False, False, False, False, False, False, False, True):
             script.main(
                 wizard=True,
@@ -96,13 +96,13 @@ if __name__ == '__main__':
                 current_folder=False,
                 both=False,
                 type=False,
-				strict=True,
+				all=True,
                 file_path=args.path,
                 view_width=args.width,
                 view_height=args.height
                 )
         # script -s -w
-        # wizard, view, path, type, directory, cropped, both, strict
+        # wizard, view, path, type, directory, cropped, both, all
         case(True, False, False, False, False, False, False, True):
             script.main(
                 wizard=True,
@@ -110,13 +110,13 @@ if __name__ == '__main__':
                 current_folder=False,
                 both=False,
                 type=False,
-				strict=True,
+				all=True,
                 file_path=args.path,
                 view_width=args.width,
                 view_height=args.height
                 )
         # script -w -c
-        # wizard, view, path, type, directory, cropped, both, strict
+        # wizard, view, path, type, directory, cropped, both, all
         case(True, False, False, False, False, True, False, False):
             script.main(
                 wizard=True,
@@ -124,13 +124,13 @@ if __name__ == '__main__':
                 current_folder=False,
                 both=False,
                 type=False,
-				strict=False,
+				all=False,
                 file_path=args.path,
                 view_width=args.width,
                 view_height=args.height
                 )
         # script -v -c
-        # wizard, view, path, type, directory, cropped, both, strict
+        # wizard, view, path, type, directory, cropped, both, all
         case(False, True, False, False, False, True, False, False):
             script.main(
                 wizard=False,
@@ -138,13 +138,13 @@ if __name__ == '__main__':
                 current_folder=False,
                 both=False,
                 type=False,
-				strict=False,
+				all=False,
                 file_path=args.path,
                 view_width=args.width,
                 view_height=args.height
                 )
         # script -f
-        # wizard, view, path, type, directory, cropped, both, strict
+        # wizard, view, path, type, directory, cropped, both, all
         case(False, False, True, False, False, False, False, False):
             script.main(
                 wizard=True,
@@ -152,13 +152,13 @@ if __name__ == '__main__':
                 current_folder=False,
                 both=False,
                 type=False,
-				strict=False,
+				all=False,
                 file_path=args.path,
                 view_width=args.width,
                 view_height=args.height
                 )
         # script -f -w
-        # wizard, view, path, type, directory, cropped, both, strict
+        # wizard, view, path, type, directory, cropped, both, all
         case(True, False, True, False, False, False, False, False):
             script.main(
                 wizard=True,
@@ -166,13 +166,13 @@ if __name__ == '__main__':
                 current_folder=False,
                 both=False,
                 type=False,
-				strict=False,
+				all=False,
                 file_path=args.path,
                 view_width=args.width,
                 view_height=args.height
                 )
         # script -f -v
-        # wizard, view, path, type, directory, cropped, both, strict
+        # wizard, view, path, type, directory, cropped, both, all
         case(False, True, True, False, False, False, False, False):
             script.main(
                 wizard=False,
@@ -180,13 +180,13 @@ if __name__ == '__main__':
                 current_folder=False,
                 both=False,
                 type=False,
-				strict=False,
+				all=False,
                 file_path=args.path,
                 view_width=args.width,
                 view_height=args.height
                 )
         # script -d
-        # wizard, view, path, type, directory, cropped, both, strict
+        # wizard, view, path, type, directory, cropped, both, all
         case(False, False, False, False, True, False, False, False):
             script.main(
                 wizard=True,
@@ -194,13 +194,13 @@ if __name__ == '__main__':
                 current_folder=True,
                 both=False,
                 type=False,
-				strict=False,
+				all=False,
                 file_path=args.path,
                 view_width=args.width,
                 view_height=args.height
                 )
         # script -d -w
-        # wizard, view, path, type, directory, cropped, both, strict
+        # wizard, view, path, type, directory, cropped, both, all
         case(True, False, False, False, True, False, False, False):
             script.main(
                 wizard=True,
@@ -208,13 +208,13 @@ if __name__ == '__main__':
                 current_folder=True,
                 both=False,
                 type=False,
-				strict=False,
+				all=False,
                 file_path=args.path,
                 view_width=args.width,
                 view_height=args.height
                 )
         # script -d -c
-        # wizard, view, path, type, directory, cropped, both, strict
+        # wizard, view, path, type, directory, cropped, both, all
         case(False, False, False, False, True, True, False, False):
             script.main(
                 wizard=True,
@@ -222,13 +222,13 @@ if __name__ == '__main__':
                 current_folder=True,
                 both=False,
                 type=False,
-				strict=False,
+				all=False,
                 file_path=args.path,
                 view_width=args.width,
                 view_height=args.height
                 )
         # script -d -с -w
-        # wizard, view, path, type, directory, cropped, both, strict
+        # wizard, view, path, type, directory, cropped, both, all
         case(True, False, False, False, True, True, False, False):
             script.main(
                 wizard=True,
@@ -236,13 +236,13 @@ if __name__ == '__main__':
                 current_folder=True,
                 both=False,
                 type=False,
-				strict=False,
+				all=False,
                 file_path=args.path,
                 view_width=args.width,
                 view_height=args.height
                 )
         # script -v -d
-        # wizard, view, path, type, directory, cropped, both, strict
+        # wizard, view, path, type, directory, cropped, both, all
         case(False, True, False, False, True, False, False, False):
             script.main(
                 wizard=False,
@@ -250,13 +250,13 @@ if __name__ == '__main__':
                 current_folder=True,
                 both=False,
                 type=False,
-				strict=False,
+				all=False,
                 file_path=args.path,
                 view_width=args.width,
                 view_height=args.height
                 )
         # script -v -c
-        # wizard, view, path, type, directory, cropped, both, strict
+        # wizard, view, path, type, directory, cropped, both, all
         case(False, True, False, False, True, True, False, False):
             script.main(
                 wizard=False,
@@ -264,13 +264,13 @@ if __name__ == '__main__':
                 current_folder=True,
                 both=False,
                 type=False,
-				strict=False,
+				all=False,
                 file_path=args.path,
                 view_width=args.width,
                 view_height=args.height
                 )
         # script -v -d -c
-        # wizard, view, path, type, directory, cropped, both, strict
+        # wizard, view, path, type, directory, cropped, both, all
         case(False, True, False, False, True, True, False, False):
             script.main(
                 wizard=False,
@@ -278,13 +278,13 @@ if __name__ == '__main__':
                 current_folder=True,
                 both=False,
                 type=False,
-				strict=False,
+				all=False,
                 file_path=args.path,
                 view_width=args.width,
                 view_height=args.height
                 )
         # script -b
-        # wizard, view, path, type, directory, cropped, both, strict
+        # wizard, view, path, type, directory, cropped, both, all
         case(False, False, False, False, False, False, True, False):
             script.main(
                 wizard=None,
@@ -292,13 +292,13 @@ if __name__ == '__main__':
                 current_folder=False,
                 both=True,
                 type=False,
-				strict=False,
+				all=False,
                 file_path=args.path,
                 view_width=args.width,
                 view_height=args.height
                 )
         # script -b -d
-        # wizard, view, path, type, directory, cropped, both, strict
+        # wizard, view, path, type, directory, cropped, both, all
         case(False, False, False, False, True, False, True, False):
             script.main(
                 wizard=None,
@@ -306,13 +306,13 @@ if __name__ == '__main__':
                 current_folder=True,
                 both=True,
                 type=False,
-				strict=False,
+				all=False,
                 file_path=args.path,
                 view_width=args.width,
                 view_height=args.height
                 )
         # script -b -c
-        # wizard, view, path, type, directory, cropped, both, strict
+        # wizard, view, path, type, directory, cropped, both, all
         case(False, False, False, False, False, True, True, False):
             script.main(
                 wizard=None,
@@ -320,13 +320,13 @@ if __name__ == '__main__':
                 current_folder=False,
                 both=True,
                 type=False,
-				strict=False,
+				all=False,
                 file_path=args.path,
                 view_width=args.width,
                 view_height=args.height
                 )
         # script -b -s
-        # wizard, view, path, type, directory, cropped, both, strict
+        # wizard, view, path, type, directory, cropped, both, all
         case(False, False, False, False, False, False, True, True):
             script.main(
                 wizard=None,
@@ -334,13 +334,13 @@ if __name__ == '__main__':
                 current_folder=False,
                 both=True,
                 type=False,
-				strict=True,
+				all=True,
                 file_path=args.path,
                 view_width=args.width,
                 view_height=args.height
                 )
         # script -b -d -c
-        # wizard, view, path, type, directory, cropped, both, strict
+        # wizard, view, path, type, directory, cropped, both, all
         case(False, False, False, False, True, True, True, False):
             script.main(
                 wizard=None,
@@ -348,13 +348,13 @@ if __name__ == '__main__':
                 current_folder=True,
                 both=True,
                 type=False,
-				strict=False,
+				all=False,
                 file_path=args.path,
                 view_width=args.width,
                 view_height=args.height
                 )
         # script -b -s -d
-        # wizard, view, path, type, directory, cropped, both, strict
+        # wizard, view, path, type, directory, cropped, both, all
         case(False, False, False, False, True, False, True, True):
             script.main(
                 wizard=None,
@@ -362,13 +362,13 @@ if __name__ == '__main__':
                 current_folder=True,
                 both=True,
                 type=False,
-				strict=True,
+				all=True,
                 file_path=args.path,
                 view_width=args.width,
                 view_height=args.height
                 )
         # script -t
-        # wizard, view, path, type, directory, cropped, both, strict
+        # wizard, view, path, type, directory, cropped, both, all
         case(False, False, False, True, False, False, False, False):
             script.main(
                 wizard=False,
@@ -381,7 +381,7 @@ if __name__ == '__main__':
                 view_height=args.height
                 )
         # script -t -с
-        # wizard, view, path, type, directory, cropped, both, strict
+        # wizard, view, path, type, directory, cropped, both, all
         case(False, False, False, True, False, True, False, False):
             script.main(
                 wizard=False,
@@ -394,7 +394,7 @@ if __name__ == '__main__':
                 view_height=args.height
                 )
         # script -t -d
-        # wizard, view, path, type, directory, cropped, both, strict
+        # wizard, view, path, type, directory, cropped, both, all
         case(False, False, False, True, True, False, False, False):
             script.main(
                 wizard=False,
@@ -407,7 +407,7 @@ if __name__ == '__main__':
                 view_height=args.height
                 )
         # script -t -d -c
-        # wizard, view, path, type, directory, cropped, both, strict
+        # wizard, view, path, type, directory, cropped, both, all
         case(False, False, False, True, True, True, False, False):
             script.main(
                 wizard=False,
@@ -420,63 +420,63 @@ if __name__ == '__main__':
                 view_height=args.height
                 )
         # script -w -v
-        # wizard, view, path, type, directory, cropped, both, strict
+        # wizard, view, path, type, directory, cropped, both, all
         case(True, True, False, False, False, False, False, False):
             misc.script_close(flags=True)
         # script -f -c
-        # wizard, view, path, type, directory, cropped, both, strict
+        # wizard, view, path, type, directory, cropped, both, all
         case(False, False, True, False, False, True, False, False):
             misc.script_close(flags=True)
         # script -s -c
-        # wizard, view, path, type, directory, cropped, both, strict
+        # wizard, view, path, type, directory, cropped, both, all
         case(False, False, False, False, False, True, False, True):
             misc.script_close(flags=True)
         # script -f -d
-        # wizard, view, path, type, directory, cropped, both, strict
+        # wizard, view, path, type, directory, cropped, both, all
         case(False, False, True, False, True, False, False, False):
             misc.script_close(flags=True)
         # script -b -s -c
-        # wizard, view, path, type, directory, cropped, both, strict
+        # wizard, view, path, type, directory, cropped, both, all
         case(False, False, False, False, False, True, True, True):
             misc.script_close(flags=True)
         # script -f -d -c
-        # wizard, view, path, type, directory, cropped, both, strict
+        # wizard, view, path, type, directory, cropped, both, all
         case(False, False, True, False, True, True, False, False):
             misc.script_close(flags=True)
         # script -f -t -c
-        # wizard, view, path, type, directory, cropped, both, strict
+        # wizard, view, path, type, directory, cropped, both, all
         case(False, False, True, True, False, True, False, False):
             misc.script_close(flags=True)
         # script -f -w -c
-        # wizard, view, path, type, directory, cropped, both, strict
+        # wizard, view, path, type, directory, cropped, both, all
         case(True, False, True, False, False, True, False, False):
             misc.script_close(flags=True)
         # script -f -w -c -d
-        # wizard, view, path, type, directory, cropped, both, strict
+        # wizard, view, path, type, directory, cropped, both, all
         case(True, False, True, False, True, True, False, False):
             misc.script_close(flags=True)
         # script -f -v -c
-        # wizard, view, path, type, directory, cropped, both, strict
+        # wizard, view, path, type, directory, cropped, both, all
         case(False, True, True, False, False, True, False, False):
             misc.script_close(flags=True)
         # script -f -v -c -d
-        # wizard, view, path, type, directory, cropped, both, strict
+        # wizard, view, path, type, directory, cropped, both, all
         case(False, True, True, False, True, True, False, False):
             misc.script_close(flags=True)
         # script -t -d -b
-        # wizard, view, path, type, directory, cropped, both, strict
+        # wizard, view, path, type, directory, cropped, both, all
         case(False, False, False, True, True, False, True, False):
             misc.script_close(flags=True)
         # script -t -d -b -c
-        # wizard, view, path, type, directory, cropped, both, strict
+        # wizard, view, path, type, directory, cropped, both, all
         case(False, False, False, True, True, True, True, False):
             misc.script_close(flags=True)
         # script -t -b
-        # wizard, view, path, type, directory, cropped, both, strict
+        # wizard, view, path, type, directory, cropped, both, all
         case(False, False, False, True, False, True, True, False):
             misc.script_close(flags=True)
 
-# TODO: use the --strict flag by default
+# TODO: use the --all flag by default
 # TODO: if given, then process all screenshots
 # TODO: or name it as -a or --all
 # TODO: then process views only
