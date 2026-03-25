@@ -169,7 +169,6 @@ def match_path(folder: bool, cropped_screens: bool, path: str, all: bool) -> tup
             print(print_time(), 'Current directory is being used...')
             directory = os.getcwd()
             files = get_files(directory, cropped_screens, all)
-            # print(directory, files)
             is_empty(files)
     else:
         directory, files = process_user_input(path, single_file=True) if path else get_input(cropped_screens, all)
@@ -199,7 +198,6 @@ def get_files(folder: str, cropped_screens: bool, all: bool) -> list:
                 if file.lower().endswith('.png')
                 and file.startswith('Screenshot_')
             ]
-    print(files)
     return files
 
 

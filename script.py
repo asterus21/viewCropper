@@ -165,7 +165,7 @@ def crop_corners(directory: str, files: list, target_pixels: list, view_width: i
 def crop_wizards(directory: str, files: list, target_pixels: list, stdout: bool) -> None:
     '''Crops the screenshots according to the target pixels.'''
     file_number = 1
-    cropped_files = len(misc.get_files(folder=os.getcwd(), cropped=True, all=False))
+    cropped_files = len(misc.get_files(folder=os.getcwd(), cropped_screens=True, all=False))
     for i in range(len(files)):
         # skips empty coordinates if present
         if not target_pixels[i]:
@@ -174,6 +174,8 @@ def crop_wizards(directory: str, files: list, target_pixels: list, stdout: bool)
         image = Image.open(os.path.join(directory, files[i]))
         # main logic of the script, i.e. screens cropping
         try:
+            if stdout:
+                print(f'{misc.print_time()}', 'Processing: ' + files[i])
             crop = image.crop((
                 target_pixels[i][0][0],
                 target_pixels[i][0][1],
@@ -205,6 +207,8 @@ def crop_views(directory: str, files: list, target_pixels: list, view_width: int
         image = Image.open(os.path.join(directory, files[i]))
         # main logic of the script, i.e. screens cropping
         try:
+            if stdout:
+                print(f'{misc.print_time()}', 'Processing: ' + files[i])
             crop = image.crop((
                 target_pixels[i][0] - 12,
                 target_pixels[i][1] - 15,
@@ -304,27 +308,29 @@ def start_script(folder: str, screens: list, width: int, height: int, wizard: bo
 
 
 def main(wizard: bool, cropped_screens: bool, current_folder: bool, both: bool, type: bool, all: bool, file_path: str, view_width: int, view_height: int) -> None:
-    '''Main function of the script.'''
+    '''Main function of the script.'''    
+    # import time
+    # start_time = time.perf_counter()
     directory, files = misc.match_path(current_folder, cropped_screens, file_path, all)
-    match(both, type):
-        case(True, True):
+    match (both, type):
+        case (True, True):
             misc.script_close(flags=True)
-        case(True, False):
+        case (True, False):
             process_views_and_wizards(
                 directory,
                 files,
                 view_width,
                 view_height
             )
-        case(False, True):
+        case (False, True):
             print(f'{misc.print_time()}', 'Getting a list of files...')
             get_screenshot_types(directory, files, stdout=True)
-        case(False, False):
-            print(f'{misc.print_time()}', 'Getting a list of files...')
-            start_script(directory, files, view_width, view_height, wizard, stdout=True)
-        case _:
+        case (False, False):
             print(f'{misc.print_time()}', 'Getting a list of files...')
             start_script(directory, files, view_width, view_height, wizard, stdout=True)
     print(f'{misc.print_time()}', 'The script is finished.')
+    # end_time = time.perf_counter()
+    # finished = end_time - start_time
+    # print(f'finished within: { finished }')
     misc.script_close(flags=False)
     return None
