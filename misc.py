@@ -169,7 +169,7 @@ def match_path(folder: bool, cropped_screens: bool, path: str, strict: bool) -> 
             print(print_time(), 'Current directory is being used...')
             directory = os.getcwd()
             files = get_files(directory, cropped_screens, strict)
-            print(directory, files)
+            # print(directory, files)
             is_empty(files)
     else:
         directory, files = process_user_input(path, single_file=True) if path else get_input(cropped_screens, strict)
