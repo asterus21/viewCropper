@@ -126,7 +126,7 @@ def get_coordinates(coordinates: dict, wizard: bool) -> list:
 def crop_corners(directory: str, files: list, target_pixels: list, view_width: int, view_height: int, wizard: bool, stdout: bool) -> None:
     '''Crops the screenshots according to the target pixels.'''
     file_number = 1
-    cropped_files = len(misc.get_files(folder=os.getcwd(), cropped=True, strict=False))
+    cropped_files = len(misc.get_files(folder=os.getcwd(), cropped_screens=True, strict=False))
     for i in range(len(files)):
         # skips empty coordinates if present
         if not target_pixels[i]:
@@ -196,7 +196,7 @@ def crop_wizards(directory: str, files: list, target_pixels: list, stdout: bool)
 def crop_views(directory: str, files: list, target_pixels: list, view_width: int, view_height: int, stdout: bool) -> None:
     '''Crops the screenshots according to the target pixels.'''
     file_number = 1
-    cropped_files = len(misc.get_files(folder=os.getcwd(), cropped=True, strict=False))
+    cropped_files = len(misc.get_files(folder=os.getcwd(), cropped_screens=True, strict=False))
     for i in range(len(files)):
         # skips empty coordinates if present
         if not target_pixels[i]:
