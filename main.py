@@ -476,5 +476,7 @@ if __name__ == '__main__':
         case(False, False, False, True, False, True, True, False):
             misc.script_close(flags=True)
 
+# TODO: use find_wizards() and find_views()
+# TODO: as well as crop_wizards() and crop_views() separately
 # TODO: test each script value
 # TODO: use classes
