@@ -77,7 +77,7 @@ def get_targets(image, x: int, y: int) -> dict:
     return targets
 
 
-def find_wizards(image, height: int, width: int, whole: bool, upper=None, upper_neighbor=None, lower=None, lower_neighbor=None):
+def find_wizards(image, height: int, width: int, whole: bool, upper=None, upper_neighbor=None, lower=None, lower_neighbor=None) -> list:
     if whole:
         target_left_coordinates  = []
         target_right_coordinates = []

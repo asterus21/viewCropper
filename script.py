@@ -12,6 +12,15 @@ import data
 import misc
 
 
+def test_remove_empty_values(files: list, values: list) -> dict:
+    '''Removes empty values in a list of found targets.'''
+    coordinates = {
+        files[i]: values[i] for i in range(0, len(files))
+        if values[i]
+    }
+    return coordinates, list(coordinates.keys())
+
+
 def remove_empty_values(files: list, values: list) -> dict:
     '''Removes empty values in a list of found targets.'''
     coordinates = {
@@ -30,6 +39,32 @@ def find_target_pixels(directory: str, files: list, wizard: bool, stdout: bool) 
             process_targets(directory, file, targets, wizard)
         else:
             process_targets(directory, file, targets, wizard)
+    coordinates = remove_empty_values(files, targets)
+    return coordinates
+
+
+def find_wizards(directory: str, files: list, stdout: bool) -> dict:
+    '''Calls the processing function and removes not processed screenshots.'''
+    targets = []
+    for file in files:
+        if stdout:
+            print(f'{misc.print_time()}', 'Processing: ' + file)
+            process_wizards(directory, file, whole=True)
+        else:
+           process_wizards(directory, file, whole=True)
+    coordinates = remove_empty_values(files, targets)
+    return coordinates
+
+
+def find_views(directory: str, files: list, stdout: bool) -> dict:
+    '''Calls the processing function and removes not processed screenshots.'''
+    targets = []
+    for file in files:
+        if stdout:
+            print(f'{misc.print_time()}', 'Processing: ' + file)
+            process_views(directory, files)
+        else:
+           process_views(directory, files)
     coordinates = remove_empty_values(files, targets)
     return coordinates
 
@@ -236,7 +271,7 @@ def get_keys(values: dict) -> list:
     return keys
 
 
-def get_values(directory: str, files: list, wizard: bool, whole: bool) -> dict:
+def get_values(directory: str, files: list, wizard: bool, whole: bool) -> tuple:
     '''Gets values for wizards or views.'''
     if wizard:
         values = {
@@ -247,8 +282,9 @@ def get_values(directory: str, files: list, wizard: bool, whole: bool) -> dict:
         values = {
             file: process_views(directory, file)
             for file in files
-        }
-    return values
+        }    
+    coordinates, keys = test_remove_empty_values(list(values.keys()), list(values.values()))
+    return coordinates, keys
 
 
 def get_types(values: dict, wizard: bool) -> dict:
@@ -307,10 +343,19 @@ def start_script(folder: str, screens: list, width: int, height: int, wizard: bo
     return None
 
 
+def test_start_script(directory, files, width, height, wizard, stdout):
+    targets, keys = get_values(directory, files, wizard, whole=True)
+    coordinates = get_coordinates(targets, wizard)
+    if wizard:
+        crop_wizards(directory, keys, coordinates, stdout)
+    else:
+        crop_views(directory, keys, coordinates, width, height, stdout)
+
+
 def main(wizard: bool, cropped_screens: bool, current_folder: bool, both: bool, type: bool, all: bool, file_path: str, view_width: int, view_height: int) -> None:
     '''Main function of the script.'''    
-    # import time
-    # start_time = time.perf_counter()
+    import time
+    start_time = time.perf_counter()
     directory, files = misc.match_path(current_folder, cropped_screens, file_path, all)
     match (both, type):
         case (True, True):
@@ -327,10 +372,11 @@ def main(wizard: bool, cropped_screens: bool, current_folder: bool, both: bool, 
             get_screenshot_types(directory, files, stdout=True)
         case (False, False):
             print(f'{misc.print_time()}', 'Getting a list of files...')
-            start_script(directory, files, view_width, view_height, wizard, stdout=True)
+            # start_script(directory, files, view_width, view_height, wizard, stdout=True)
+            test_start_script(directory, files, view_width, view_height, wizard, stdout=True)
     print(f'{misc.print_time()}', 'The script is finished.')
-    # end_time = time.perf_counter()
-    # finished = end_time - start_time
-    # print(f'finished within: { finished }')
+    end_time = time.perf_counter()
+    finished = end_time - start_time
+    print(f'finished within: { finished }')
     misc.script_close(flags=False)
     return None
