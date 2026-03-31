@@ -18,7 +18,7 @@ if __name__ == '__main__':
     parser.add_argument('-d', '--dir',     action='store_true', dest='directory', help='flag to start the script in the current folder')
     parser.add_argument('-c', '--cropped', action='store_true', dest='cropped',   help='flag to process only those screenshots which start with "Cropped_"')
     parser.add_argument('-b', '--both',    action='store_true', dest='both',      help='flag to process both wizards and views')
-    parser.add_argument('-a', '--all',     action='store_true', dest='all',       help='flag to process all screenshots')
+    parser.add_argument('-a', '--all',     action='store_true', dest='all',       help='flag to process even those which do not start with "Screenshot_"')
     parser.add_argument('-x', '--width',   action='store',      dest='width',     help='width value to process views',        type=int, default=1271)
     parser.add_argument('-y', '--height',  action='store',      dest='height',    help='height value to process views',       type=int, default=761)
     parser.add_argument('-f', '--file',    action='store',      dest='path',      help='path value to process a single file', type=str, default=None)

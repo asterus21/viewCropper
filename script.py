@@ -31,21 +31,21 @@ def find_targets(directory: str, files: list, wizard: bool, stdout: bool) -> dic
     return coordinates
 
 
-def get_class_wrapper(directory: str, file: str):
+def get_class_instance(directory: str, file: str):
     import targets
     # concatenate a path and file, e.g. 'D:/folder/screenshot_1.png') then convert to the RGB format
     image = Image.open(os.path.join(directory, file)).convert('RGB')
     width, height = image.size
     process = targets.Process(image, height, width)
-    return image, height, width, process
+    return process
 
 
 def process_targets(directory: str, file: str, targets_list: list, wizard: bool):
     '''Finds targets for both wizards and views.'''
     try:
-        image, height, width, process = get_class_wrapper(directory, file)
-        if wizard: coordinates = process.find_wizards(image, height, width, whole=True)
-        else: coordinates = process.find_views(image, height, width)
+        process = get_class_instance(directory, file)
+        if wizard: coordinates = process.find_wizards(process.image, process.height, process.width, whole=True)
+        else: coordinates = process.find_views(process.image, process.height, process.width)
         targets_list.append(coordinates)
     except:
         print(misc.print_time(), (f'File {file} not found!'))
