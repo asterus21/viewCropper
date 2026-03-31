@@ -27,25 +27,21 @@ def find_targets(directory: str, files: list, wizard: bool, stdout: bool) -> dic
             process_targets(directory, file, targets, wizard)
         else:
             process_targets(directory, file, targets, wizard)
-    coordinates, _ = remove_empty_values(files, targets)
-    return coordinates
-
-
-def get_class_instance(directory: str, file: str):
-    import targets
-    # concatenate a path and file, e.g. 'D:/folder/screenshot_1.png') then convert to the RGB format
-    image = Image.open(os.path.join(directory, file)).convert('RGB')
-    width, height = image.size
-    process = targets.Process(image, height, width)
-    return process
+    coordinates, screens = remove_empty_values(files, targets)
+    return coordinates, screens
 
 
 def process_targets(directory: str, file: str, targets_list: list, wizard: bool):
     '''Finds targets for both wizards and views.'''
     try:
-        process = get_class_instance(directory, file)
-        if wizard: coordinates = process.find_wizards(process.image, process.height, process.width, whole=True)
-        else: coordinates = process.find_views(process.image, process.height, process.width)
+        from targets import Process
+        image = Image.open(os.path.join(directory, file)).convert('RGB')
+        width, height = image.size
+        process = Process(image, height, width)
+        if wizard:
+            coordinates = process.find_wizards(whole=True)
+        else:
+            coordinates = process.find_views()
         targets_list.append(coordinates)
     except:
         print(misc.print_time(), (f'File {file} not found!'))
@@ -65,110 +61,8 @@ def get_coordinates(coordinates: dict, wizard: bool) -> list:
         coordinates_list = [
             (item[0], item[-1]) for item in coordinates.values() if item
         ]
+    # print(coordinates_list)
     return coordinates_list
-
-
-# main logic of the script, i.e. image cropping
-def crop_corners(directory: str, files: list, target_pixels: list, view_width: int, view_height: int, wizard: bool, stdout: bool) -> None:
-    '''Crops the screenshots according to the target pixels.'''
-    file_number = 1
-    cropped_files = len(misc.get_files(folder=os.getcwd(), cropped_screens=True, all=False))
-    for i in range(len(files)):
-        # skips empty coordinates if present
-        if not target_pixels[i]: continue
-        # concatenates a path and file, e.g. 'D:/folder/screenshot_1.png')
-        image = Image.open(os.path.join(directory, files[i]))
-        # main logic of the script, i.e. screens cropping
-        try:                                    # fetch to the class
-            if not wizard:                      # fetch to the class
-                crop = image.crop((             # fetch to the class
-                    target_pixels[i][0] - 12,   # fetch to the class
-                    target_pixels[i][1] - 15,   # fetch to the class
-                    view_width,                 # fetch to the class (must be None for views when an instance is created)
-                    view_height                 # fetch to the class (must be None for views when an instance is created)
-                    ))                          # fetch to the class
-            else:                               # fetch to the class
-                crop = image.crop((             # fetch to the class
-                    target_pixels[i][0][0],     # fetch to the class
-                    target_pixels[i][0][1],     # fetch to the class
-                    target_pixels[i][1][0] + 1, # fetch to the class
-                    target_pixels[i][1][1] + 1  # fetch to the class
-                    ))                          # fetch to the class
-            if cropped_files:
-                crop.save(f'Cropped_{cropped_files+1}.png')
-                cropped_files += 1
-            else:
-                crop.save(f'Cropped_{file_number}.png')
-                file_number += 1
-        except Exception as E:
-            print(f'{E}: no wizard screenshot or view one is found.')
-    if stdout:
-        print(f'{misc.print_time()}', str(len(files)) + ' file(s) processed.')
-    return None
-
-
-def crop_wizards(directory: str, files: list, target_pixels: list, stdout: bool) -> None:
-    '''Crops the screenshots according to the target pixels.'''
-    file_number = 1
-    cropped_files = len(misc.get_files(folder=os.getcwd(), cropped_screens=True, all=False))
-    for i in range(len(files)):
-        # skips empty coordinates if present
-        if not target_pixels[i]: continue
-        # concatenates a path and file, e.g. 'D:/folder/screenshot_1.png')
-        image = Image.open(os.path.join(directory, files[i]))
-        # main logic of the script, i.e. screens cropping
-        try:
-            if stdout:
-                print(f'{misc.print_time()}', 'Processing: ' + files[i])
-            crop = image.crop((
-                target_pixels[i][0][0],
-                target_pixels[i][0][1],
-                target_pixels[i][1][0] + 1,
-                target_pixels[i][1][1] + 1
-                ))
-            if cropped_files:
-                crop.save(f'Cropped_{cropped_files+1}.png')
-                cropped_files += 1
-            else:
-                crop.save(f'Cropped_{file_number}.png')
-                file_number += 1
-        except Exception as E:
-            print(f'{E}: no wizard screenshot is found.')
-    if stdout:
-        print(f'{misc.print_time()}', str(len(files)) + ' file(s) processed.')
-    return None
-
-
-def crop_views(directory: str, files: list, target_pixels: list, view_width: int, view_height: int, stdout: bool) -> None:
-    '''Crops the screenshots according to the target pixels.'''
-    file_number = 1
-    cropped_files = len(misc.get_files(folder=os.getcwd(), cropped_screens=True, all=False))
-    for i in range(len(files)):
-        # skips empty coordinates if present
-        if not target_pixels[i]: continue
-        # concatenate a path and file, e.g. 'D:/folder/screenshot_1.png')
-        image = Image.open(os.path.join(directory, files[i]))
-        # main logic of the script, i.e. screens cropping
-        try:
-            if stdout:
-                print(f'{misc.print_time()}', 'Processing: ' + files[i])
-            crop = image.crop((
-                target_pixels[i][0] - 12,
-                target_pixels[i][1] - 15,
-                view_width,
-                view_height
-                ))
-            if cropped_files:
-                crop.save(f'Cropped_{cropped_files+1}.png')
-                cropped_files += 1
-            else:
-                crop.save(f'Cropped_{file_number}.png')
-                file_number += 1
-        except Exception as E:
-            print(f'{E}: no wizard screenshot or view one is found.')
-    if stdout:
-        print(f'{misc.print_time()}', str(len(files)) + ' file(s) processed.')
-    return None
 
 
 def get_keys(values: dict) -> list:
@@ -224,30 +118,24 @@ def get_screenshot_types(directory, files, stdout: bool) -> tuple:
         return sorts
 
 
-def process_views_and_wizards(directory: str, files: list, width: int, height: int) -> None:
-    '''Processes both wizards and views.'''
-    wizards      = get_values(directory, files, wizard=True, whole=True)
-    views        = get_values(directory, get_keys(wizards), wizard=False, whole=False)
-    wizard_types = get_types(wizards, wizard=True)
-    view_types   = get_types(views, wizard=False)
-    crop_wizards(directory, list(wizard_types.keys()), get_coordinates(wizards, wizard=True), stdout=True)
-    crop_views(directory, list(view_types.keys()), get_coordinates(views, wizard=False), width, height, stdout=True)
-    return None
+# def process_views_and_wizards(directory: str, files: list, width: int, height: int) -> None:
+#     '''Processes both wizards and views.'''
+#     wizards      = get_values(directory, files, wizard=True, whole=True)
+#     views        = get_values(directory, get_keys(wizards), wizard=False, whole=False)
+#     wizard_types = get_types(wizards, wizard=True)
+#     view_types   = get_types(views, wizard=False)
+#     crop_wizards(directory, list(wizard_types.keys()), get_coordinates(wizards, wizard=True), stdout=True)
+#     crop_views(directory, list(view_types.keys()), get_coordinates(views, wizard=False), width, height, stdout=True)
+#     return None
 
 
 def start_script(folder: str, screens: list, width: int, height: int, wizard: bool, stdout: bool) -> None:
     '''Performs the screenshot cropping process.'''
-    targets = find_targets(folder, screens, wizard, stdout)
-    edited_coordinates = get_coordinates(targets, wizard)
-    crop_corners(
-        folder,
-        list(targets.keys()),
-        edited_coordinates,
-        width,
-        height,
-        wizard,
-        stdout
-        )
+    from croppers import Croppers
+    targets, files = find_targets(folder, screens, wizard, stdout)
+    coordinates = get_coordinates(targets, wizard)
+    croppers = Croppers(folder, files, coordinates, width, height, wizard, stdout)
+    croppers.crop_corners()
     return None
 
 
@@ -257,9 +145,9 @@ def main(wizard: bool, cropped_screens: bool, current_folder: bool, both: bool, 
     match (both, type):
         case (True, True):
             misc.script_close(flags=True)
-        case (True, False):
-            print(f'{misc.print_time()}', 'Getting a list of files...')
-            process_views_and_wizards(directory, files, view_width, view_height)
+        # case (True, False):
+            # print(f'{misc.print_time()}', 'Getting a list of files...')
+            # process_views_and_wizards(directory, files, view_width, view_height)
         case (False, True):
             print(f'{misc.print_time()}', 'Getting a list of files...')
             get_screenshot_types(directory, files, stdout=True)
