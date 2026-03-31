@@ -125,43 +125,6 @@ def find_views(image, height: int, width: int, central, right, left):
     return coordinates
 
 
-def find_targets(
-    image, height: int, width: int, wizard: bool,
-    central=None, right=None, left=None, upper=None, upper_neighbor=None, lower=None, lower_neighbor=None) -> list:
-    '''Finds target pixels by their RGB value.'''
-    if wizard:
-        target_left_coordinates  = []
-        target_right_coordinates = []
-        for x in range(width - 1):
-            for y in range(height - 1):
-                t = get_targets(image, x, y)
-                if  (
-                    t.get('target') in upper and
-                    t.get('right')  in upper_neighbor and
-                    t.get('down')   in upper_neighbor
-                    ):
-                    target_left_coordinates.append((x, y))
-                if  (
-                    t.get('target') in lower and
-                    t.get('left')   in lower_neighbor and
-                    t.get('up')     in lower_neighbor
-                    ):
-                    target_right_coordinates.append((x, y))
-            coordinates = target_left_coordinates + target_right_coordinates
-        return coordinates
-    else:
-        coordinates = []
-        for x in range(width - 1):
-            for y in range(height - 1):
-                t = get_targets(image, x, y)
-                if  (
-                    t.get('target') in central and
-                    t.get('right')  in right and
-                    t.get('left')   in left
-                    ):
-                    coordinates.append((x, y))
-        return coordinates
-
 def match_path(folder: bool, cropped_screens: bool, path: str, all: bool) -> tuple:
     '''Filters out a file, folder and cropped screens.'''
     if folder:

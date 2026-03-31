@@ -9,7 +9,7 @@ from PIL import Image
 import misc
 
 
-def test_remove_empty_values(files: list, values: list) -> dict:
+def remove_empty_values(files: list, values: list) -> tuple:
     '''Removes empty values in a list of found targets.'''
     coordinates = {
         files[i]: values[i] for i in range(0, len(files))
@@ -18,16 +18,7 @@ def test_remove_empty_values(files: list, values: list) -> dict:
     return coordinates, list(coordinates.keys())
 
 
-def remove_empty_values(files: list, values: list) -> dict:
-    '''Removes empty values in a list of found targets.'''
-    coordinates = {
-        files[i]: values[i] for i in range(0, len(files))
-        if values[i]
-    }
-    return coordinates
-
-
-def find_target_pixels(directory: str, files: list, wizard: bool, stdout: bool) -> dict:
+def find_targets(directory: str, files: list, wizard: bool, stdout: bool) -> dict:
     '''Calls the processing function and removes not processed screenshots.'''
     targets = []
     for file in files:
@@ -36,37 +27,11 @@ def find_target_pixels(directory: str, files: list, wizard: bool, stdout: bool) 
             process_targets(directory, file, targets, wizard)
         else:
             process_targets(directory, file, targets, wizard)
-    coordinates = remove_empty_values(files, targets)
+    coordinates, _ = remove_empty_values(files, targets)
     return coordinates
 
 
-# def find_wizards(directory: str, files: list, stdout: bool) -> dict:
-#     '''Calls the processing function and removes not processed screenshots.'''
-#     targets = []
-#     for file in files:
-#         if stdout:
-#             print(f'{misc.print_time()}', 'Processing: ' + file)
-#             process_wizards(directory, file, whole=True)
-#         else:
-#             process_wizards(directory, file, whole=True)
-#     coordinates = remove_empty_values(files, targets)
-#     return coordinates
-# 
-# 
-# def find_views(directory: str, files: list, stdout: bool) -> dict:
-#     '''Calls the processing function and removes not processed screenshots.'''
-#     targets = []
-#     for file in files:
-#         if stdout:
-#             print(f'{misc.print_time()}', 'Processing: ' + file)
-#             process_views(directory, files)
-#         else:
-#             process_views(directory, files)
-#     coordinates = remove_empty_values(files, targets)
-#     return coordinates
-
-
-def class_wrapper(directory: str, file: str):
+def get_class_wrapper(directory: str, file: str):
     import targets
     # concatenate a path and file, e.g. 'D:/folder/screenshot_1.png') then convert to the RGB format
     image = Image.open(os.path.join(directory, file)).convert('RGB')
@@ -78,7 +43,7 @@ def class_wrapper(directory: str, file: str):
 def process_targets(directory: str, file: str, targets_list: list, wizard: bool):
     '''Finds targets for both wizards and views.'''
     try:
-        image, height, width, process = class_wrapper(directory, file)
+        image, height, width, process = get_class_wrapper(directory, file)
         if wizard: coordinates = process.find_wizards(image, height, width, whole=True)
         else: coordinates = process.find_views(image, height, width)
         targets_list.append(coordinates)
@@ -86,13 +51,6 @@ def process_targets(directory: str, file: str, targets_list: list, wizard: bool)
         print(misc.print_time(), (f'File {file} not found!'))
         misc.script_close(flags=False)
     return targets_list
-
-
-def get_new_list_of_files(files: dict) -> list:
-    '''Returns dictionary keys with only the screenshots to be processed.'''
-    # fetches only the keys of the dictionary, i.e. files names
-    # to crop only needed screenshots as we don't want to crop extra ones
-    return(list(files.keys()))
 
 
 def get_coordinates(coordinates: dict, wizard: bool) -> list:
@@ -117,8 +75,7 @@ def crop_corners(directory: str, files: list, target_pixels: list, view_width: i
     cropped_files = len(misc.get_files(folder=os.getcwd(), cropped_screens=True, all=False))
     for i in range(len(files)):
         # skips empty coordinates if present
-        if not target_pixels[i]:
-            continue
+        if not target_pixels[i]: continue
         # concatenates a path and file, e.g. 'D:/folder/screenshot_1.png')
         image = Image.open(os.path.join(directory, files[i]))
         # main logic of the script, i.e. screens cropping
@@ -156,8 +113,7 @@ def crop_wizards(directory: str, files: list, target_pixels: list, stdout: bool)
     cropped_files = len(misc.get_files(folder=os.getcwd(), cropped_screens=True, all=False))
     for i in range(len(files)):
         # skips empty coordinates if present
-        if not target_pixels[i]:
-            continue
+        if not target_pixels[i]: continue
         # concatenates a path and file, e.g. 'D:/folder/screenshot_1.png')
         image = Image.open(os.path.join(directory, files[i]))
         # main logic of the script, i.e. screens cropping
@@ -224,26 +180,19 @@ def get_keys(values: dict) -> list:
 
 
 def get_values(directory: str, files: list, wizard: bool, whole: bool) -> tuple:
-    '''Gets values for wizards or views.'''    
-    def process_wizards(directory: str, file: str, whole: bool) -> list:
-        '''Finds a part of targets only for wizards.'''
-        image, height, width, process = class_wrapper(directory, file)
-        return process.find_wizards(image, height, width, whole)
-    def process_views(directory: str, file: str) -> list:
-        '''Finds targets only for views.'''
-        image, height, width, process = class_wrapper(directory, file)
-        return process.find_views(image, height, width)
+    '''Gets values for wizards or views.'''
+    targets = []
     if wizard:
         values = {
-            file: process_wizards(directory, file, whole)
+            file: process_targets(directory, file, targets, whole, wizard=True)
             for file in files
         }
     else:
         values = {
-            file: process_views(directory, file)
+            file: process_targets(directory, file, targets, whole=None, wizard=False)
             for file in files
-        }    
-    coordinates, keys = test_remove_empty_values(list(values.keys()), list(values.values()))
+        }
+    coordinates, keys = remove_empty_values(list(values.keys()), list(values.values()))
     return coordinates, keys
 
 
@@ -288,12 +237,11 @@ def process_views_and_wizards(directory: str, files: list, width: int, height: i
 
 def start_script(folder: str, screens: list, width: int, height: int, wizard: bool, stdout: bool) -> None:
     '''Performs the screenshot cropping process.'''
-    targets = find_target_pixels(folder, screens, wizard, stdout)
-    files_list = get_new_list_of_files(targets)
+    targets = find_targets(folder, screens, wizard, stdout)
     edited_coordinates = get_coordinates(targets, wizard)
     crop_corners(
         folder,
-        files_list,
+        list(targets.keys()),
         edited_coordinates,
         width,
         height,
@@ -303,6 +251,7 @@ def start_script(folder: str, screens: list, width: int, height: int, wizard: bo
     return None
 
 
+# # DO NOT REMOVE:
 # def test_start_script(directory: str, files: list, width: int, height: int, wizard: bool, stdout: bool):
 #     '''Performs the screenshot cropping process.'''
 #     targets, keys = get_values(directory, files, wizard, whole=True)
