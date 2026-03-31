@@ -1,4 +1,4 @@
-# from data import Targets
+from data import Targets
 
 
 class Process(Targets):
@@ -57,7 +57,7 @@ class Process(Targets):
         return coordinates
 
 
-    def find_views(self, image: bytes, height: int, width: int):
+    def find_views(self, image: bytes, height: int, width: int) -> list:
         '''Finds view targets.'''
         coordinates = []
         for x in range(width - 1):
