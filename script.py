@@ -251,21 +251,8 @@ def start_script(folder: str, screens: list, width: int, height: int, wizard: bo
     return None
 
 
-# # DO NOT REMOVE:
-# def start_script(directory: str, files: list, width: int, height: int, wizard: bool, stdout: bool):
-#     '''Performs the screenshot cropping process.'''
-#     targets, keys = get_values(directory, files, wizard, whole=True)
-#     coordinates = get_coordinates(targets, wizard)
-#     if wizard:
-#         crop_wizards(directory, keys, coordinates, stdout)
-#     else:
-#         crop_views(directory, keys, coordinates, width, height, stdout)
-
-
 def main(wizard: bool, cropped_screens: bool, current_folder: bool, both: bool, type: bool, all: bool, file_path: str, view_width: int, view_height: int) -> None:
-    '''Main function of the script.'''    
-    # import time
-    # start_time = time.perf_counter()
+    '''Main function of the script.'''
     directory, files = misc.match_path(current_folder, cropped_screens, file_path, all)
     match (both, type):
         case (True, True):
@@ -280,8 +267,5 @@ def main(wizard: bool, cropped_screens: bool, current_folder: bool, both: bool, 
             print(f'{misc.print_time()}', 'Getting a list of files...')
             start_script(directory, files, view_width, view_height, wizard, stdout=True)
     print(f'{misc.print_time()}', 'The script is finished.')
-    # end_time = time.perf_counter()
-    # finished = end_time - start_time
-    # print(f'finished within: { finished }')
     misc.script_close(flags=False)
     return None
