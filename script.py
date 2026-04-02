@@ -43,7 +43,6 @@ def process_targets(directory: str, file: str, targets_list: list, wizard: bool)
         else:
             coordinates = process.find_views()
         targets_list.append(coordinates)
-        # print(targets_list)
     except:
         print(misc.print_time(), (f'File {file} not found!'))
         misc.script_close(flags=False)
@@ -127,14 +126,18 @@ def get_screenshot_types(directory, files, stdout: bool) -> tuple:
 #     return None
 
 
-def start_script(folder: str, screens: list, width: int, height: int, wizard: bool, stdout: bool) -> None:
-    '''Performs the screenshot cropping process.'''
-    from croppers import Croppers
+def process_files(folder: str, screens: list, wizard: bool, stdout: bool) -> tuple:
+    '''Gets a list of files and returns targets coordinates.'''
     targets, files = find_targets(folder, screens, wizard, stdout)
     coordinates = get_coordinates(targets, wizard)
-    # can be given in a separate function
+    return files, coordinates
+
+
+def start_script(folder: str, files: list, coordinates: list, width: int, height: int, wizard: bool, stdout: bool) -> None:
+    '''Performs the screenshot cropping process.'''
+    from croppers import Croppers
     croppers = Croppers(folder, files, coordinates, width, height, wizard, stdout)
-    croppers.crop_wrapper(croppers.crop_corners)
+    croppers.crop_screenshots(croppers.crop_corners)
     return None
 
 
@@ -152,7 +155,8 @@ def main(wizard: bool, cropped_screens: bool, current_folder: bool, both: bool, 
             get_screenshot_types(directory, files, stdout=True)
         case (False, False):
             print(f'{misc.print_time()}', 'Getting a list of files...')
-            start_script(directory, files, view_width, view_height, wizard, stdout=True)
+            screenshots, coordinates = process_files(directory, files, wizard, stdout=True)
+            start_script(directory, screenshots, coordinates, view_width, view_height, wizard, stdout=True)
     print(f'{misc.print_time()}', 'The script is finished.')
     misc.script_close(flags=False)
     return None

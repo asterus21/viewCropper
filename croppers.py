@@ -5,31 +5,31 @@ from PIL import Image
 
 class Croppers:
 
-    def __init__(self, directory: str, files: list, target_pixels: list, view_width: int, view_height: int, wizard: bool, stdout: bool):
-        self.directory = directory
-        self.files = files
-        self.target_pixels = target_pixels
-        self.view_width = view_width
+    def __init__(self, directory: str, files: list, targets: list, view_width: int, view_height: int, wizard: bool, stdout: bool):
+        self.directory   = directory
+        self.files       = files
+        self.targets     = targets
+        self.view_width  = view_width
         self.view_height = view_height
-        self.wizard = wizard
-        self.stdout = stdout
+        self.wizard      = wizard
+        self.stdout      = stdout
 
 
     def crop_wizards(self, image, index):
         '''Crops wizards according to the target pixels.'''
         return image.crop((
-            self.target_pixels[index][0][0],
-            self.target_pixels[index][0][1],
-            self.target_pixels[index][1][0] + 1,
-            self.target_pixels[index][1][1] + 1
+            self.targets[index][0][0],
+            self.targets[index][0][1],
+            self.targets[index][1][0] + 1,
+            self.targets[index][1][1] + 1
             ))
 
 
     def crop_views(self, image, index):
         '''Crops views according to the target pixels.'''
         return image.crop((
-            self.target_pixels[index][0] - 12,
-            self.target_pixels[index][1] - 15,
+            self.targets[index][0] - 12,
+            self.targets[index][1] - 15,
             self.view_width,
             self.view_height
             ))
@@ -43,7 +43,7 @@ class Croppers:
             return self.crop_views(image, index)
 
 
-    def crop_wrapper(self, func) -> None:
+    def crop_screenshots(self, func) -> None:
         '''Crops the screenshots according to the target pixels.'''
         file_number = 1
         cropped_files = len(misc.get_files(folder=os.getcwd(), cropped_screens=True, all=False))
