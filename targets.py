@@ -4,7 +4,7 @@ from data import Targets
 class Process(Targets):
 
     def __init__(self, image, height, width):
-        super().__init__()
+        Targets.__init__()
         self.image  = image
         self.height = height
         self.width  = width
