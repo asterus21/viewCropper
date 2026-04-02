@@ -132,6 +132,7 @@ def start_script(folder: str, screens: list, width: int, height: int, wizard: bo
     from croppers import Croppers
     targets, files = find_targets(folder, screens, wizard, stdout)
     coordinates = get_coordinates(targets, wizard)
+    # can be given in a separate function
     croppers = Croppers(folder, files, coordinates, width, height, wizard, stdout)
     croppers.crop_wrapper(croppers.crop_corners)
     return None

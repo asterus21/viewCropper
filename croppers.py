@@ -48,8 +48,6 @@ class Croppers:
         file_number = 1
         cropped_files = len(misc.get_files(folder=os.getcwd(), cropped_screens=True, all=False))
         for i in range(len(self.files)):
-            if not self.target_pixels[i]:
-                continue
             image = Image.open(os.path.join(self.directory, self.files[i]))
             try:
                 crop = func(image, i)
