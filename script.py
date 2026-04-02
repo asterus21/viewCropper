@@ -43,6 +43,7 @@ def process_targets(directory: str, file: str, targets_list: list, wizard: bool)
         else:
             coordinates = process.find_views()
         targets_list.append(coordinates)
+        # print(targets_list)
     except:
         print(misc.print_time(), (f'File {file} not found!'))
         misc.script_close(flags=False)
@@ -51,17 +52,14 @@ def process_targets(directory: str, file: str, targets_list: list, wizard: bool)
 
 def get_coordinates(coordinates: dict, wizard: bool) -> list:
     '''Filters out the target pixels.'''
-    # fetches only the first target in case there are several ones
-    if not wizard:
-        coordinates_list = [
-            item[0] for item in coordinates.values() if item
-        ]
-    # fetches only the first and last targets for wizards in case there are several ones
-    else:
+    if wizard:
         coordinates_list = [
             (item[0], item[-1]) for item in coordinates.values() if item
         ]
-    # print(coordinates_list)
+    else:
+        coordinates_list = [
+            item[0] for item in coordinates.values() if item
+        ]
     return coordinates_list
 
 
@@ -135,7 +133,7 @@ def start_script(folder: str, screens: list, width: int, height: int, wizard: bo
     targets, files = find_targets(folder, screens, wizard, stdout)
     coordinates = get_coordinates(targets, wizard)
     croppers = Croppers(folder, files, coordinates, width, height, wizard, stdout)
-    croppers.crop_corners()
+    croppers.crop_wrapper(croppers.crop_corners)
     return None
 
 

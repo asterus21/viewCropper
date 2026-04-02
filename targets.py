@@ -4,7 +4,7 @@ from data import Targets
 class Process(Targets):
 
     def __init__(self, image, height, width):
-        Targets.__init__()
+        Targets.__init__(self)
         self.image  = image
         self.height = height
         self.width  = width
@@ -20,6 +20,21 @@ class Process(Targets):
             up     = self.image.getpixel((x, y - 1))
         )
         return targets
+
+
+    def find_views(self) -> list:
+        '''Finds view targets.'''
+        coordinates = []
+        for x in range(self.width - 1):
+            for y in range(self.height - 1):
+                t = self.get_targets(x, y)
+                if  (
+                    t.get('target') in Targets.central and
+                    t.get('right')  in Targets.right   and
+                    t.get('left')   in Targets.left
+                    ):
+                    coordinates.append((x, y))
+        return coordinates
 
     
     def find_wizards(self, whole: bool) -> list:
@@ -54,19 +69,4 @@ class Process(Targets):
                         t.get('down')   in Targets.neighbor
                         ):
                         coordinates.append((x, y))
-        return coordinates
-
-
-    def find_views(self) -> list:
-        '''Finds view targets.'''
-        coordinates = []
-        for x in range(self.width - 1):
-            for y in range(self.height - 1):
-                t = self.get_targets(x, y)
-                if  (
-                    t.get('target') in Targets.central and
-                    t.get('right')  in Targets.right   and
-                    t.get('left')   in Targets.left
-                    ):
-                    coordinates.append((x, y))
         return coordinates
