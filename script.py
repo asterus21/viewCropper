@@ -75,12 +75,12 @@ def get_values(directory: str, files: list, wizard: bool, whole: bool) -> tuple:
     targets = []
     if wizard:
         values = {
-            file: process_targets(directory, file, targets, whole, wizard=True)
+            file: process_targets(directory, file, targets, wizard=True)
             for file in files
         }
     else:
         values = {
-            file: process_targets(directory, file, targets, whole=None, wizard=False)
+            file: process_targets(directory, file, targets, wizard=False)
             for file in files
         }
     coordinates, keys = remove_empty_values(list(values.keys()), list(values.values()))
@@ -126,6 +126,18 @@ def get_screenshot_types(directory, files, stdout: bool) -> tuple:
 #     return None
 
 
+def process_views_and_wizards(directory: str, files: list, width: int, height: int) -> None:
+    '''Processes both wizards and views.'''
+    wizards_targets, wizard_keys = get_values(directory, files, wizard=True, whole=True)
+    views_targets, view_keys = get_values(directory, get_keys(wizards_targets), wizard=False, whole=False)
+    from croppers import Croppers
+    crop_wizard = Croppers(directory, wizard_keys, wizards_targets, width, height, wizard=True, stdout=True)
+    crop_view = Croppers(directory, view_keys, views_targets, width, height, wizard=True, stdout=True)
+    crop_wizard.crop_screenshots(crop_wizard.crop_wizards)
+    crop_view.crop_screenshots(crop_view.crop_views)
+    return None
+
+
 def process_files(folder: str, screens: list, wizard: bool, stdout: bool) -> tuple:
     '''Gets a list of files and returns targets coordinates.'''
     targets, files = find_targets(folder, screens, wizard, stdout)
@@ -136,8 +148,8 @@ def process_files(folder: str, screens: list, wizard: bool, stdout: bool) -> tup
 def start_script(folder: str, files: list, coordinates: list, width: int, height: int, wizard: bool, stdout: bool) -> None:
     '''Performs the screenshot cropping process.'''
     from croppers import Croppers
-    croppers = Croppers(folder, files, coordinates, width, height, wizard, stdout)
-    croppers.crop_screenshots(croppers.crop_corners)
+    crop = Croppers(folder, files, coordinates, width, height, wizard, stdout)
+    crop.crop_screenshots(crop.crop_corners)
     return None
 
 
@@ -147,9 +159,9 @@ def main(wizard: bool, cropped_screens: bool, current_folder: bool, both: bool, 
     match (both, type):
         case (True, True):
             misc.script_close(flags=True)
-        # case (True, False):
-            # print(f'{misc.print_time()}', 'Getting a list of files...')
-            # process_views_and_wizards(directory, files, view_width, view_height)
+        case (True, False):
+            print(f'{misc.print_time()}', 'Getting a list of files...')
+            process_views_and_wizards(directory, files, view_width, view_height)
         case (False, True):
             print(f'{misc.print_time()}', 'Getting a list of files...')
             get_screenshot_types(directory, files, stdout=True)

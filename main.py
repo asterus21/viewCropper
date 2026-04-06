@@ -24,6 +24,9 @@ if __name__ == '__main__':
     parser.add_argument('-f', '--file',    action='store',      dest='path',      help='path value to process a single file', type=str, default=None)
     args = parser.parse_args()
 
+    # ./imageCropper.exe -v -d -x 1457 -y 798 -a
+    # doesn't work
+
     # from Claude:
     # for the use of -x and -y flags without -v
     if (args.width != 1271 or args.height != 761) and not args.view and not args.wizard:
