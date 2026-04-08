@@ -20,6 +20,19 @@ class Targets:
         self.stdout = stdout
 
 
+    def find_target_types(self) -> dict:
+        '''Calls the processing function and removes not processed screenshots.'''
+        targets = []
+        for file in self.files:
+            if self.stdout:
+                print(f'{misc.print_time()}', 'Processing: ' + file)
+                self.process_targets(file, targets)
+            else:
+                self.process_targets(file, targets)
+        values = self.return_all_values(targets)
+        return values
+    
+
     def find_targets(self) -> dict:
         '''Calls the processing function and removes not processed screenshots.'''
         targets = []
@@ -31,7 +44,7 @@ class Targets:
                 self.process_targets(file, targets)
         coordinates, screens = self.remove_empty_values(targets)
         return coordinates, screens
-    
+
 
     def remove_empty_values(self, values: list) -> tuple:
         '''Removes empty values in a list of found targets.'''
@@ -40,6 +53,14 @@ class Targets:
             if values[i]
         }
         return coordinates, list(coordinates.keys())
+
+
+    def return_all_values(self, values: list) -> tuple:
+        '''Removes empty values in a list of found targets.'''
+        coordinates = {
+            self.files[i]: values[i] for i in range(0, len(self.files))
+        }
+        return coordinates
 
 
     def process_targets(self, file: str, targets_list: list) -> list:
