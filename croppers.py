@@ -1,3 +1,9 @@
+'''Croppers module.
+
+The module contains a class to crop screenshot according to the found targets.
+'''
+
+
 import os
 import misc
 from PIL import Image

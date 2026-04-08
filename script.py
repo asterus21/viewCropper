@@ -4,62 +4,8 @@ The script is aimed to crop screenshots of the PolyAnalyst nodes.
 '''
 
 
-import os
-from PIL import Image
+from targets import Targets
 import misc
-
-
-def remove_empty_values(files: list, values: list) -> tuple:
-    '''Removes empty values in a list of found targets.'''
-    coordinates = {
-        files[i]: values[i] for i in range(0, len(files))
-        if values[i]
-    }
-    return coordinates, list(coordinates.keys())
-
-
-def find_targets(directory: str, files: list, wizard: bool, stdout: bool) -> dict:
-    '''Calls the processing function and removes not processed screenshots.'''
-    targets = []
-    for file in files:
-        if stdout:
-            print(f'{misc.print_time()}', 'Processing: ' + file)
-            process_targets(directory, file, targets, wizard)
-        else:
-            process_targets(directory, file, targets, wizard)
-    coordinates, screens = remove_empty_values(files, targets)
-    return coordinates, screens
-
-
-def process_targets(directory: str, file: str, targets_list: list, wizard: bool):
-    '''Finds targets for both wizards and views.'''
-    try:
-        from process import Process
-        image = Image.open(os.path.join(directory, file)).convert('RGB')
-        width, height = image.size
-        process = Process(image, height, width)
-        if wizard:
-            coordinates = process.find_wizards(whole=True)
-        else:
-            coordinates = process.find_views()
-        targets_list.append(coordinates)
-    except:
-        print(misc.print_time(), (f'File {file} not found!'))
-        misc.script_close(flags=False)
-    return targets_list
-
-
-def get_coordinates(coordinates: dict, wizard: bool) -> list:
-    '''Filters out the target pixels.'''
-    if wizard:
-        coordinates_list = [
-            (item[0], item[-1]) for item in coordinates.values() if item
-        ]
-    else:
-        coordinates_list = [
-            item[0] for item in coordinates.values() if item
-        ]
-    return coordinates_list
 
 
 def get_keys(values: dict) -> list:
@@ -72,18 +18,19 @@ def get_keys(values: dict) -> list:
 
 def get_values(directory: str, files: list, wizard: bool, whole: bool) -> tuple:
     '''Gets values for wizards or views.'''
+    targets_instance = Targets(directory, files, wizard, stdout=True)
     targets = []
     if wizard:
         values = {
-            file: process_targets(directory, file, targets, wizard=True)
+            file: targets_instance.process_targets(file, targets)
             for file in files
         }
     else:
         values = {
-            file: process_targets(directory, file, targets, wizard=False)
+            file: targets_instance.process_targets(file, targets)
             for file in files
         }
-    coordinates, keys = remove_empty_values(list(values.keys()), list(values.values()))
+    coordinates, keys = targets_instance.remove_empty_values(values)
     return coordinates, keys
 
 
@@ -115,30 +62,6 @@ def get_screenshot_types(directory, files, stdout: bool) -> tuple:
         return sorts
 
 
-def process_views_and_wizards(directory: str, files: list, width: int, height: int) -> None:
-    '''Processes both wizards and views.'''
-    wizards, wizard_coordinates = process_files(directory, files, wizard=True, stdout=False)
-    views, view_coordinates     = process_files(directory, files, wizard=False, stdout=False)
-    start_script(directory, wizards, wizard_coordinates, width=None, height=None, wizard=True, stdout=False)
-    start_script(directory, views, view_coordinates, width, height, wizard=False, stdout=False)
-    print(f'{misc.print_time()}', str(len(wizards) + len(views)) + ' file(s) processed.')
-
-
-def process_files(folder: str, screens: list, wizard: bool, stdout: bool) -> tuple:
-    '''Gets a list of files and returns targets coordinates.'''
-    targets, files = find_targets(folder, screens, wizard, stdout)
-    coordinates = get_coordinates(targets, wizard)
-    return files, coordinates
-
-
-def start_script(folder: str, files: list, coordinates: list, width: int, height: int, wizard: bool, stdout: bool) -> None:
-    '''Performs the screenshot cropping process.'''
-    from croppers import Croppers
-    crop = Croppers(folder, files, coordinates, width, height, wizard, stdout)
-    crop.crop_screenshots(crop.crop_corners)
-    return None
-
-
 def main(wizard: bool, cropped_screens: bool, current_folder: bool, both: bool, type: bool, all: bool, file_path: str, view_width: int, view_height: int) -> None:
     '''Main function of the script.'''
     directory, files = misc.match_path(current_folder, cropped_screens, file_path, all)
@@ -156,5 +79,30 @@ def main(wizard: bool, cropped_screens: bool, current_folder: bool, both: bool, 
             screenshots, coordinates = process_files(directory, files, wizard, stdout=True)
             start_script(directory, screenshots, coordinates, view_width, view_height, wizard, stdout=True)
     print(f'{misc.print_time()}', 'The script is finished.')
-    misc.script_close(flags=False)
+    # misc.script_close(flags=False)
     return None
+
+
+def process_files(folder: str, screens: list, wizard: bool, stdout: bool) -> tuple:
+    '''Gets a list of files and returns targets coordinates.'''
+    targets_instance = Targets(folder, screens, wizard, stdout)    
+    targets, files = targets_instance.find_targets()
+    coordinates = targets_instance.get_coordinates(targets)
+    return files, coordinates
+
+
+def start_script(folder: str, files: list, coordinates: list, width: int, height: int, wizard: bool, stdout: bool) -> None:
+    '''Performs the screenshot cropping process.'''
+    from croppers import Croppers
+    croppers_instance = Croppers(folder, files, coordinates, width, height, wizard, stdout)
+    croppers_instance.crop_screenshots(croppers_instance.crop_corners)
+    return None
+
+
+def process_views_and_wizards(directory: str, files: list, width: int, height: int) -> None:
+    '''Processes both wizards and views.'''
+    wizards, wizard_coordinates = process_files(directory, files, wizard=True, stdout=False)
+    views, view_coordinates     = process_files(directory, files, wizard=False, stdout=False)
+    start_script(directory, wizards, wizard_coordinates, width=None, height=None, wizard=True, stdout=False)
+    start_script(directory, views, view_coordinates, width, height, wizard=False, stdout=False)
+    print(f'{misc.print_time()}', str(len(wizards) + len(views)) + ' file(s) processed.')

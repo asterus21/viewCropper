@@ -1,11 +1,19 @@
-from process import Process
+'''Targets module.
+
+The module contains a class to process target pixels.
+'''
+
+import os
+from PIL import Image
+
 import misc
+
+from process import Process
 
 
 class Targets:
     
     def __init__(self, directory, files, wizard, stdout):
-        Process.__init__(self)
         self.directory = directory
         self.files = files
         self.wizard = wizard
@@ -18,10 +26,10 @@ class Targets:
         for file in self.files:
             if self.stdout:
                 print(f'{misc.print_time()}', 'Processing: ' + file)
-                self.process_targets(self.directory, file, targets, self.wizard)
+                self.process_targets(file, targets)
             else:
-                self.process_targets(self.directory, file, targets, self.wizard)
-        coordinates, screens = self.remove_empty_values(self.files, targets)
+                self.process_targets(file, targets)
+        coordinates, screens = self.remove_empty_values(targets)
         return coordinates, screens
     
 
@@ -36,11 +44,14 @@ class Targets:
 
     def process_targets(self, file: str, targets_list: list) -> list:
         '''Finds targets for both wizards and views.'''
+        image = Image.open(os.path.join(self.directory, file)).convert('RGB')
+        width, height = image.size
+        process = Process(image, height, width)
         try:
             if self.wizard:
-                targets_list.append(Process.find_wizards(whole=True))
+                targets_list.append(process.find_wizards(whole=True))
             else:
-                targets_list.append(Process.find_views())
+                targets_list.append(process.find_views())
         except:
             print(misc.print_time(), (f'File {file} not found!'))
             misc.script_close(flags=False)

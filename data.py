@@ -1,3 +1,9 @@
+'''Data module.
+
+The module contains a class to store pixel colors.
+'''
+
+
 from dataclasses import dataclass
 
 @dataclass
