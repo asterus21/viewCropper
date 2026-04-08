@@ -16,16 +16,16 @@ class Process(Data):
         self.width  = width
 
 
-    def get_Data(self, x: int, y: int) -> dict:
+    def get_data(self, x: int, y: int) -> dict:
         '''Finds target pixels and their neighbours.'''
-        Data = dict(
+        data = dict(
             target = self.image.getpixel((x, y)),
             right  = self.image.getpixel((x + 1, y)),
             down   = self.image.getpixel((x, y + 1)),
             left   = self.image.getpixel((x - 1, y)),
             up     = self.image.getpixel((x, y - 1))
         )
-        return Data
+        return data
 
 
     def find_views(self) -> list:
