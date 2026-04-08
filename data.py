@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
 @dataclass
-class Targets:
+class Data:
     central:  tuple = ( (229, 168, 97),  (229, 165, 90),  (137, 99, 54),   (82, 61, 35) )
     right:    tuple = ( (51, 51, 51),    (31, 31, 31),    (19, 19, 19) )
     left:     tuple = ( (255, 255, 255), (153, 153, 153), (92, 92, 92) )

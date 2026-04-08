@@ -43,14 +43,14 @@ class Croppers:
             return self.crop_views(image, index)
 
 
-    def crop_screenshots(self, func) -> None:
-        '''Crops the screenshots according to the target pixels.'''
+    def crop_screenshots(self, method) -> None:
+        '''Wrapps the cropping function.'''
         file_number = 1
         cropped_files = len(misc.get_files(folder=os.getcwd(), cropped_screens=True, all=False))
         for i in range(len(self.files)):
             image = Image.open(os.path.join(self.directory, self.files[i]))
             try:
-                crop = func(image, i)
+                crop = method(image, i)
                 if cropped_files:
                     crop.save(f'Cropped_{cropped_files+1}.png')
                     cropped_files += 1
