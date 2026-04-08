@@ -27,6 +27,9 @@ if __name__ == '__main__':
     # ./imageCropper.exe -v -d -x 1457 -y 798 -a
     # doesn't work
 
+    # ./imageCropper.exe -v -d -x 1103 -y 651 -c
+    # rewrites Cropped_ files
+
     # from Claude:
     # for the use of -x and -y flags without -v
     if (args.width != 1271 or args.height != 761) and not args.view and not args.wizard:
@@ -379,6 +382,7 @@ if __name__ == '__main__':
                 current_folder=False,
                 both=False,
                 type=True,
+                all=False,
                 file_path=args.path,
                 view_width=args.width,
                 view_height=args.height

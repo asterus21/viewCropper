@@ -115,27 +115,13 @@ def get_screenshot_types(directory, files, stdout: bool) -> tuple:
         return sorts
 
 
-# def process_views_and_wizards(directory: str, files: list, width: int, height: int) -> None:
-#     '''Processes both wizards and views.'''
-#     wizards      = get_values(directory, files, wizard=True, whole=True)
-#     views        = get_values(directory, get_keys(wizards), wizard=False, whole=False)
-#     wizard_types = get_types(wizards, wizard=True)
-#     view_types   = get_types(views, wizard=False)
-#     crop_wizards(directory, list(wizard_types.keys()), get_coordinates(wizards, wizard=True), stdout=True)
-#     crop_views(directory, list(view_types.keys()), get_coordinates(views, wizard=False), width, height, stdout=True)
-#     return None
-
-
 def process_views_and_wizards(directory: str, files: list, width: int, height: int) -> None:
     '''Processes both wizards and views.'''
-    wizards_targets, wizard_keys = get_values(directory, files, wizard=True, whole=True)
-    views_targets, view_keys = get_values(directory, get_keys(wizards_targets), wizard=False, whole=False)
-    from croppers import Croppers
-    crop_wizard = Croppers(directory, wizard_keys, wizards_targets, width, height, wizard=True, stdout=True)
-    crop_view = Croppers(directory, view_keys, views_targets, width, height, wizard=True, stdout=True)
-    crop_wizard.crop_screenshots(crop_wizard.crop_wizards)
-    crop_view.crop_screenshots(crop_view.crop_views)
-    return None
+    wizards, wizard_coordinates = process_files(directory, files, wizard=True, stdout=False)
+    views, view_coordinates     = process_files(directory, files, wizard=False, stdout=False)
+    start_script(directory, wizards, wizard_coordinates, width=None, height=None, wizard=True, stdout=False)
+    start_script(directory, views, view_coordinates, width, height, wizard=False, stdout=False)
+    print(f'{misc.print_time()}', str(len(wizards) + len(views)) + ' file(s) processed.')
 
 
 def process_files(folder: str, screens: list, wizard: bool, stdout: bool) -> tuple:
