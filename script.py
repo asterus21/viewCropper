@@ -3,9 +3,26 @@
 The script is aimed to crop screenshots of the PolyAnalyst nodes.
 '''
 
+import misc
 
 from targets import Targets
-import misc
+from croppers import Croppers
+
+
+
+def get_screenshot_types(directory, files, stdout: bool) -> tuple:
+    '''Returns the types of screenshots.'''
+    wizards      = get_values(directory, files, wizard=True)
+    views        = get_values(directory, files, wizard=False)
+    wizard_types = get_types(wizards, wizard=True)
+    view_types   = get_types(views, wizard=False)
+    types        = wizard_types | view_types
+    sorts        = dict(sorted(types.items()))
+    if stdout:
+        for key, value in sorts.items(): print(str(key) + ': ' + str(value))
+        return sorts
+    else:
+        return sorts
 
 
 def get_keys(values: dict) -> list:
@@ -16,22 +33,11 @@ def get_keys(values: dict) -> list:
     return keys
 
 
-def get_values(directory: str, files: list, wizard: bool, whole: bool) -> tuple:
+def get_values(directory: str, files: list, wizard: bool) -> tuple:
     '''Gets values for wizards or views.'''
-    targets_instance = Targets(directory, files, wizard, stdout=True)
-    targets = []
-    if wizard:
-        values = {
-            file: targets_instance.process_targets(file, targets)
-            for file in files
-        }
-    else:
-        values = {
-            file: targets_instance.process_targets(file, targets)
-            for file in files
-        }
-    coordinates, keys = targets_instance.remove_empty_values(values)
-    return coordinates, keys
+    targets_instance = Targets(directory, files, wizard, stdout=False)
+    coordinates, _ = targets_instance.find_targets()
+    return coordinates
 
 
 def get_types(values: dict, wizard: bool) -> dict:
@@ -47,19 +53,10 @@ def get_types(values: dict, wizard: bool) -> dict:
     return types
 
 
-def get_screenshot_types(directory, files, stdout: bool) -> tuple:
-    '''Returns the types of screenshots.'''
-    wizards      = get_values(directory, files, wizard=True, whole=False)
-    views        = get_values(directory, get_keys(wizards), wizard=False, whole=None)
-    wizard_types = get_types(wizards, wizard=True)
-    view_types   = get_types(views, wizard=False)
-    types        = wizard_types | view_types
-    sorts        = dict(sorted(types.items()))
-    if stdout:
-        for key, value in sorts.items(): print(str(key) + ': ' + str(value))
-        return sorts
-    else:
-        return sorts
+
+
+
+
 
 
 def main(wizard: bool, cropped_screens: bool, current_folder: bool, both: bool, type: bool, all: bool, file_path: str, view_width: int, view_height: int) -> None:
@@ -93,7 +90,6 @@ def process_files(folder: str, screens: list, wizard: bool, stdout: bool) -> tup
 
 def start_script(folder: str, files: list, coordinates: list, width: int, height: int, wizard: bool, stdout: bool) -> None:
     '''Performs the screenshot cropping process.'''
-    from croppers import Croppers
     croppers_instance = Croppers(folder, files, coordinates, width, height, wizard, stdout)
     croppers_instance.crop_screenshots(croppers_instance.crop_corners)
     return None
