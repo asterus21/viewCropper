@@ -1,0 +1,60 @@
+from process import Process
+import misc
+
+
+class Targets:
+    
+    def __init__(self, directory, files, wizard, stdout):
+        Process.__init__(self)
+        self.directory = directory
+        self.files = files
+        self.wizard = wizard
+        self.stdout = stdout
+
+
+    def find_targets(self) -> dict:
+        '''Calls the processing function and removes not processed screenshots.'''
+        targets = []
+        for file in self.files:
+            if self.stdout:
+                print(f'{misc.print_time()}', 'Processing: ' + file)
+                self.process_targets(self.directory, file, targets, self.wizard)
+            else:
+                self.process_targets(self.directory, file, targets, self.wizard)
+        coordinates, screens = self.remove_empty_values(self.files, targets)
+        return coordinates, screens
+    
+
+    def remove_empty_values(self, values: list) -> tuple:
+        '''Removes empty values in a list of found targets.'''
+        coordinates = {
+            self.files[i]: values[i] for i in range(0, len(self.files))
+            if values[i]
+        }
+        return coordinates, list(coordinates.keys())
+
+
+    def process_targets(self, file: str, targets_list: list) -> list:
+        '''Finds targets for both wizards and views.'''
+        try:
+            if self.wizard:
+                targets_list.append(Process.find_wizards(whole=True))
+            else:
+                targets_list.append(Process.find_views())
+        except:
+            print(misc.print_time(), (f'File {file} not found!'))
+            misc.script_close(flags=False)
+        return targets_list
+
+
+    def get_coordinates(self, coordinates: dict) -> list:
+        '''Filters out the target pixels.'''
+        if self.wizard:
+            coordinates_list = [
+                (item[0], item[-1]) for item in coordinates.values() if item
+            ]
+        else:
+            coordinates_list = [
+                item[0] for item in coordinates.values() if item
+            ]
+        return coordinates_list
