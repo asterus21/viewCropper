@@ -34,7 +34,7 @@ def find_targets(directory: str, files: list, wizard: bool, stdout: bool) -> dic
 def process_targets(directory: str, file: str, targets_list: list, wizard: bool):
     '''Finds targets for both wizards and views.'''
     try:
-        from targets import Process
+        from process import Process
         image = Image.open(os.path.join(directory, file)).convert('RGB')
         width, height = image.size
         process = Process(image, height, width)
