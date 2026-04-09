@@ -4,7 +4,7 @@ The module contains a class to find target pixels.
 '''
 
 
-from data import Data
+from classes.data import Data
 
 
 class Process(Data):

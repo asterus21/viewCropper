@@ -8,7 +8,7 @@ from PIL import Image
 
 import misc
 
-from process import Process
+from classes.process import Process
 
 
 class Targets:

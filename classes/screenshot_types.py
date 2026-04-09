@@ -21,7 +21,7 @@ class Types:
 
     def get_values(self) -> tuple:
         '''Gets values for wizards or views.'''
-        from targets import Targets
+        from classes.targets import Targets
         targets_instance = Targets(self.directory, self.files, wizard=True, stdout=False)
         coordinates = targets_instance.find_target_types()
         return coordinates

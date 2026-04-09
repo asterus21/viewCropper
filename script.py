@@ -5,9 +5,9 @@ The script is aimed to crop screenshots of the PolyAnalyst nodes.
 
 import misc
 
-from croppers import Croppers
-from targets import Targets
-from screenshot_types import Types
+from classes.croppers import Croppers
+from classes.targets import Targets
+from classes.screenshot_types import Types
 
 
 def main(wizard: bool, cropped_screens: bool, current_folder: bool, both: bool, type: bool, all: bool, file_path: str, view_width: int, view_height: int) -> None:
