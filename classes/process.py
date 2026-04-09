@@ -50,7 +50,7 @@ class Process(Data):
             target_right_coordinates = []
             for x in range(self.width - 1):
                 for y in range(self.height - 1):
-                    t = self.get_Data(x, y)
+                    t = self.get_data(x, y)
                     if  (
                         t.get('target') in Data.upper    and
                         t.get('right')  in Data.neighbor and

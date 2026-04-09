@@ -27,7 +27,6 @@ def main(wizard: bool, cropped_screens: bool, current_folder: bool, both: bool, 
             screenshots, coordinates = process_files(directory, files, wizard, stdout=True)
             start_script(directory, screenshots, coordinates, view_width, view_height, wizard, stdout=True)
     print(f'{misc.print_time()}', 'The script is finished.')
-    # misc.script_close(flags=False)
     return None
 
 

@@ -33,7 +33,7 @@ class Targets:
         return values
     
 
-    def find_targets(self) -> dict:
+    def find_targets(self) -> tuple:
         '''Calls the processing function and removes not processed screenshots.'''
         targets = []
         for file in self.files:
@@ -76,6 +76,7 @@ class Targets:
         except:
             print(misc.print_time(), (f'File {file} not found!'))
             misc.script_close(flags=False)
+        
         return targets_list
 
 
