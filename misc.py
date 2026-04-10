@@ -63,17 +63,6 @@ def process_user_input(user_input: str, single_file: bool):
             return user_input
 
 
-def get_targets(image, x: int, y: int) -> dict:
-    '''Finds target pixels and their neighbours.'''
-    return dict(
-        target = image.getpixel((x, y)),
-        right  = image.getpixel((x + 1, y)),
-        down   = image.getpixel((x, y + 1)),
-        left   = image.getpixel((x - 1, y)),
-        up     = image.getpixel((x, y - 1))
-    )
-
-
 def match_path(folder: bool, cropped_screens: bool, path: str, all_files: bool) -> tuple:
     '''Filters out a file, folder and cropped screens.'''
     if folder:

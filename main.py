@@ -6,7 +6,7 @@ The module handles script arguments to pass them to the main() function.
 
 import argparse
 
-import misc
+import misc as misc
 import script
 
 

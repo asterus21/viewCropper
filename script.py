@@ -3,7 +3,7 @@
 The script is aimed to crop screenshots of the PolyAnalyst nodes.
 '''
 
-import misc
+import misc as misc
 
 from classes.croppers import Croppers
 from classes.targets import Targets
@@ -32,8 +32,8 @@ def main(wizard: bool, cropped_screens: bool, current_folder: bool, both: bool, 
 
 def process_files(folder: str, screens: list, wizard: bool, stdout: bool) -> tuple:
     '''Gets a list of files and returns targets coordinates.'''
-    targets_instance = Targets(folder, screens, wizard, stdout)    
-    targets, files = targets_instance.find_targets()
+    targets_instance = Targets(folder, screens, wizard, stdout)
+    targets, files = targets_instance.find_targets(type=False, whole=True)
     coordinates = targets_instance.get_coordinates(targets)
     return files, coordinates
 
