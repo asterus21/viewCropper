@@ -25,10 +25,10 @@ class Targets:
         targets = []
         for file in self.files:
             if self.stdout: print(f'{misc.print_time()}', 'Processing: ' + file)
-            values = self.process_targets(file, targets, whole)
+            self.process_targets(file, targets, whole)
         if type:
-            return self.return_all_values(values)
-        return self.remove_empty_values(values)
+            return self.return_all_values(targets)
+        return self.remove_empty_values(targets)
 
 
     def remove_empty_values(self, values: list) -> tuple:
