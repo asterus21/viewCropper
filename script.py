@@ -51,12 +51,10 @@ def process_views_and_wizards(directory: str, files: list, width: int, height: i
 def start_script(folder: str, files: list, coordinates: list, width: int, height: int, wizard: bool, stdout: bool) -> None:
     '''Performs the screenshot cropping process.'''
     croppers_instance = Croppers(folder, files, coordinates, width, height, wizard, stdout)
-    croppers_instance.crop_screenshots(croppers_instance.crop_corners)
-    return None
+    return croppers_instance.crop_screenshots(croppers_instance.crop_corners)
 
 
 def get_screenshot_types(directory, files) -> tuple:
     '''Returns the types of screenshots.'''
     types_instance = Types(directory, files)
-    types = types_instance.get_screenshot_types()
-    return types
+    return types_instance.get_screenshot_types()

@@ -18,14 +18,13 @@ class Process(Data):
 
     def get_data(self, x: int, y: int) -> dict:
         '''Finds target pixels and their neighbours.'''
-        data = dict(
+        return dict(
             target = self.image.getpixel((x, y)),
             right  = self.image.getpixel((x + 1, y)),
             down   = self.image.getpixel((x, y + 1)),
             left   = self.image.getpixel((x - 1, y)),
             up     = self.image.getpixel((x, y - 1))
         )
-        return data
 
 
     def find_views(self) -> list:
@@ -33,7 +32,7 @@ class Process(Data):
         coordinates = []
         for x in range(self.width - 1):
             for y in range(self.height - 1):
-                t = self.get_Data(x, y)
+                t = self.get_data(x, y)
                 if  (
                     t.get('target') in Data.central and
                     t.get('right')  in Data.right   and
@@ -68,7 +67,7 @@ class Process(Data):
             coordinates = []
             for x in range(self.width - 1):
                 for y in range(self.height - 1):
-                    t = self.get_Data(x, y)
+                    t = self.get_data(x, y)
                     if  (
                         t.get('target') in Data.upper    and
                         t.get('right')  in Data.neighbor and

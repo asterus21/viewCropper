@@ -20,8 +20,7 @@ from pathlib import Path
 def print_time() -> str:
     '''Prints the current time.'''
     now = datetime.datetime.now()
-    formatted_time = now.strftime("%Y-%m-%d %H:%M:%S")
-    return formatted_time
+    return now.strftime("%Y-%m-%d %H:%M:%S")
 
 
 def script_close(flags: bool) -> None:
@@ -67,14 +66,13 @@ def process_user_input(user_input: str, single_file: bool):
 
 def get_targets(image, x: int, y: int) -> dict:
     '''Finds target pixels and their neighbours.'''
-    targets = dict(
+    return dict(
         target = image.getpixel((x, y)),
         right  = image.getpixel((x + 1, y)),
         down   = image.getpixel((x, y + 1)),
         left   = image.getpixel((x - 1, y)),
         up     = image.getpixel((x, y - 1))
     )
-    return targets
 
 
 def match_path(folder: bool, cropped_screens: bool, path: str, all: bool) -> tuple:
@@ -84,8 +82,7 @@ def match_path(folder: bool, cropped_screens: bool, path: str, all: bool) -> tup
         directory = os.getcwd()
         files = get_files(directory, cropped_screens, all)
         is_empty(files)
-    else:
-        directory, files = process_user_input(path, single_file=True) if path else get_input(cropped_screens, all)
+    else: directory, files = process_user_input(path, single_file=True) if path else get_input(cropped_screens, all)
     return directory, files
 
 
@@ -130,8 +127,7 @@ def get_input(cropped_screens: bool, all: bool) -> str:
     # adds an empty line before the script start
     print()
     # checks for a single volume letter
-    if user_input.endswith(':'):
-        user_input = user_input + '/'
+    if user_input.endswith(':'): user_input = user_input + '/'
     match user_input:
         case 'exit':
             print(print_time(), 'The program is about to close.')

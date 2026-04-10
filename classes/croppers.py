@@ -43,10 +43,7 @@ class Croppers:
 
     def crop_corners(self, image, index):
         '''Crops the screenshots according to the target pixels.'''
-        if self.wizard:
-            return self.crop_wizards(image, index)            
-        else: 
-            return self.crop_views(image, index)
+        return self.crop_wizards(image, index) if self.wizard else self.crop_views(image, index)
 
 
     def crop_screenshots(self, method) -> None:
@@ -63,8 +60,6 @@ class Croppers:
                 else:
                     crop.save(f'Cropped_{file_number}.png')
                     file_number += 1
-            except Exception as E:
-                print(f'{E}: no wizard screenshot or view one is found.')
-        if self.stdout:
-            print(f'{misc.print_time()}', str(len(self.files)) + ' file(s) processed.')
+            except Exception as E: print(f'{E}: no wizard screenshot or view one is found.')
+        if self.stdout: print(f'{misc.print_time()}', str(len(self.files)) + ' file(s) processed.')
         return None

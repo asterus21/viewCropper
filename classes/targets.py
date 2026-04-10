@@ -27,10 +27,8 @@ class Targets:
             if self.stdout:
                 print(f'{misc.print_time()}', 'Processing: ' + file)
                 self.process_targets(file, targets)
-            else:
-                self.process_targets(file, targets)
-        values = self.return_all_values(targets)
-        return values
+            else: self.process_targets(file, targets)
+        return self.return_all_values(targets)
     
 
     def find_targets(self) -> tuple:
@@ -40,10 +38,8 @@ class Targets:
             if self.stdout:
                 print(f'{misc.print_time()}', 'Processing: ' + file)
                 self.process_targets(file, targets)
-            else:
-                self.process_targets(file, targets)
-        coordinates, screens = self.remove_empty_values(targets)
-        return coordinates, screens
+            else: self.process_targets(file, targets)
+        return self.remove_empty_values(targets)
 
 
     def remove_empty_values(self, values: list) -> tuple:
@@ -55,12 +51,9 @@ class Targets:
         return coordinates, list(coordinates.keys())
 
 
-    def return_all_values(self, values: list) -> tuple:
+    def return_all_values(self, values: list) -> dict:
         '''Removes empty values in a list of found targets.'''
-        coordinates = {
-            self.files[i]: values[i] for i in range(0, len(self.files))
-        }
-        return coordinates
+        return { self.files[i]: values[i] for i in range(0, len(self.files)) }
 
 
     def process_targets(self, file: str, targets_list: list) -> list:
@@ -69,25 +62,15 @@ class Targets:
         width, height = image.size
         process = Process(image, height, width)
         try:
-            if self.wizard:
-                targets_list.append(process.find_wizards(whole=True))
-            else:
-                targets_list.append(process.find_views())
+            if self.wizard: targets_list.append(process.find_wizards(whole=True))
+            else: targets_list.append(process.find_views())
         except:
             print(misc.print_time(), (f'File {file} not found!'))
             misc.script_close(flags=False)
-        
         return targets_list
 
 
     def get_coordinates(self, coordinates: dict) -> list:
         '''Filters out the target pixels.'''
-        if self.wizard:
-            coordinates_list = [
-                (item[0], item[-1]) for item in coordinates.values() if item
-            ]
-        else:
-            coordinates_list = [
-                item[0] for item in coordinates.values() if item
-            ]
-        return coordinates_list
+        return ( [(item[0], item[-1]) for item in coordinates.values() if item] if self.wizard
+                else [item[0] for item in coordinates.values() if item] )
