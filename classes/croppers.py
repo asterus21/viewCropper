@@ -21,7 +21,7 @@ class Croppers:
         self.stdout      = stdout
 
 
-    def crop_wizards(self, image, index):
+    def crop_wizards(self, image, index) -> object:
         '''Crops wizards according to the target pixels.'''
         return image.crop((
             self.targets[index][0][0],
@@ -31,7 +31,7 @@ class Croppers:
             ))
 
 
-    def crop_views(self, image, index):
+    def crop_views(self, image, index) -> object:
         '''Crops views according to the target pixels.'''
         return image.crop((
             self.targets[index][0] - 12,
@@ -41,15 +41,15 @@ class Croppers:
             ))
 
 
-    def crop_corners(self, image, index):
+    def crop_corners(self, image, index) -> object:
         '''Crops the screenshots according to the target pixels.'''
         return self.crop_wizards(image, index) if self.wizard else self.crop_views(image, index)
 
 
-    def crop_screenshots(self, method) -> None:
+    def crop_screenshots(self, method) -> object:
         '''Wrapps the cropping function.'''
         file_number = 1
-        cropped_files = len(misc.get_files(folder=os.getcwd(), cropped_screens=True, all=False))
+        cropped_files = len(misc.get_files(folder=os.getcwd(), cropped_screens=True, all_files=False))
         for i in range(len(self.files)):
             image = Image.open(os.path.join(self.directory, self.files[i]))
             try:
@@ -62,4 +62,3 @@ class Croppers:
                     file_number += 1
             except Exception as E: print(f'{E}: no wizard screenshot or view one is found.')
         if self.stdout: print(f'{misc.print_time()}', str(len(self.files)) + ' file(s) processed.')
-        return None

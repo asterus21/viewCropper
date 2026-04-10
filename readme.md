@@ -12,7 +12,7 @@ The script logic is defined via a use of flags, i.e.
 * `-x`, `--width`   – width value to process views
 * `-y`, `--height`  – height value to process views
 * `-f`, `--file`    – path value to process a single file
-* `-a`, `--all`     – flag to process not only those screenshots which start with "Screenshot_" but all of them (except "Cropped_")
+* `-a`, `--all_files`     – flag to process not only those screenshots which start with "Screenshot_" but all_files of them (except "Cropped_")
 
 Examples (via Windows PowerShell):
 
@@ -64,27 +64,27 @@ Examples (via Windows PowerShell):
 
 `py .\main.py -t`
 
-- process all wizards in the current folder:
+- process all_files wizards in the current folder:
 
 `py .\main.py -d`
 
-- process all views in the current folder:
+- process all_files views in the current folder:
 
 `py .\main.py -d -v`
 
-- process all views in the current folder by 200 pixels high and 400 wide:
+- process all_files views in the current folder by 200 pixels high and 400 wide:
 
 `py .\main.py -d -v -y 200 -x 400`
 
-- process all wizards and views in the current folder:
+- process all_files wizards and views in the current folder:
 
 `py .\main.py -b -d`
 
-- process all view screenshot files that start with "Cropped_":
+- process all_files view screenshot files that start with "Cropped_":
 
 `py .\main.py -c -v`
 
-- process all wizard screenshot files that start with any character, i.e. not only with "Screenshot_" (but not "Cropped_"):
+- process all_files wizard screenshot files that start with any character, i.e. not only with "Screenshot_" (but not "Cropped_"):
 
 `py .\main.py -a -w`
 
@@ -104,7 +104,7 @@ Examples (via Windows PowerShell):
 * `-x`, `--width`   – значение ширины для обработки вьюшек
 * `-y`, `--height`  – значение высоты для обработки вьюшек
 * `-f`, `--file`    – путь к файлу для обработки одного файла
-* `-a`, `--all`     – флаг для обработки только всех скриншотов, которые начинаются не только с "Screenshot_" (кроме "Cropped_")
+* `-a`, `--all_files`     – флаг для обработки только всех скриншотов, которые начинаются не только с "Screenshot_" (кроме "Cropped_")
 
 Примеры (через Windows PowerShell):
 

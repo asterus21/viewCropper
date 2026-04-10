@@ -51,8 +51,7 @@ def process_user_input(user_input: str, single_file: bool):
     '''Processes user's input.'''
     if single_file:
         directory, file = check_path(user_input)
-        folder = str(directory)
-        return folder, [file]
+        return str(directory), list(file)
     else:
         path = Path(user_input)
         # the entered path must exist and be a folder
@@ -75,20 +74,19 @@ def get_targets(image, x: int, y: int) -> dict:
     )
 
 
-def match_path(folder: bool, cropped_screens: bool, path: str, all: bool) -> tuple:
+def match_path(folder: bool, cropped_screens: bool, path: str, all_files: bool) -> tuple:
     '''Filters out a file, folder and cropped screens.'''
     if folder:
         print(print_time(), 'Current directory is being used...')
-        directory = os.getcwd()
-        files = get_files(directory, cropped_screens, all)
+        files = get_files(os.getcwd(), cropped_screens, all_files)
         is_empty(files)
-    else: directory, files = process_user_input(path, single_file=True) if path else get_input(cropped_screens, all)
+    else: directory, files = process_user_input(path, single_file=True) if path else get_input(cropped_screens, all_files)
     return directory, files
 
 
-def get_files(folder: str, cropped_screens: bool, all: bool) -> list:
+def get_files(folder: str, cropped_screens: bool, all_files: bool) -> list:
     '''Gets list of screenshots from a folder.'''
-    match (cropped_screens, all):
+    match (cropped_screens, all_files):
         case(True, True):
             script_close(flags=True)
         case(True, False):
@@ -121,38 +119,25 @@ def is_empty(files_list: list) -> list:
         return files_list
 
 
-def get_input(cropped_screens: bool, all: bool) -> str:
+def process_directory(folder, if_cropped, if_all) -> tuple:
+    '''Processes a folder and files to get screenshots from.'''
+    return folder, get_files(folder, if_cropped, if_all)
+
+
+def get_input(cropped_screens: bool, all_files: bool) -> tuple:
     '''Accepts the user's input.'''
     user_input = input('Enter a path to the PNG files to crop (e.g. D:/screens) or press Enter to use a current directory (type exit to quit): ')
     # adds an empty line before the script start
     print()
     # checks for a single volume letter
     if user_input.endswith(':'): user_input = user_input + '/'
-    match user_input:
-        case 'exit':
-            print(print_time(), 'The program is about to close.')
-            sys.exit(0)
-        case 'Exit':
-            print(print_time(), 'The program is about to close.')
-            sys.exit(0)
-        case 'EXIT':
-            print(print_time(), 'The program is about to close.')
-            sys.exit(0)
-        case 'учше':
-            print(print_time(), 'The program is about to close.')
-            sys.exit(0)
-        case 'УЧШЕ':
-            print(print_time(), 'The program is about to close.')
-            sys.exit(0)
-        case '':
-            print(print_time(), 'Current directory is being used.\n')
-            directory = os.getcwd()
-            files_list = get_files(directory, cropped_screens, all)
-            is_empty(files_list)
-            return directory, files_list
-        case _:
-            directory = process_user_input(user_input, single_file=False)
-            files_list = get_files(directory, cropped_screens, all)
-            is_empty(files_list)
-            # D:/folder, [screenshot_1.png, screenshot_2.png, ...]
-            return directory, files_list
+    if user_input in ('exit', 'Exit', 'EXIT', 'учше', 'УЧШЕ'):
+        print(print_time(), 'The program is about to close.')
+        sys.exit(0)
+    elif user_input == '':
+        print(print_time(), 'Current directory is being used.\n')
+        folder, files = process_directory(os.getcwd(), cropped_screens, all_files)
+    else:
+        directory = process_user_input(user_input, single_file=False)
+        folder, files = process_directory(directory, cropped_screens, all_files)
+    return folder, files

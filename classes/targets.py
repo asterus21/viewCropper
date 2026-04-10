@@ -18,18 +18,7 @@ class Targets:
         self.files = files
         self.wizard = wizard
         self.stdout = stdout
-
-
-    def find_target_types(self) -> dict:
-        '''Calls the processing function and removes not processed screenshots.'''
-        targets = []
-        for file in self.files:
-            if self.stdout:
-                print(f'{misc.print_time()}', 'Processing: ' + file)
-                self.process_targets(file, targets)
-            else: self.process_targets(file, targets)
-        return self.return_all_values(targets)
-    
+  
 
     def find_targets(self) -> tuple:
         '''Calls the processing function and removes not processed screenshots.'''
@@ -50,6 +39,17 @@ class Targets:
         }
         return coordinates, list(coordinates.keys())
 
+
+    def find_target_types(self) -> dict:
+        '''Calls the processing function and removes not processed screenshots.'''
+        targets = []
+        for file in self.files:
+            if self.stdout:
+                print(f'{misc.print_time()}', 'Processing: ' + file)
+                self.process_targets(file, targets)
+            else: self.process_targets(file, targets)
+        return self.return_all_values(targets)
+    
 
     def return_all_values(self, values: list) -> dict:
         '''Removes empty values in a list of found targets.'''

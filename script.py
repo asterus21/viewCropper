@@ -10,9 +10,9 @@ from classes.targets import Targets
 from classes.screenshot_types import Types
 
 
-def main(wizard: bool, cropped_screens: bool, current_folder: bool, both: bool, type: bool, all: bool, file_path: str, view_width: int, view_height: int) -> None:
+def main(wizard: bool, cropped_screens: bool, current_folder: bool, both: bool, type: bool, all_files: bool, file_path: str, view_width: int, view_height: int) -> None:
     '''Main function of the script.'''
-    directory, files = misc.match_path(current_folder, cropped_screens, file_path, all)
+    directory, files = misc.match_path(current_folder, cropped_screens, file_path, all_files)
     match (both, type):
         case (True, True):
             misc.script_close(flags=True)

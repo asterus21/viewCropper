@@ -6,6 +6,7 @@ The module contains a class to store pixel colors.
 
 from dataclasses import dataclass
 
+
 @dataclass
 class Data:
     central:  tuple = ( (229, 168, 97),  (229, 165, 90),  (137, 99, 54),   (82, 61, 35) )
