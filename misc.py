@@ -51,7 +51,7 @@ def process_user_input(user_input: str, single_file: bool):
     '''Processes user's input.'''
     if single_file:
         directory, file = check_path(user_input)
-        return str(directory), list(file)
+        return str(directory), [file]
     else:
         path = Path(user_input)
         # the entered path must exist and be a folder
