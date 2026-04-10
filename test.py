@@ -5,7 +5,9 @@ The module performs unit tests.
 
 import subprocess
 
- 
+
+# TODO: make several lists
+# TODO: maybe it's better to use a generator here
 valid_commands_one_flag = [
     'py main.py -h',                                                  # show help
     'py main.py',                                                     # default script, i.e. processing wizards only    
@@ -54,6 +56,7 @@ valid_commands_others = [
 ]
 
 
+# TODO: it is needed to catch exceptions in the stdout
 not_valid_commands = [
     'py main.py -x 100 -a 100',
     'py main.py -y 100 -a 100',
