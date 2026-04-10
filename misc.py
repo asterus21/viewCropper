@@ -67,7 +67,8 @@ def match_path(folder: bool, cropped_screens: bool, path: str, all_files: bool) 
     '''Filters out a file, folder and cropped screens.'''
     if folder:
         print(print_time(), 'Current directory is being used...')
-        files = get_files(os.getcwd(), cropped_screens, all_files)
+        directory = os.getcwd()
+        files = get_files(directory, cropped_screens, all_files)
         is_empty(files)
     else: directory, files = process_user_input(path, single_file=True) if path else get_input(cropped_screens, all_files)
     return directory, files

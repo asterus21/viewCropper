@@ -5,8 +5,8 @@ The module performs unit tests.
 
 import subprocess
 
-
-valid_commands = [
+ 
+valid_commands_one_flag = [
     'py main.py -h',                                                  # show help
     'py main.py',                                                     # default script, i.e. processing wizards only    
     'py main.py -w',                                                  # processing wizards
@@ -15,6 +15,9 @@ valid_commands = [
     'py main.py -c',                                                  # processing cropped wizards implicitly
     'py main.py -d',                                                  # processing wizards in the current folder implicitly
     'py main.py -b',                                                  # processing both wizards and views
+    ]
+
+valid_commands_others = [
     'py main.py -x 100',                                              # processing views with the width value of 100
     'py main.py -y 100',                                              # processing views with the height value of 100
     'py main.py -x 100 -y 100',                                       # processing views with the width and height values of 100
@@ -103,4 +106,5 @@ def test_start(commands: list) -> tuple:
 
 
 if __name__ == '__main__':
-    test_start(valid_commands)
+    test_start(valid_commands_one_flag)
+    test_start(valid_commands_others)
