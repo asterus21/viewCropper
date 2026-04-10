@@ -37,9 +37,9 @@ invalid_commands = [
 
 
 def test_start(commands: list) -> tuple:
-    script_number = 0    
+    script_number = 0
     print()
-    from datetime import datetime  
+    from datetime import datetime
     for script in commands:
         print(f'starting the test: { script } ')
         start_time = datetime.now()
@@ -52,7 +52,7 @@ def test_start(commands: list) -> tuple:
             )
         stdout, stderr = process.communicate(input='\n')
         end_time = datetime.now()
-        time_difference = end_time - start_time        
+        time_difference = end_time - start_time
         print(f'"{ commands[script_number] }" finished at { time_difference.total_seconds() % 60 }')
         script_number +=1
     print('the test is finshed')

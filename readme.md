@@ -2,17 +2,17 @@ The current script is aimed to automatically crop windows of the PolyAnalyst nod
 
 The script logic is defined via a use of flags, i.e.
 
-* `-h`, `--help`    – show this help message and exit
-* `-w`, `--wizard`  – flag to process only wizards (used by default when no flag is given)
-* `-v`, `--view`    – flag to process only views
-* `-t`, `--type`    – flag to show types of screenshots
-* `-d`, `--dir`     – flag to start the script in the current folder
-* `-c`, `--cropped` – flag to process only those screenshots which start with "Cropped_"
-* `-b`, `--both`    – flag to process both wizards and views
-* `-x`, `--width`   – width value to process views
-* `-y`, `--height`  – height value to process views
-* `-f`, `--file`    – path value to process a single file
-* `-a`, `--all_files`     – flag to process not only those screenshots which start with "Screenshot_" but all_files of them (except "Cropped_")
+* `-h`, `--help`   – show this help message and exit
+* `-w`, `--wizard` – flag to process only wizards (used by default when no flag is given)
+* `-v`, `--view`   – flag to process only views
+* `-t`, `--type`   – flag to show types of screenshots
+* `-d`, `--dir`    – flag to start the script in the current folder
+* `-c`, `--cropped`– flag to process only those screenshots which start with "Cropped_"
+* `-b`, `--both`   – flag to process both wizards and views
+* `-x`, `--width`  – width value to process views
+* `-y`, `--height` – height value to process views
+* `-f`, `--file`   – path value to process a single file
+* `-a`, `--all`    – flag to process not only those screenshots which start with "Screenshot_" but all_files of them (except "Cropped_")
 
 Examples (via Windows PowerShell):
 
@@ -94,17 +94,17 @@ Examples (via Windows PowerShell):
 
 Работа скрипта определяется с помощью флагов:
 
-* `-h`, `--help`    – показать флаги и завершить работу
-* `-w`, `--wizard`  – флаг для работы только с визардами (используется по умолчанию, если флаг не задан)
-* `-v`, `--view`    – флаг для работы только с вьюшками
-* `-t`, `--type`    – флаг для отображения типов скриншотов
-* `-d`, `--dir`     – флаг для запуска скрипта в текущей папке
-* `-c`, `--cropped` – флаг для обработки только тех скриншотов, которые начинаются с "Cropped_"
-* `-b`, `--both`    – флаг для обработки как визардов, так и вьюшек
-* `-x`, `--width`   – значение ширины для обработки вьюшек
-* `-y`, `--height`  – значение высоты для обработки вьюшек
-* `-f`, `--file`    – путь к файлу для обработки одного файла
-* `-a`, `--all_files`     – флаг для обработки только всех скриншотов, которые начинаются не только с "Screenshot_" (кроме "Cropped_")
+* `-h`, `--help`   – показать флаги и завершить работу
+* `-w`, `--wizard` – флаг для работы только с визардами (используется по умолчанию, если флаг не задан)
+* `-v`, `--view`   – флаг для работы только с вьюшками
+* `-t`, `--type`   – флаг для отображения типов скриншотов
+* `-d`, `--dir`    – флаг для запуска скрипта в текущей папке
+* `-c`, `--cropped`– флаг для обработки только тех скриншотов, которые начинаются с "Cropped_"
+* `-b`, `--both`   – флаг для обработки как визардов, так и вьюшек
+* `-x`, `--width`  – значение ширины для обработки вьюшек
+* `-y`, `--height` – значение высоты для обработки вьюшек
+* `-f`, `--file`   – путь к файлу для обработки одного файла
+* `-a`, `--all`    – флаг для обработки только всех скриншотов, которые начинаются не только с "Screenshot_" (кроме "Cropped_")
 
 Примеры (через Windows PowerShell):
 

@@ -25,20 +25,20 @@ class Types:
     def get_keys(self, values: dict) -> list:
         '''Gets empty keys to process'''
         return [ key for key in values if not values[key] ]
-    
-    
+
+
     def get_values(self, keys: list, wizard: bool) -> dict:
         '''Gets values for wizards or views.'''
         from classes.targets import Targets
-        if wizard: 
+        if wizard:
             targets_instance = Targets(self.directory, self.files, wizard=True, stdout=False)
             return targets_instance.find_targets(type=True, whole=False)
         else:
             targets_instance = Targets(self.directory, keys, wizard=False, stdout=False)
-            return targets_instance.find_targets(type=True, whole=None)       
+            return targets_instance.find_targets(type=True, whole=None)
 
 
     def get_types(self, values: dict, wizard: bool) -> dict:
         '''Returns a file type for a screenshot'''
-        return ({key: 'wizard' for key, value in values.items() if value} if wizard
-                else {key: 'view' for key, value in values.items() if value})
+        return ( {key: 'wizard' for key, value in values.items() if value} if wizard
+                else {key: 'view' for key, value in values.items() if value} )

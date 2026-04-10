@@ -12,13 +12,13 @@ from classes.process import Process
 
 
 class Targets:
-    
+
     def __init__(self, directory, files, wizard, stdout):
         self.directory = directory
         self.files     = files
         self.wizard    = wizard
         self.stdout    = stdout
-  
+
 
     def find_targets(self, type: bool, whole: bool) -> tuple:
         '''Calls the processing function and removes not processed screenshots.'''
@@ -26,10 +26,10 @@ class Targets:
         for file in self.files:
             if self.stdout: print(f'{misc.print_time()}', 'Processing: ' + file)
             values = self.process_targets(file, targets, whole)
-        if type: 
+        if type:
             return self.return_all_values(values)
         return self.remove_empty_values(values)
-    
+
 
     def remove_empty_values(self, values: list) -> tuple:
         '''Removes empty values in a list of found targets.'''
@@ -38,11 +38,11 @@ class Targets:
             if values[i]
         }
         return coordinates, list(coordinates.keys())
-    
+
 
     def return_all_values(self, values: list) -> dict:
         '''Removes empty values in a list of found targets.'''
-        return { self.files[i]: values[i] for i in range(0, len(self.files)) }
+        return {self.files[i]: values[i] for i in range(0, len(self.files))}
 
 
     def process_targets(self, file: str, targets_list: list, whole: bool) -> list:

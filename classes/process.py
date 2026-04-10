@@ -41,7 +41,7 @@ class Process(Data):
                     coordinates.append((x, y))
         return coordinates
 
-    
+
     def find_wizards(self, whole: bool) -> list:
         '''Finds wizard Data.'''
         if whole:
