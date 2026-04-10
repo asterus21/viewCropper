@@ -411,7 +411,7 @@ if __name__ == '__main__':
                 )
         # script -t -a
         # wizard, view, path, type, directory, cropped, both, all_files
-        case(False, False, False, True, False, True, False, True):
+        case(False, False, False, True, False, False, False, True):
             script.main(
                 wizard=False,
                 cropped_screens=False,
@@ -443,6 +443,20 @@ if __name__ == '__main__':
             script.main(
                 wizard=False,
                 cropped_screens=True,
+                current_folder=True,
+                both=False,
+                type=True,
+				all_files=False,
+                file_path=args.path,
+                view_width=args.width,
+                view_height=args.height
+                )
+        # script -t -d -a
+        # wizard, view, path, type, directory, cropped, both, all_files
+        case(False, False, False, True, True, False, False, True):
+            script.main(
+                wizard=False,
+                cropped_screens=False,
                 current_folder=True,
                 both=False,
                 type=True,
@@ -502,6 +516,10 @@ if __name__ == '__main__':
         # script -t -d -b -c
         # wizard, view, path, type, directory, cropped, both, all_files
         case(False, False, False, True, True, True, True, False):
+            misc.script_close(flags=True)
+        # script -t -d -c -a
+        # wizard, view, path, type, directory, cropped, both, all_files
+        case(False, False, False, True, True, True, False, True):
             misc.script_close(flags=True)
         # script -t -b
         # wizard, view, path, type, directory, cropped, both, all_files
