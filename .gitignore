@@ -6,3 +6,4 @@ screenshots/
 *.spec
 draft.py
 TODO.md
+test.py
