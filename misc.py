@@ -25,7 +25,6 @@ def print_time() -> str:
 
 def script_close(flags: bool) -> None:
     '''Closes the script.'''
-    # adds an empty line before the closing statetement
     print()
     if flags:
         input('Given flags cannot be used together.\nPress Enter to close the program.')
@@ -35,10 +34,9 @@ def script_close(flags: bool) -> None:
         sys.exit(0)
 
 
-def check_path(path):
+def check_path(path: str) -> tuple:
     '''Checks if the entered path is a file.'''
     user_input = Path(path)
-    # the entered path must exist and be a file and not a folder
     if not user_input.exists() and not user_input.is_dir() and user_input.is_file():
         print('No valid path is provided or the file does not exist.')
         input('Press Enter to close to programm.')
@@ -47,14 +45,13 @@ def check_path(path):
         return user_input.parent, user_input.name
 
 
-def process_user_input(user_input: str, single_file: bool):
+def process_user_input(user_input: str, single_file: bool) -> str:
     '''Processes user's input.'''
     if single_file:
         directory, file = check_path(user_input)
         return str(directory), [file]
     else:
         path = Path(user_input)
-        # the entered path must exist and be a folder
         if not path.exists() and path.is_dir():
             print('No valid path is provided.')
             input('Press Enter to close to programm.')
@@ -70,7 +67,8 @@ def match_path(folder: bool, cropped_screens: bool, path: str, all_files: bool) 
         directory = os.getcwd()
         files = get_files(directory, cropped_screens, all_files)
         is_empty(files)
-    else: directory, files = process_user_input(path, single_file=True) if path else get_input(cropped_screens, all_files)
+    else:
+        directory, files = process_user_input(path, single_file=True) if path else get_input(cropped_screens, all_files)
     return directory, files
 
 
@@ -109,7 +107,7 @@ def is_empty(files_list: list) -> list:
         return files_list
 
 
-def process_directory(folder, if_cropped, if_all) -> tuple:
+def process_directory(folder: str, if_cropped: bool, if_all: bool) -> tuple:
     '''Processes a folder and files to get screenshots from.'''
     return folder, get_files(folder, if_cropped, if_all)
 
@@ -117,9 +115,7 @@ def process_directory(folder, if_cropped, if_all) -> tuple:
 def get_input(cropped_screens: bool, all_files: bool) -> tuple:
     '''Accepts the user's input.'''
     user_input = input('Enter a path to the PNG files to crop (e.g. D:/screens) or press Enter to use a current directory (type exit to quit): ')
-    # adds an empty line before the script start
     print()
-    # checks for a single volume letter
     if user_input.endswith(':'): user_input = user_input + '/'
     if user_input in ('exit', 'Exit', 'EXIT', 'учше', 'УЧШЕ'):
         print(print_time(), 'The program is about to close.')

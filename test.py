@@ -98,7 +98,7 @@ def test_start(commands: list) -> tuple:
         end_time = datetime.now()
         time_difference = end_time - start_time
         print(f'The test finished within {time_difference.total_seconds() % 60:,.2f} seconds.')
-        cropped = [ file for file in os.listdir(os.getcwd()) if file.startswith('Cropped_')]
+        cropped = [file for file in os.listdir(os.getcwd()) if file.startswith('Cropped_')]
         print()
         print(f'Total number of cropped files: {len(cropped)}')
         print('---------------------------')

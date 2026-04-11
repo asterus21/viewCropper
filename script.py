@@ -10,7 +10,7 @@ from classes.targets import Targets
 from classes.screenshot_types import Types
 
 
-def main(wizard: bool, cropped_screens: bool, current_folder: bool, both: bool, type: bool, all_files: bool, file_path: str, view_width: int, view_height: int) -> None:
+def main(wizard: bool, cropped_screens: bool, current_folder: bool, both: bool, type: bool, all_files: bool, file_path: str, view_width: int, view_height: int) -> object:
     '''Main function of the script.'''
     directory, files = misc.match_path(current_folder, cropped_screens, file_path, all_files)
     match (both, type):
@@ -27,7 +27,6 @@ def main(wizard: bool, cropped_screens: bool, current_folder: bool, both: bool, 
             screenshots, coordinates = process_files(directory, files, wizard, stdout=True)
             start_script(directory, screenshots, coordinates, view_width, view_height, wizard, stdout=True)
     print(f'{misc.print_time()}', 'The script is finished.')
-    return None
 
 
 def process_files(folder: str, screens: list, wizard: bool, stdout: bool) -> tuple:
@@ -38,23 +37,22 @@ def process_files(folder: str, screens: list, wizard: bool, stdout: bool) -> tup
     return files, coordinates
 
 
-def process_views_and_wizards(directory: str, files: list, width: int, height: int) -> None:
+def process_views_and_wizards(directory: str, files: list, width: int, height: int) -> object:
     '''Processes both wizards and views.'''
     wizards, wizard_coordinates = process_files(directory, files, wizard=True, stdout=False)
     views, view_coordinates     = process_files(directory, files, wizard=False, stdout=False)
     start_script(directory, wizards, wizard_coordinates, width=None, height=None, wizard=True, stdout=False)
     start_script(directory, views, view_coordinates, width, height, wizard=False, stdout=False)
     print(f'{misc.print_time()}', str(len(wizards) + len(views)) + ' file(s) processed.')
-    return None
 
 
-def start_script(folder: str, files: list, coordinates: list, width: int, height: int, wizard: bool, stdout: bool) -> None:
+def start_script(folder: str, files: list, coordinates: list, width: int, height: int, wizard: bool, stdout: bool) -> object:
     '''Performs the screenshot cropping process.'''
     crop = Croppers(folder, files, coordinates, width, height, wizard, stdout)
     return crop.crop_screenshots(crop.crop_corners)
 
 
-def get_screenshot_types(directory, files) -> tuple:
+def get_screenshot_types(directory, files) -> dict:
     '''Returns the types of screenshots.'''
     types = Types(directory, files)
     return types.get_screenshot_types()

@@ -28,7 +28,7 @@ class Process(Data):
 
 
     def find_views(self) -> list:
-        '''Finds view Data.'''
+        '''Finds view data.'''
         coordinates = []
         for x in range(self.width - 1):
             for y in range(self.height - 1):
@@ -43,7 +43,7 @@ class Process(Data):
 
 
     def find_wizards(self, whole: bool) -> list:
-        '''Finds wizard Data.'''
+        '''Finds wizard data.'''
         if whole:
             target_left_coordinates  = []
             target_right_coordinates = []
