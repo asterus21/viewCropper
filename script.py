@@ -12,7 +12,7 @@ from classes.screenshot_types import Types
 
 def main(wizard: bool, cropped_screens: bool, current_folder: bool, both: bool, type: bool, all_files: bool, file_path: str, view_width: int, view_height: int) -> object:
     '''Main function of the script.'''
-    directory, files = misc.match_path(current_folder, cropped_screens, file_path, all_files)
+    directory, files = misc.match_path(current_folder, cropped_screens, all_files, file_path)
     match (both, type):
         case (True, True):
             misc.script_close(flags=True)
@@ -29,12 +29,6 @@ def main(wizard: bool, cropped_screens: bool, current_folder: bool, both: bool, 
     print(f'{misc.print_time()}', 'The script is finished.')
 
 
-def process_files(folder: str, screens: list, wizard: bool, stdout: bool) -> tuple:
-    '''Gets a list of files and returns targets coordinates.'''
-    targets_instance = Targets(folder, screens, wizard, stdout)
-    targets, files = targets_instance.find_targets(type=False, whole=True)
-    coordinates = targets_instance.get_coordinates(targets)
-    return files, coordinates
 
 
 def process_views_and_wizards(directory: str, files: list, width: int, height: int) -> object:
@@ -46,13 +40,20 @@ def process_views_and_wizards(directory: str, files: list, width: int, height: i
     print(f'{misc.print_time()}', str(len(wizards) + len(views)) + ' file(s) processed.')
 
 
-def start_script(folder: str, files: list, coordinates: list, width: int, height: int, wizard: bool, stdout: bool) -> object:
-    '''Performs the screenshot cropping process.'''
-    crop = Croppers(folder, files, coordinates, width, height, wizard, stdout)
-    return crop.crop_screenshots(crop.crop_corners)
-
-
 def get_screenshot_types(directory, files) -> dict:
     '''Returns the types of screenshots.'''
     types = Types(directory, files)
     return types.get_screenshot_types()
+
+
+def process_files(folder: str, screens: list, wizard: bool, stdout: bool) -> tuple:
+    '''Gets a list of files and returns targets coordinates.'''
+    targets_instance = Targets(folder, screens, wizard, stdout)
+    targets, files = targets_instance.find_targets(type=False, whole=True)
+    coordinates = targets_instance.get_coordinates(targets)
+    return files, coordinates
+
+def start_script(folder: str, files: list, coordinates: list, width: int, height: int, wizard: bool, stdout: bool) -> object:
+    '''Performs the screenshot cropping process.'''
+    crop = Croppers(folder, files, coordinates, width, height, wizard, stdout)
+    return crop.crop_screenshots(crop.crop_corners)

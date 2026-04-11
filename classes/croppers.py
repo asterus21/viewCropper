@@ -21,7 +21,7 @@ class Croppers:
         self.stdout      = stdout
 
 
-    def crop_wizards(self, image, index) -> object:
+    def crop_wizards(self, image: bytes, index: int) -> object:
         '''Crops wizards according to the target pixels.'''
         return image.crop((
             self.targets[index][0][0],
@@ -31,7 +31,7 @@ class Croppers:
             ))
 
 
-    def crop_views(self, image, index) -> object:
+    def crop_views(self, image: bytes, index: int) -> object:
         '''Crops views according to the target pixels.'''
         return image.crop((
             self.targets[index][0] - 12,
@@ -41,12 +41,12 @@ class Croppers:
             ))
 
 
-    def crop_corners(self, image, index) -> object:
+    def crop_corners(self, image: bytes, index: int) -> object:
         '''Crops the screenshots according to the target pixels.'''
         return self.crop_wizards(image, index) if self.wizard else self.crop_views(image, index)
 
 
-    def crop_screenshots(self, method) -> object:
+    def crop_screenshots(self, method: object) -> object:
         '''Wrapps the cropping function.'''
         file_number = 1
         cropped_files = len(misc.get_files(folder=os.getcwd(), cropped_screens=True, all_files=False))

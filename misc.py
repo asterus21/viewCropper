@@ -60,13 +60,12 @@ def process_user_input(user_input: str, single_file: bool) -> str:
             return user_input
 
 
-def match_path(folder: bool, cropped_screens: bool, path: str, all_files: bool) -> tuple:
+def match_path(current_folder: bool, cropped_screens: bool, all_files: bool, path: str) -> tuple:
     '''Filters out a file, folder and cropped screens.'''
-    if folder:
+    if current_folder:
         print(print_time(), 'Current directory is being used...')
         directory = os.getcwd()
-        files = get_files(directory, cropped_screens, all_files)
-        is_empty(files)
+        files = is_empty(get_files(directory, cropped_screens, all_files))        
     else:
         directory, files = process_user_input(path, single_file=True) if path else get_input(cropped_screens, all_files)
     return directory, files

@@ -23,7 +23,7 @@ class Types:
 
 
     def get_keys(self, values: dict) -> list:
-        '''Gets empty keys to process'''
+        '''Gets empty keys to process.'''
         return [ key for key in values if not values[key] ]
 
 
@@ -39,6 +39,6 @@ class Types:
 
 
     def get_types(self, values: dict, wizard: bool) -> dict:
-        '''Returns a file type for a screenshot'''
+        '''Returns a file type for a screenshot.'''
         return ( {key: 'wizard' for key, value in values.items() if value} if wizard
                 else {key: 'view' for key, value in values.items() if value} )
