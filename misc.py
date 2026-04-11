@@ -74,8 +74,6 @@ def match_path(current_folder: bool, cropped_screens: bool, all_files: bool, pat
 def get_files(folder: str, cropped_screens: bool, all_files: bool) -> list:
     '''Gets list of screenshots from a folder.'''
     match (cropped_screens, all_files):
-        case(True, True):
-            script_close(flags=True)
         case(True, False):
             files = [
                 file for file in os.listdir(folder)
@@ -94,6 +92,8 @@ def get_files(folder: str, cropped_screens: bool, all_files: bool) -> list:
                 if file.lower().endswith('.png')
                 and file.startswith('Screenshot_')
             ]
+        case(True, True):
+            script_close(flags=True)
     return files
 
 

@@ -108,6 +108,7 @@ def test_start(commands: list) -> tuple:
             stdout = subprocess.PIPE,
             stderr = subprocess.PIPE,
             text   = True
+            #, shell  = True
             )
         return process
     for script in commands:
