@@ -29,8 +29,6 @@ def main(wizard: bool, cropped_screens: bool, current_folder: bool, both: bool, 
     print(f'{misc.print_time()}', 'The script is finished.')
 
 
-
-
 def process_views_and_wizards(directory: str, files: list, width: int, height: int) -> object:
     '''Processes both wizards and views.'''
     wizards, wizard_coordinates = process_files(directory, files, wizard=True, stdout=False)
