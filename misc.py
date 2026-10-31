@@ -96,7 +96,7 @@ def get_files(folder: str, cropped_screens: bool, all_files: bool) -> list:
             script_close(flags=True)
     return files
 
-
+# TODO: if all files start with 'Cropped_', then the method is triggered!
 def is_empty(files_list: list) -> list:
     '''Checks if the given list of files is empty.'''
     if not files_list:
